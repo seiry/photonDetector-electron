@@ -1,9 +1,10 @@
 {
-  "name": "pet-test",
+  "name": "pet-controler",
   "version": "0.0.1",
-  "author": "",
-  "description": "An electron-vue project",
-  "license": null,
+  "author": "Seiry Yu",
+  "description": "PET综合控制器",
+  "license": "UNLICENSED",
+  "private": true,
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
@@ -23,7 +24,7 @@
     "rebuild": "electron-rebuild"
   },
   "build": {
-    "productName": "pet-test",
+    "productName": "PET控制系统",
     "appId": "eu.seiry.2020.nuaa.pet",
     "directories": {
       "output": "build"
@@ -59,6 +60,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "ffi-napi": "^2.4.7",
+    "ref": "^1.3.5",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",
     "vue-router": "^3.0.1",
