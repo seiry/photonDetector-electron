@@ -4,7 +4,7 @@ import axios from 'axios'
 import App from './App'
 import router from './router'
 import store from './store'
-import path from 'path'
+// import path from 'path'
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios
@@ -18,23 +18,45 @@ new Vue({
   template: '<App/>'
 }).$mount('#app')
 
-var edge = require('electron-edge-js')
-var helloWorld = edge.func(`
-    async (input) => { 
-        return ".NET Welcomes " + input.ToString(); 
-    }
-`)
-const hello = edge.func({
-  assemblyFile: path.join(__static, 'ClassLibrary1.dll'),
-  typeName: 'ClassLibrary1.Class1',
-  methodName: 'hello'
+// var edge = require('electron-edge-js')
+// var helloWorld = edge.func(`
+//     async (input) => {
+//         return ".NET Welcomes " + input.ToString();
+//     }
+// `)
+// const hello = edge.func({
+//   assemblyFile: path.join(__static, 'ClassLibrary1.dll'),
+//   typeName: 'ClassLibrary1.Class1',
+//   methodName: 'hello'
+// })
+
+// helloWorld('JavaScript', function (error, result) {
+//   if (error) throw error
+//   console.log(result)
+//   // debugger
+// })
+// hello(123, (e, r) => {
+//   console.log(e, r)
+// })
+const ffi = require('ffi-napi')
+/**
+ * 先定义一个函数, 用来在窗口中显示字符
+ * @param {String} text
+ * @return {*} none
+ */
+function showText (text) {
+  return Buffer.from(text, 'ucs2').toString('binary')
+};
+// 通过ffi加载user32.dll
+const myUser32 = new ffi.Library('user32', {
+  'MessageBoxW': // 声明这个dll中的一个函数
+    [
+      'int32', ['int32', 'string', 'string', 'int32'] // 用json的格式罗列其返回类型和参数类型
+    ]
 })
 
-helloWorld('JavaScript', function (error, result) {
-  if (error) throw error
-  console.log(result)
-  // debugger
-})
-hello(123, (e, r) => {
-  console.log(e, r)
-})
+// 调用user32.dll中的MessageBoxW()函数, 弹出一个对话框
+const isOk = myUser32.MessageBoxW(
+  0, showText('I am Node.JS'), showText('Hello, World!~'), 2
+)
+console.log(isOk)
