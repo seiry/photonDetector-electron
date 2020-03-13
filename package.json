@@ -2,7 +2,7 @@
   "name": "pet-controler",
   "version": "0.0.1",
   "author": "Seiry Yu",
-  "description": "PET综合控制器",
+  "description": "γ光子探测器控制系统",
   "license": "UNLICENSED",
   "private": true,
   "main": "./dist/electron/main.js",
@@ -24,7 +24,7 @@
     "rebuild": "electron-rebuild"
   },
   "build": {
-    "productName": "PET控制系统",
+    "productName": "γ光子探测器控制系统",
     "appId": "eu.seiry.2020.nuaa.pet",
     "directories": {
       "output": "build"
