@@ -1,16 +1,17 @@
+/* eslint-disable no-unused-vars */
 'use strict'
+import { app, BrowserWindow, dialog } from 'electron'
+// import myTest from '../ffi/test'
+// import { dllPath } from '../ffi/utils'
+// import { myUser32, showText } from '../ffi/user32.js'
+const ffi = require('ffi-napi')
 
-import { app, BrowserWindow } from 'electron'
+// import myTest from '../ffi/test'
 
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
  */
-if (process.env.NODE_ENV !== 'development') {
-  global.__static = require('path')
-    .join(__dirname, '/static')
-    .replace(/\\/g, '\\\\')
-}
 
 let mainWindow
 const winURL =
@@ -29,6 +30,12 @@ function createWindow() {
   })
 
   mainWindow.loadURL(winURL)
+  // mainWindow.openDevTools() // devtools for build
+  // const t = myTest()
+  // dialog.showMessageBox({
+  //   message : `${t.add(1,2)}`,
+  //   buttons: []
+  // })
 
   mainWindow.on('closed', () => {
     mainWindow = null

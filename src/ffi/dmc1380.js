@@ -1,10 +1,9 @@
-import { dllPrefix } from './utils'
+import { dllPath } from './utils'
 const ffi = require('ffi-napi')
 // const ref = require('ref')
-const path = require('path')
 // const dword = ref.types.ulong
 export const dmc = new ffi.Library(
-  path.join(__static, dllPrefix, 'Dmc1380.dll'),
+  dllPath('Dmc1380.dll'),
   {
     d1000_board_init: ['ulong', []],
     d1000_board_close: ['ulong', []],

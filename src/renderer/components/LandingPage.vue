@@ -42,7 +42,8 @@
 
 <script>
 import SystemInformation from './LandingPage/SystemInformation'
-import myTest from '../../ffi/test'
+
+import myTest from '../../ffi/test.js'
 export default {
   data() {
     return {
