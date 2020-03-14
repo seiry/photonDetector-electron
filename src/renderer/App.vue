@@ -5,11 +5,9 @@
 </template>
 
 <script>
-  export default {
-    name: 'pet-test'
-  }
+export default { name: 'pet-test' }
 </script>
 
 <style>
-  /* CSS */
+/* CSS */
 </style>
