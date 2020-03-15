@@ -41,9 +41,12 @@
 </template>
 
 <script>
+/* eslint-disable no-unused-vars */
+
 import SystemInformation from './LandingPage/SystemInformation'
 
 import myTest from '../../ffi/test.js'
+import can from '../../ffi/can'
 export default {
   data() {
     return {
@@ -57,7 +60,8 @@ export default {
       this.$electron.shell.openExternal(link)
     },
     dll() {
-      this.ret = myTest.add(1, 2)
+      // this.ret = myTest.add(1, 2)
+      this.ret = can.VCI_OpenDevice(1, 0, 0)
     }
   }
 }
