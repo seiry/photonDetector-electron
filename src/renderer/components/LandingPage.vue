@@ -37,6 +37,9 @@
           <el-button type="primary" @click="dll" icon="el-icon-search"
             >dll {{ ret }}</el-button
           >
+          <el-button type="primary" @click="dmc" icon="el-icon-search">
+            {{ ret2 }}</el-button
+          >
         </div>
       </div>
     </main>
@@ -47,13 +50,14 @@
 /* eslint-disable no-unused-vars */
 
 import SystemInformation from './LandingPage/SystemInformation'
-
+import dmc from '../../ffi/dmc1380.js'
 import myTest from '../../ffi/test.js'
 import can from '../../ffi/can'
 export default {
   data() {
     return {
-      ret: ''
+      ret: '',
+      ret2: ''
     }
   },
   name: 'landing-page',
@@ -64,7 +68,11 @@ export default {
     },
     dll() {
       // this.ret = myTest.add(1, 2)
-      this.ret = can.VCI_OpenDevice(1, 0, 0)
+      this.ret = [myTest.add(1, 7), myTest.arrayAdd([1, 9])]
+    },
+    dmc() {
+      // console.log(dmc.d1000_start_t_line)
+      this.ret2 = dmc.d1000_start_t_line(1, [1, 2], [0, 0], 1, 1, 1)
     }
   }
 }

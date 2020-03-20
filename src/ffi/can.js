@@ -13,7 +13,7 @@ export const PVCI_INIT_CONFIG = StructType({
   Timing1: 'uchar',
   Mode: 'uchar'
 })
-console.log(new PVCI_INIT_CONFIG({ Mode: '123' }))
+// console.log(new PVCI_INIT_CONFIG({ Mode: '123' }))
 export const can = new ffi.Library(dllPath('ControlCAN.dll'), {
   VCI_OpenDevice: ['ulong', ['ulong', 'ulong', 'ulong']]
 })

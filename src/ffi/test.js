@@ -1,6 +1,8 @@
 /* eslint-disable no-unused-vars */
 import { dllPath } from './utils'
-import { dialog } from 'electron'
+
+const ArrayType = require('ref-array-napi')
+const IntArray = ArrayType('int')
 
 const ffi = require('ffi-napi')
 // let fileContents = fs.readFileSync(
@@ -13,8 +15,18 @@ const ffi = require('ffi-napi')
 //   title:
 // })
 
-export const myTest = new ffi.Library(dllPath('Dll1.dll'), {
-  add: ['ulong', ['int', 'int']]
+const myTest = new ffi.Library(dllPath('Dll1.dll'), {
+  add: ['ulong', ['int', 'int']],
+  arrayAdd: ['int', [IntArray]]
 })
-
-export default myTest
+const add = (a, b) => {
+  return myTest.add(a, b)
+}
+const arrayAdd = (arr = []) => {
+  const refArr = new IntArray(arr)
+  return myTest.arrayAdd(refArr)
+}
+export default {
+  add,
+  arrayAdd
+}
