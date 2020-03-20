@@ -121,7 +121,20 @@ const d1000_start_t_move = (axis, Dist, StrVel, MaxVel, Tacc) => {
 }
 
 /**
+ * 以梯形速度曲线控制指定轴至运行速度，并以绝对坐标运行一段指定距离。
+ * @param {*} axis 轴号，范围 0～(n×3-1) ，n 为卡数；
+ * @param {*} Pos 绝对运动位置，单位：pulse；
+ * @param {*} StrVel 初始速度，单位：pps；
+ * @param {*} MaxVel 运行速度，单位：pps；
+ * @param {*} Tacc 加速时间，单位：s。
+ */
+const d1000_start_ta_move = (axis, Pos, StrVel, MaxVel, Tacc) => {
+  return dmc1380.d1000_start_t_move(axis, Pos, StrVel, MaxVel, Tacc)
+}
+
+/**
  * 直线插补函数
+ * 启动多轴相对坐标的直线插补。
  * @param {*} TotalAxis  插补轴数，范围 2～3 轴；
  * @param {*} AxisArray 轴号列表；
  * @param {*} DistArray 对应轴号列表各轴的相对坐标的距离列表；
@@ -146,15 +159,73 @@ const d1000_start_t_line = (
     Tacc
   )
 }
+
+/**
+ * 直线插补函数
+ * 启动多轴相对坐标的直线插补。
+ * @param {*} TotalAxis  插补轴数，范围 2～3 轴；
+ * @param {*} PosArray 轴号列表；
+ * @param {*} DistArray 对应轴号列表各轴的相对坐标的距离列表；
+ * @param {*} StrVel 初始速度，单位：pps；
+ * @param {*} MaxVel 运行速度，单位：pps；
+ * @param {*} Tacc  加速时间，单位：s。
+ */
+const d1000_start_ta_line = (
+  TotalAxis,
+  AxisArray,
+  PosArray,
+  StrVel,
+  MaxVel,
+  Tacc
+) => {
+  return dmc1380.d1000_start_t_line(
+    TotalAxis,
+    new ShortArray(AxisArray),
+    new ShortArray(PosArray),
+    StrVel,
+    MaxVel,
+    Tacc
+  )
+}
+
+/**
+ * 回原点函数
+ * 启动指定轴进行回原点运动。
+ * @param {*} axis 轴号，范围 0～(n×3-1)，n 为卡数；
+ * @param {*} StrVel 回原点运动初始速度，单位：pps；
+ * @param {*} MaxVel 回原点运动速度，单位：pps，负值表示往负方向找原点，正值表示往正方向找原点；
+ * @param {*} Tacc 加速时间，单位：s。
+ */
+const d1000_home_move = (axis, StrVel, MaxVel, Tacc) => {
+  return dmc1380.d1000_home_move(axis, StrVel, MaxVel, Tacc)
+}
+
+/**
+ * 检测指定轴的运动状态。
+ * 0：正在运行；
+ * 1：脉冲输出完毕停止；
+ * 2：指令停止（如调用了 d1000_decel_stop 函数）；
+ * 3：遇限位停止；
+ * 4：遇原点停止。
+ * @param {*} axis 轴号，范围 0～(n×3-1)，n 为卡数。
+ */
+const d1000_check_done = (axis) => {
+  return dmc1380.d1000_check_done(axis)
+}
+
 export default {
   d1000_board_init,
   d1000_board_close,
   d1000_set_pls_outmode,
   d1000_start_tv_move,
-  d1000_start_t_line,
   d1000_get_speed,
   d1000_change_speed,
   d1000_decel_stop,
   d1000_immediate_stop,
-  d1000_start_t_move
+  d1000_start_t_move,
+  d1000_start_ta_move,
+  d1000_start_t_line,
+  d1000_start_ta_line,
+  d1000_home_move,
+  d1000_check_done
 }
