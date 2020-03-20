@@ -68,11 +68,16 @@ export default {
     },
     dll() {
       // this.ret = myTest.add(1, 2)
-      this.ret = [myTest.add(1, 7), myTest.arrayAdd([1, 9])]
+      this.ret = [
+        myTest.add(1, 17),
+        myTest.arrayAdd([-1, 9]),
+        myTest.arrayAddDouble([1.2, 1.3]),
+        myTest.doubleAdd(0.1, 0.2)
+      ]
     },
     dmc() {
       // console.log(dmc.d1000_start_t_line)
-      this.ret2 = dmc.d1000_start_t_line(1, [1, 2], [0, 0], 1, 1, 1)
+      this.ret2 = dmc.d1000_get_speed()
     }
   }
 }

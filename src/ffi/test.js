@@ -3,6 +3,7 @@ import { dllPath } from './utils'
 
 const ArrayType = require('ref-array-napi')
 const IntArray = ArrayType('int')
+const DoubleArray = ArrayType('double')
 
 const ffi = require('ffi-napi')
 // let fileContents = fs.readFileSync(
@@ -17,7 +18,9 @@ const ffi = require('ffi-napi')
 
 const myTest = new ffi.Library(dllPath('Dll1.dll'), {
   add: ['ulong', ['int', 'int']],
-  arrayAdd: ['int', [IntArray]]
+  doubleAdd: ['double', ['double', 'double']],
+  arrayAdd: ['int', [IntArray]],
+  arrayAddDouble: ['double', [DoubleArray]]
 })
 const add = (a, b) => {
   return myTest.add(a, b)
@@ -26,7 +29,14 @@ const arrayAdd = (arr = []) => {
   const refArr = new IntArray(arr)
   return myTest.arrayAdd(refArr)
 }
+const arrayAddDouble = (arr = []) => {
+  const refArr = new DoubleArray(arr)
+  return myTest.arrayAddDouble(refArr)
+}
+const doubleAdd = (a, b) => myTest.doubleAdd(a, b)
 export default {
   add,
-  arrayAdd
+  doubleAdd,
+  arrayAdd,
+  arrayAddDouble
 }
