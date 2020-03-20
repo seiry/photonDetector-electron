@@ -33,7 +33,10 @@
           <button class="alt" @click="open('https://vuejs.org/v2/guide/')">
             Vue.js
           </button>
-          <button @click="dll">dll {{ ret }}</button>
+          <!-- <button @click="dll">dll {{ ret }}</button> -->
+          <el-button type="primary" @click="dll" icon="el-icon-search"
+            >dll {{ ret }}</el-button
+          >
         </div>
       </div>
     </main>
