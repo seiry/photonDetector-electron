@@ -7,11 +7,8 @@ const ShortArray = ArrayType('short')
 const dmc1380 = new ffi.Library(dllPath('Dmc1380.dll'), {
   d1000_board_init: ['ulong', []],
   d1000_board_close: ['ulong', []],
-  // d1000_set_pls_outmode(short axis, short pls_outmode)
   d1000_set_pls_outmode: ['ulong', ['short', 'short']],
-  // DWORD d1000_start_tv_move (short axis, long StrVel, Long MaxVel, double Tacc)
   d1000_start_tv_move: ['ulong', ['short', 'long', 'long', 'double']],
-  // DWORD d1000_start_tv_move (short axis, long StrVel, Long MaxVel, doubleTacc)
   d1000_get_speed: ['ulong', ['short']],
   d1000_change_speed: ['ulong', ['short', 'long']],
   d1000_decel_stop: ['ulong', ['short']],
@@ -122,6 +119,7 @@ const d1000_start_t_move = (axis, Dist, StrVel, MaxVel, Tacc) => {
 
 /**
  * 以梯形速度曲线控制指定轴至运行速度，并以绝对坐标运行一段指定距离。
+ * "a" aka "absolute"
  * @param {*} axis 轴号，范围 0～(n×3-1) ，n 为卡数；
  * @param {*} Pos 绝对运动位置，单位：pulse；
  * @param {*} StrVel 初始速度，单位：pps；
@@ -129,7 +127,7 @@ const d1000_start_t_move = (axis, Dist, StrVel, MaxVel, Tacc) => {
  * @param {*} Tacc 加速时间，单位：s。
  */
 const d1000_start_ta_move = (axis, Pos, StrVel, MaxVel, Tacc) => {
-  return dmc1380.d1000_start_t_move(axis, Pos, StrVel, MaxVel, Tacc)
+  return dmc1380.d1000_start_ta_move(axis, Pos, StrVel, MaxVel, Tacc)
 }
 
 /**
@@ -178,7 +176,7 @@ const d1000_start_ta_line = (
   MaxVel,
   Tacc
 ) => {
-  return dmc1380.d1000_start_t_line(
+  return dmc1380.d1000_start_ta_line(
     TotalAxis,
     new ShortArray(AxisArray),
     new ShortArray(PosArray),
@@ -213,6 +211,73 @@ const d1000_check_done = (axis) => {
   return dmc1380.d1000_check_done(axis)
 }
 
+/**
+ * 读取指令位置计数器计数值。
+ * @param {*} axis 轴号，范围 0～(n×3-1)，n 为卡数。
+ */
+const d1000_get_command_pos = (axis) => {
+  return dmc1380.d1000_get_command_pos(axis)
+}
+
+/**
+ * 设置指令位置计数器计数值。
+ * @param {*} axis 轴号，范围 0～(n×3-1)，n 为卡数。
+ * @param {*} Pos 设置指令位置计数器值，单位：Pulse。
+ */
+const d1000_set_command_pos = (axis, Pos) => {
+  return dmc1380.d1000_set_command_pos(axis, Pos)
+}
+
+/**
+ * 输出通用输出信号。
+ * @param {*} BitNo 表示要输出的通用输出口的位号，多卡运行时范围参考表 8-5；
+ * @param {*} BitData 输出信号：0 - 表示低电平；1 - 表示高电平。
+ */
+const d1000_out_bit = (BitNo, BitData) => {
+  return dmc1380.d1000_out_bit(BitNo, BitData)
+}
+
+/**
+ * 读取通用输入信号状态。
+ * @param {*} BitNo ：表示要读取的通用输入口的位号，多卡运行时范围参考表 8-5；
+ */
+const d1000_in_bit = (BitNo) => {
+  return dmc1380.d1000_in_bit(BitNo)
+}
+
+/**
+ * 读取通用输出信号状态。
+ * @param {*} BitNo ：表示要读取的通用输入口的位号，多卡运行时范围参考表 8-5；
+ */
+const d1000_get_outbit = (BitNo) => {
+  return dmc1380.d1000_get_outbit(BitNo)
+}
+
+/**
+ * 专用输入口使能。
+ * @param {*} CardNo 卡号。
+ * @param {*} InputEn 专用信号输入口使能，需要将各信号按照二进制的位取值，然后转化为十进制, 具体使用方法参照 4.2.8 专用 IO 口函数所提供的简单例程。其位号与信号的关系如表 8-6 所示。
+ */
+const d1000_in_enable = (CardNo, InputEn) => {
+  return dmc1380.d1000_in_enable(CardNo, InputEn)
+}
+
+/**
+ * 设置减速信号是否使能。
+
+ * @param {*} axis 轴号，范围 0～(n×3-1)， n 为卡数；
+ * @param {*} SdMode  减速使能模式，0：SD 信号无效；1：SD 信号有效；
+ */
+const d1000_set_sd = (axis, SdMode) => {
+  return dmc1380.d1000_set_sd(axis, SdMode)
+}
+/**
+ * 读取指定轴的专用接口信号状态，包括 EL+、EL-、STP、STA、SD+、SD-等信号状态。
+ * @param {*} axis 轴号，范围 0～(n×3-1)， n 为卡数。 返回值：指定轴专用信号
+ */
+const d1000_get_axis_status = (axis) => {
+  return dmc1380.d1000_get_axis_status(axis)
+}
 export default {
   d1000_board_init,
   d1000_board_close,
@@ -220,12 +285,20 @@ export default {
   d1000_start_tv_move,
   d1000_get_speed,
   d1000_change_speed,
-  d1000_decel_stop,
   d1000_immediate_stop,
+  d1000_decel_stop,
   d1000_start_t_move,
   d1000_start_ta_move,
   d1000_start_t_line,
   d1000_start_ta_line,
   d1000_home_move,
-  d1000_check_done
+  d1000_check_done,
+  d1000_get_command_pos,
+  d1000_set_command_pos,
+  d1000_out_bit,
+  d1000_in_bit,
+  d1000_get_outbit,
+  d1000_in_enable,
+  d1000_set_sd,
+  d1000_get_axis_status
 }
