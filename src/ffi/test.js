@@ -18,6 +18,8 @@ const ffi = require('ffi-napi')
 // dialog.showMessageBox({
 //   title:
 // })
+const Type = ArrayType('int', 8)
+const Type2 = ArrayType(Type)
 
 const TestStruct = StructType({
   name: 'string'
@@ -48,7 +50,8 @@ const myTest = new ffi.Library(dllPath('Dll1.dll'), {
   arrayAdd: ['int', [IntArray]],
   arrayAddDouble: ['double', [DoubleArray]],
   getObj: [Obj1, []],
-  changeObj: ['void', [ref.refType(Obj1)]]
+  changeObj: ['void', [ref.refType(Obj1)]],
+  changeArr: ['int', [Type, 'int']]
 })
 const add = (a, b) => {
   return myTest.add(a, b)
@@ -73,7 +76,18 @@ const changeObj = () => {
   myTest.changeObj(obj.ref())
   console.log(obj)
 }
-changeObj()
+const changeArr = () => {
+  const arr = new Type([1, 2, 3, 8], 4)
+  let arr2 = Array(2500).fill(arr)
+  arr2 = new Type2(arr2) // 工厂方法会转换成真实传值
+  debugger
+
+  // const arr = IntArray([1, 2, 3, 4]) // 这里说明，声明类型不能改？
+  const re = myTest.changeArr(arr, 4)
+  console.log(re)
+  debugger
+}
+// changeArr()
 export default {
   add,
   doubleAdd,

@@ -48,6 +48,8 @@ const VCI_CAN_OBJ = StructType({
   Data: ArrayType('byte', 8),
   Reserved: ArrayType('byte', 3)
 })
+const VCI_CAN_OBJArrayType = ArrayType(VCI_CAN_OBJ)
+
 // console.log(new PVCI_CAN_OBJ({ Data: [7, 0, 0, 1] }))
 // console.log(
 //   new PVCI_BOARD_INFO({
@@ -68,11 +70,11 @@ const can = new ffi.Library(dllPath('ControlCAN.dll'), {
   VCI_StartCAN: ['ulong', ['ulong', 'ulong', 'ulong']],
   VCI_Transmit: [
     'ulong',
-    ['ulong', 'ulong', 'ulong', ArrayType(VCI_CAN_OBJ), 'ulong']
+    ['ulong', 'ulong', 'ulong', VCI_CAN_OBJArrayType, 'ulong']
   ],
   VCI_Receive: [
     'ulong',
-    ['ulong', 'ulong', 'ulong', ArrayType(VCI_CAN_OBJ), 'ulong', 'int']
+    ['ulong', 'ulong', 'ulong', VCI_CAN_OBJArrayType, 'ulong', 'int']
   ]
 })
 
@@ -178,11 +180,18 @@ const VCI_ResetCAN = (DevType, DevIndex, CANIndex) => {
  * @param {*} Length 要发送的帧结构体数组的长度（发送的帧数量）。最大为1000,高速收发时推荐值为48。
  * 返回实际发送的帧数，=-1表示USB-CAN设备不存在或USB掉线。
  */
-// TODO: 帧是数组，这里需要验证，需不需要引用传值
+// TODO: 帧是数组，这里需要验证，需不需要引用传值；也需要验证长度可变是否影响传入
 const VCI_Transmit = (DeviceType, DeviceInd, CANInd, pSend = []) => {
   // pSend = new PVCI_CAN_OBJ(pSend)
   pSend = pSend.map((e) => new VCI_CAN_OBJ(e))
-  return can.VCI_Transmit(DeviceType, DeviceInd, CANInd, pSend, pSend.Length)
+  const SendArray = new VCI_CAN_OBJArrayType(pSend)
+  return can.VCI_Transmit(
+    DeviceType,
+    DeviceInd,
+    CANInd,
+    SendArray,
+    pSend.Length
+  )
 }
 
 /**
@@ -194,13 +203,28 @@ const VCI_Transmit = (DeviceType, DeviceInd, CANInd, pSend = []) => {
  * @param {*} Len 用来接收的帧结构体数组的长度（本次接收的最大帧数，实际返回值小于等于这个值）。该值为所提供的存储空间大小，适配器中为每个通道设置了2000帧的接收缓存区，用户根据自身系统和工作环境需求，在1到2000之间选取适当的接收数组长度。一般pReceive数组大小与Len都设置大于2000，如：2500为宜，可有效防止数据溢出导致地址冲突。同时每隔30ms调用一次VCI_Receive为宜。（在满足应用的时效性情况下，尽量降低调用VCI_Receive的频率，只要保证内部缓存不溢出，每次读取并处理更多帧，可以提高运行效率。）
  * @param {*} WaitTime 保留
  */
-const VCI_Receive = (DevType, DevIndex, CANIndex, Len, WaitTime = 0) => {
-  // TODO: 验证要不要预置长度
-  let pReceive = new ArrayType(VCI_CAN_OBJ, Len)
-  can.VCI_Receive(DevType, DevIndex, CANIndex, pReceive, Len, WaitTime)
+const VCI_Receive = (DevType, DevIndex, CANIndex, Len = 2500, WaitTime = 0) => {
+  const nullObj = new VCI_CAN_OBJ()
+  const recieveArr = Array(Len).fill(nullObj)
+  let pReceive = new VCI_CAN_OBJArrayType(recieveArr, Len)
+  // debugger
+  const re = can.VCI_Receive(
+    DevType,
+    DevIndex,
+    CANIndex,
+    pReceive,
+    Len,
+    WaitTime
+  )
   // TODO: juege
   return pReceive
 }
+// debugger
+// let i = 1
+// while (i++ < 100) {
+//   VCI_Receive()
+// }
+// debugger
 export default {
   VCI_OpenDevice,
   VCI_CloseDevice,
