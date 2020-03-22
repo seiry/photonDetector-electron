@@ -31,3 +31,13 @@
 |longlong |   long|
 |ulonglong  |   unsigned long long|
 | size_t |        platform-dependent, usually pointer size |
+
+### 问题
+
+* win32 error 126 Dll文件的路径写错了，或者Dll有相关的依赖，依赖没有放在与入口Dll在同一级目录下
+* win32 error 127 ffi定义的函数名、返回值类型或者参数类型与Dll定义的不一致
+* win32 error 193 Dll与当前的操作系统不匹配，当前系统是64位的Dll是32位的
+
+
+
+[https://segmentfault.com/a/1190000019402908]

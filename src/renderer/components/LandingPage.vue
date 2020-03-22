@@ -77,7 +77,9 @@ export default {
     },
     dmc() {
       // console.log(dmc.d1000_start_t_line)
-      this.ret2 = dmc.d1000_get_speed()
+      // this.ret2 = dmc.d1000_get_speed()
+      // console.log(myTest.getObj())
+      console.log(can.VCI_Transmit(0, 0, 0, { Data: [1] }, 1))
     }
   }
 }

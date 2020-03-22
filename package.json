@@ -68,6 +68,7 @@
         "lodash": "^4.17.15",
         "nodeplotlib": "^0.6.5",
         "ref-array-napi": "^1.2.0",
+        "ref-napi": "^1.4.3",
         "ref-struct-napi": "^1.1.0",
         "vue": "^2.5.16",
         "vue-electron": "^1.0.6",
