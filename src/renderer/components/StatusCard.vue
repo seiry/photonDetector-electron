@@ -8,14 +8,15 @@
       <span> 状态: {{ status.moveStatus | formatStatus }} </span>
       <span> 转速: {{ status.speed | fix2 }} °/s </span>
       <span> 角度: {{ status.degree | fix2 }} °</span>
-    </div>
-    <el-progress
-      type="dashboard"
-      :percentage="percentage"
-      :color="colors"
-    ></el-progress>
 
-    <el-button type="primary" round @click="test">主要按钮</el-button>
+      <el-progress
+        type="dashboard"
+        :percentage="percentage"
+        :color="colors"
+      ></el-progress>
+
+      <el-button type="primary" round @click="test">主要按钮</el-button>
+    </div>
   </el-card>
 </template>
 
@@ -110,10 +111,6 @@ main {
   justify-content: space-between;
 }
 
-main > div {
-  flex-basis: 50%;
-}
-
 .left-side {
   display: flex;
   flex-direction: column;
@@ -163,7 +160,8 @@ main > div {
 .textStatus {
   display: flex;
   flex-direction: column;
-  & > * {
+  align-items: center;
+  & > span {
     flex-basis: 30px;
   }
 }

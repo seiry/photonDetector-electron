@@ -3,7 +3,11 @@
     <Loading v-show="loading"></Loading>
     <!-- <img id="logo" src="~@/assets/logo.png" alt="electron-vue" /> -->
     <main>
-      <StatusCard></StatusCard>
+      <StatusCard class="statusCard"></StatusCard>
+      <div class="operateCard">
+        <ConfigCard class="config"></ConfigCard>
+        <ActionCard></ActionCard>
+      </div>
     </main>
   </div>
 </template>
@@ -15,6 +19,8 @@ import { mapState } from 'vuex'
 import SystemInformation from './LandingPage/SystemInformation'
 import Loading from './Loading'
 import StatusCard from './StatusCard'
+import ConfigCard from './ConfigCard'
+import ActionCard from './ActionCard'
 import dmc from '../../ffi/dmc1380.js'
 import myTest from '../../ffi/test.js'
 import can from '../../ffi/can'
@@ -26,7 +32,7 @@ export default {
     }
   },
   name: 'main-page',
-  components: { StatusCard, Loading },
+  components: { StatusCard, Loading, ConfigCard, ActionCard },
   methods: {
     open(link) {
       this.$electron.shell.openExternal(link)
@@ -48,8 +54,10 @@ export default {
     rgba(229, 229, 229, 0.9) 100%
   );
   height: 100vh;
-  padding: 60px 80px;
+  padding: 30px 40px;
   width: 100vw;
+  display: flex;
+  flex-direction: column;
 }
 
 #logo {
@@ -60,12 +68,14 @@ export default {
 
 main {
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
+  flex: 1;
 }
 
-main > div {
+/* main > div {
   flex-basis: 50%;
-}
+} */
 
 .left-side {
   display: flex;
@@ -112,5 +122,16 @@ main > div {
 .doc button.alt {
   color: #42b983;
   background-color: transparent;
+}
+.statusCard {
+  flex-basis: 30%;
+}
+.operateCard {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+.config {
+  flex-grow: 1;
 }
 </style>
