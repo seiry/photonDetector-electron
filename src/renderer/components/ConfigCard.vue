@@ -107,9 +107,23 @@ export default {
   flex-wrap: wrap;
   & > .el-form-item {
     margin: 0;
+    height: 60px;
   }
 }
+/deep/ .el-card__body {
+  padding-bottom: 5px;
+}
+
 .formText {
   width: 120px;
+}
+
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: '';
+}
+.clearfix:after {
+  clear: both;
 }
 </style>

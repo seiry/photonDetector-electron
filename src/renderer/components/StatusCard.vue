@@ -15,7 +15,7 @@
         :color="colors"
       ></el-progress>
 
-      <el-button type="primary" round @click="test">主要按钮</el-button>
+      <!-- <el-button type="primary" round @click="test">主要按钮</el-button> -->
     </div>
   </el-card>
 </template>

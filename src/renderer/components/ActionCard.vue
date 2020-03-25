@@ -1,11 +1,13 @@
 <template>
-  <el-card
-    class="box-card"
-    shadow="hover"
-    body-style="flex:1; overflow: hidden;"
-  >
+  <el-card class="box-card" shadow="hover" body-style="padding:0">
     <div slot="header" class="clearfix">
       <span>操作</span>
+    </div>
+    <div style="" class="btns">
+      <el-button type="primary" round @click="loading">清零</el-button>
+      <el-button type="primary" round @click="loading">开始</el-button>
+      <el-button type="primary" round @click="loading">停止</el-button>
+      <el-button type="primary" round @click="loading">强行停止</el-button>
     </div>
   </el-card>
 </template>
@@ -27,7 +29,7 @@ export default {
   // components: { SystemInformation },
   methods: {
     ...mapActions(['setLoading']),
-    test() {
+    loading() {
       this.setLoading(true)
     }
   },
@@ -44,21 +46,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: '';
+}
+.clearfix:after {
+  clear: both;
+}
 .box-card {
   // height: 100%;
   display: flex;
   flex-direction: column;
 }
-.ops {
+.btns {
+  // padding-bottom: 20px;
+  margin: 20px;
   display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  height: 100%;
-  & > .el-form-item {
-    margin: 0;
-  }
-}
-.formText {
-  width: 120px;
+  align-items: center;
+  justify-content: space-evenly;
 }
 </style>

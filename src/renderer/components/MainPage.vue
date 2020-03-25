@@ -6,7 +6,7 @@
       <StatusCard class="statusCard"></StatusCard>
       <div class="operateCard">
         <ConfigCard class="config"></ConfigCard>
-        <ActionCard></ActionCard>
+        <ActionCard class="action"></ActionCard>
       </div>
     </main>
   </div>
@@ -46,7 +46,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 #wrapper {
   background: radial-gradient(
     ellipse at top left,
@@ -130,8 +130,14 @@ main {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-}
-.config {
-  flex-grow: 1;
+  margin-left: 30px;
+
+  .config {
+    flex-grow: 1;
+  }
+  .action {
+    margin-top: 20px;
+    height: 180px;
+  }
 }
 </style>
