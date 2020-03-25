@@ -4,7 +4,6 @@ import { app, BrowserWindow, dialog } from 'electron'
 // import myTest from '../ffi/test'
 // import { dllPath } from '../ffi/utils'
 // import { myUser32, showText } from '../ffi/user32.js'
-const ffi = require('ffi-napi')
 
 // import myTest from '../ffi/test'
 
