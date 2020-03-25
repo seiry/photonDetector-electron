@@ -1,0 +1,170 @@
+<template>
+  <el-card class="box-card" shadow="hover">
+    <div slot="header" class="clearfix">
+      <span>状态</span>
+    </div>
+    <div class="textStatus">
+      <span> 方向: {{ status.direction | direction }} </span>
+      <span> 状态: {{ status.moveStatus | formatStatus }} </span>
+      <span> 转速: {{ status.speed | fix2 }} °/s </span>
+      <span> 角度: {{ status.degree | fix2 }} °</span>
+    </div>
+    <el-progress
+      type="dashboard"
+      :percentage="percentage"
+      :color="colors"
+    ></el-progress>
+
+    <el-button type="primary" round @click="test">主要按钮</el-button>
+  </el-card>
+</template>
+
+<script>
+/* eslint-disable no-unused-vars */
+import { mapActions, mapState } from 'vuex'
+// import SystemInformation from './LandingPage/SystemInformation'
+import dmc from '../../ffi/dmc1380.js'
+import myTest from '../../ffi/test.js'
+import can from '../../ffi/can'
+export default {
+  data() {
+    return {
+      ret: '',
+      ret2: '',
+      process: 0,
+      colors: [
+        { color: '#f56c6c', percentage: 20 },
+        { color: '#e6a23c', percentage: 40 },
+        { color: '#5cb87a', percentage: 60 },
+        { color: '#1989fa', percentage: 80 },
+        { color: '#6f7ad3', percentage: 100 }
+      ]
+    }
+  },
+  name: 'status-card',
+  // components: { SystemInformation },
+  methods: {
+    ...mapActions(['setLoading']),
+    test() {
+      this.setLoading(true)
+    }
+  },
+  computed: {
+    percentage() {
+      return parseFloat((this.process % 100).toFixed(2))
+    },
+    ...mapState({ status: (state) => state.Status })
+  },
+  filters: {
+    direction(e) {
+      if (e) {
+        return '顺时针'
+      } else {
+        return '逆时针'
+      }
+    },
+    formatStatus(e) {
+      if (e) {
+        return '运行中'
+      } else {
+        return '停止'
+      }
+    },
+    fix2(e) {
+      return e.toFixed(2)
+    }
+  },
+  created() {
+    setInterval(() => {
+      this.process += Math.random() * 5
+    }, 1e3)
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Source Sans Pro', sans-serif;
+}
+
+#wrapper {
+  width: 100vw;
+}
+
+#logo {
+  height: auto;
+  margin-bottom: 20px;
+  width: 420px;
+}
+
+main {
+  display: flex;
+  justify-content: space-between;
+}
+
+main > div {
+  flex-basis: 50%;
+}
+
+.left-side {
+  display: flex;
+  flex-direction: column;
+}
+
+.welcome {
+  color: #555;
+  font-size: 23px;
+  margin-bottom: 10px;
+}
+
+.title {
+  color: #2c3e50;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.title.alt {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.doc p {
+  color: black;
+  margin-bottom: 10px;
+}
+
+.doc button {
+  font-size: 0.8em;
+  cursor: pointer;
+  outline: none;
+  padding: 0.75em 2em;
+  border-radius: 2em;
+  display: inline-block;
+  color: #fff;
+  background-color: #4fc08d;
+  transition: all 0.15s ease;
+  box-sizing: border-box;
+  border: 1px solid #4fc08d;
+}
+
+.doc button.alt {
+  color: #42b983;
+  background-color: transparent;
+}
+.textStatus {
+  display: flex;
+  flex-direction: column;
+  & > * {
+    flex-basis: 30px;
+  }
+}
+</style>

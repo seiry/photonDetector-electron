@@ -1,6 +1,7 @@
 <template>
   <div id="wrapper">
-    <img id="logo" src="~@/assets/logo.png" alt="electron-vue" />
+    <!-- <img id="logo" src="~@/assets/logo.png" alt="electron-vue" /> -->
+    <StatusCard></StatusCard>
     <main>
       <div class="left-side">
         <span class="title">
@@ -50,6 +51,7 @@
 /* eslint-disable no-unused-vars */
 
 import SystemInformation from './LandingPage/SystemInformation'
+import StatusCard from './StatusCard'
 import dmc from '../../ffi/dmc1380.js'
 import myTest from '../../ffi/test.js'
 import can from '../../ffi/can'
@@ -61,7 +63,7 @@ export default {
     }
   },
   name: 'landing-page',
-  components: { SystemInformation },
+  components: { SystemInformation, StatusCard },
   methods: {
     open(link) {
       this.$electron.shell.openExternal(link)

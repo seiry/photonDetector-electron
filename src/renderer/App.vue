@@ -9,5 +9,6 @@ export default { name: 'pet-test' }
 </script>
 
 <style>
+@import url('./main.scss');
 /* CSS */
 </style>
