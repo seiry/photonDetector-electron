@@ -10,13 +10,9 @@ class Can {
   mock = false
   constructor(mock = true) {
     this.mock = mock
-    const re = api.VCI_OpenDevice(4, 0, 0)
-    if (this.mock) {
-      this.setError(false)
-      return
-    }
+    let re = api.VCI_OpenDevice(4, 0, 0)
 
-    if (re === 1) {
+    if (re === 1 || this.mock) {
     } else {
       if (re === -1) {
         this.setError(re, 'usb设备不存在')
@@ -35,18 +31,31 @@ class Can {
      * Filter 滤波方式，允许设置为0-3，详细请参照2.2.3节的滤波模式对照表。
      * Timing0 波特率定时器 0（BTR0）。设置值见下表。
      * Timing1 波特率定时器 1（BTR1）。设置值见下表。
+     * Timing 实际上是通过时钟倍率来调整波特率
      */
     const config = {
-      AccCode: 'ulong',
-      AccMask: 'ulong',
-      Reserved: 'ulong',
-      Filter: 'uchar',
-      Timing0: 'uchar',
-      Timing1: 'uchar',
-      Mode: 'uchar'
+      // TODO: 这个掩码设置方式 应该是我全都要吧
+      AccCode: 0x00000000,
+      AccMask: 0xffffffff,
+      Reserved: 0,
+      Filter: 2,
+      Timing0: 0x00,
+      Timing1: 0x1c,
+      Mode: 0
     }
     // TODO: canindex?
-    api.VCI_InitCAN(4, 0, 0, config)
+    re = api.VCI_InitCAN(4, 0, 0, config)
+
+    if (re === 1 || this.mock) {
+    } else {
+      if (re === -1) {
+        this.setError(re, 'usb设备不存在')
+      } else if (re === 0) {
+        this.setError(re, '初始化操作失败')
+      } else {
+        this.setError(re, '初始化未知错误')
+      }
+    }
   }
 
   setError(errorCode, msg) {
