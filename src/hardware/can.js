@@ -72,6 +72,54 @@ class Can {
         this.setError(re, '缓冲区未知错误')
       }
     }
+
+    re = api.VCI_StartCAN(this.devType, this.devIndex, this.canIndex)
+
+    if (re === 1 || this.mock) {
+    } else {
+      if (re === -1) {
+        this.setError(re, 'usb设备不存在')
+      } else if (re === 0) {
+        this.setError(re, '连接编码器失败')
+      } else {
+        this.setError(re, '连接编码器出现未知错误')
+      }
+    }
+  }
+  /**
+   * 读取函数要考虑是不是要异步 这样可以超时
+   * 而且可以考虑用回报模式？
+   */
+  ReadNum() {
+    const data = {
+      id: 0,
+      TimeStamp: 0, // 这个东西 是不是发出是没有的
+      TimeFlag: 0x1,
+      SendType: 1,
+      RemoteFlag: 0,
+      ExternFlag: 0,
+      DataLen: 4,
+      Data: [0x4, 0x2, 0x1, 0x0]
+      // Reserved: [0, 0, 0]
+    }
+    let re = api.VCI_Transmit(this.devType, this.devIndex, this.canIndex, [
+      data
+    ])
+
+    if (re >= 1 || this.mock) {
+      if (re === 1) {
+      } else {
+        // emmmm 会不会发多了？
+      }
+    } else {
+      if (re === -1) {
+        this.setError(re, 'usb设备不存在')
+      } else if (re === 0) {
+        this.setError(re, '连接编码器失败')
+      } else {
+        this.setError(re, '连接编码器出现未知错误')
+      }
+    }
   }
 
   setError(errorCode, msg) {
