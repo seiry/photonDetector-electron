@@ -5,7 +5,7 @@
     </div>
     <div style="" class="btns">
       <el-button type="primary" round @click="loading">清零</el-button>
-      <el-button type="primary" round @click="loading">开始</el-button>
+      <el-button type="primary" round @click="init">开始</el-button>
       <el-button type="primary" round @click="loading">停止</el-button>
       <el-button type="primary" round @click="loading">强行停止</el-button>
     </div>
@@ -16,9 +16,7 @@
 /* eslint-disable no-unused-vars */
 import { mapActions, mapState } from 'vuex'
 // import SystemInformation from './LandingPage/SystemInformation'
-import dmc from '../../ffi/dmc1380.js'
-import myTest from '../../ffi/test.js'
-import can from '../../ffi/can'
+import Can from '../../hardware/can'
 export default {
   data() {
     return {
@@ -29,6 +27,14 @@ export default {
   // components: { SystemInformation },
   methods: {
     ...mapActions(['setLoading']),
+    init() {
+      this.can = new Can()
+      if (this.can.error) {
+        this.$message.error(this.can.humenErrorMsg)
+        return
+      }
+      this.$message.success('初始化成功' + this.can.humenErrorMsg)
+    },
     loading() {
       this.setLoading(true)
     }

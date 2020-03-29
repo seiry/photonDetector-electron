@@ -8,10 +8,8 @@ const ArrayType = require('ref-array-napi')
 // const dword = ref.types.ulong
 
 /**
- * AccCode 验收码。SJA1000的帧过滤验收码。对经过屏蔽码过滤为“有关位”进行匹配，全部匹
-配成功后，此帧可以被接收。否则不接收。详见VCI_InitCAN。
- * AccMask 屏蔽码。SJA1000的帧过滤屏蔽码。对接收的CAN帧ID进行过滤，对应位为0的是“有
-关位”，对应位为1的是“无关位”。屏蔽码推荐设置为0xFFFFFFFF，即全部接收。
+ * AccCode 验收码。SJA1000的帧过滤验收码。对经过屏蔽码过滤为“有关位”进行匹配，全部匹配成功后，此帧可以被接收。否则不接收。详见VCI_InitCAN。
+ * AccMask 屏蔽码。SJA1000的帧过滤屏蔽码。对接收的CAN帧ID进行过滤，对应位为0的是“有关位”，对应位为1的是“无关位”。屏蔽码推荐设置为0xFFFFFFFF，即全部接收。
  * Reserved 保留。
  * Filter 滤波方式，允许设置为0-3，详细请参照2.2.3节的滤波模式对照表。
  * Timing0 波特率定时器 0（BTR0）。设置值见下表。
@@ -58,7 +56,8 @@ const VCI_CAN_OBJArrayType = ArrayType(VCI_CAN_OBJ)
 // )
 // console.log(new PVCI_INIT_CONFIG({ Mode: '123' }))
 const can = new ffi.Library(dllPath('ControlCAN.dll'), {
-  VCI_OpenDevice: ['ulong', ['ulong', 'ulong', 'ulong']],
+  // 文档里的dword是有问题的，明显返回值是有符号的...
+  VCI_OpenDevice: ['int', ['ulong', 'ulong', 'ulong']],
   VCI_CloseDevice: ['ulong', ['ulong', 'ulong']],
   VCI_InitCAN: [
     'ulong',
@@ -86,8 +85,9 @@ const can = new ffi.Library(dllPath('ControlCAN.dll'), {
  * @param {*} Reserved 保留参数，通常为 0。
  * 返回值=1，表示操作成功；=0表示操作失败；=-1表示USB-CAN设备不存在或USB掉线
  */
-const VCI_OpenDevice = (DevType, DevIndex, Reserved = 0) => {
-  return can.VCI_OpenDevice(DevType, DevIndex, Reserved)
+const VCI_OpenDevice = (DevType = 4, DevIndex, Reserved = 0) => {
+  const re = can.VCI_OpenDevice(DevType, DevIndex, Reserved)
+  return re
 }
 
 /**
