@@ -7,10 +7,13 @@ class Can {
     originalCode: 0,
     msg: 'none'
   }
+  devType = 4
+  devIndex = 0
+  canIndex = 0
   mock = false
   constructor(mock = true) {
     this.mock = mock
-    let re = api.VCI_OpenDevice(4, 0, 0)
+    let re = api.VCI_OpenDevice(this.devType, this.devIndex)
 
     if (re === 1 || this.mock) {
     } else {
@@ -44,7 +47,7 @@ class Can {
       Mode: 0
     }
     // TODO: canindex?
-    re = api.VCI_InitCAN(4, 0, 0, config)
+    re = api.VCI_InitCAN(this.devType, this.devIndex, this.canIndex, config)
 
     if (re === 1 || this.mock) {
     } else {
@@ -54,6 +57,19 @@ class Can {
         this.setError(re, '初始化操作失败')
       } else {
         this.setError(re, '初始化未知错误')
+      }
+    }
+
+    re = api.VCI_ClearBuffer(this.devType, this.devIndex, this.canIndex)
+
+    if (re === 1 || this.mock) {
+    } else {
+      if (re === -1) {
+        this.setError(re, 'usb设备不存在')
+      } else if (re === 0) {
+        this.setError(re, '缓冲区清理失败')
+      } else {
+        this.setError(re, '缓冲区未知错误')
       }
     }
   }
