@@ -25,7 +25,7 @@ export default {
       config: { mode: 0, num: 1, singleTime: 0.5, width: 30, beta: 8 }
     }
   },
-  name: 'config-card',
+  name: 'action-card',
   // components: { SystemInformation },
   methods: {
     ...mapActions(['setLoading']),

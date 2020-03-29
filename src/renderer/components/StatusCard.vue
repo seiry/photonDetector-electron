@@ -76,9 +76,9 @@ export default {
     }
   },
   created() {
-    setInterval(() => {
-      this.process += Math.random() * 5
-    }, 1e3)
+    // setInterval(() => {
+    //   this.process += Math.random() * 5
+    // }, 1e3)
   }
 }
 </script>
