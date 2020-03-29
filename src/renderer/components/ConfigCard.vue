@@ -68,7 +68,8 @@
         NAll: {{ NAll }}<br />
         σ: {{ sigma }}<br />
         Δθ: {{ deltaTheta }}<br />
-        L1: {{ L1 }}
+        L1: {{ L1 }} <br />
+        φhigh: {{ phiHigh }}
       </div>
     </el-form>
   </el-card>
@@ -86,10 +87,10 @@ export default {
     return {
       config: {
         mode: 0,
-        num: 3,
+        num: 6,
         singleTime: 0.5,
         width: 20,
-        beta: 8
+        beta: 4
       }
     }
   },
@@ -137,6 +138,14 @@ export default {
       const addNum = this.NAll / this.config.num - 1
       const sigleDegree = 180 / this.NAll
       return Math.round((addNum * sigleDegree) / this.deltaTheta + 1)
+    },
+    phiHigh() {
+      /**
+       * φhigh 最大旋转角
+       */
+      const addNum = this.NAll / this.config.num - 1
+      const sigleDegree = 180 / this.NAll
+      return addNum * sigleDegree
     }
   },
   filters: {
