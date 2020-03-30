@@ -3,7 +3,8 @@ const state = {
   moveStatus: true,
   speed: 1.0,
   degree: 1.0,
-  canNum: 0
+  canNum: 0,
+  stopFlag: false
 }
 
 const mutations = {
@@ -15,6 +16,9 @@ const mutations = {
   },
   SET_CAN_NUM(state, num) {
     state.canNum = num
+  },
+  STOP(state) {
+    state.stopFlag = true
   }
 }
 
@@ -32,6 +36,13 @@ const actions = {
   },
   setCanNum({ commit }, data) {
     commit('SET_CAN_NUM', data)
+  },
+  setStopFlag({ state }, data) {
+    if (data) {
+      state.stopFlag = true
+    } else {
+      state.stopFlag = false
+    }
   }
 }
 

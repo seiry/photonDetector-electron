@@ -11,11 +11,15 @@ class Can {
   devIndex = 0
   canIndex = 0
   mock = false
+  mockNum = 0
   constructor(mock = true) {
     this.mock = mock
     let re = api.VCI_OpenDevice(this.devType, this.devIndex)
 
-    if (re === 1 || this.mock) {
+    if (this.mock) {
+      return
+    }
+    if (re === 1) {
     } else {
       if (re === -1) {
         this.setError(re, 'usb设备不存在')
@@ -93,7 +97,11 @@ class Can {
    * 而且可以考虑用回报模式？
    * @returns -1为错误 0为超时（无数据，考虑增大retry） 正数为十进制数据
    */
-  ReadNum() {
+  readNum() {
+    if (this.mock) {
+      this.mockNum += Math.round(Math.random() * 300 - 10)
+      return this.mockNum
+    }
     const data = {
       id: 0,
       TimeStamp: 0, // 这个东西 是不是发出是没有的

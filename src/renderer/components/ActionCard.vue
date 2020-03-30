@@ -6,7 +6,7 @@
     <div style="" class="btns">
       <el-button type="primary" round @click="loading">清零</el-button>
       <el-button type="primary" round @click="init">开始</el-button>
-      <el-button type="primary" round @click="loading">停止</el-button>
+      <el-button type="primary" round @click="stop">停止</el-button>
       <el-button type="primary" round @click="loading">强行停止</el-button>
     </div>
   </el-card>
@@ -19,28 +19,48 @@ import { mapActions, mapState } from 'vuex'
 import Can from '../../hardware/can'
 export default {
   data() {
+    this.can = null
+    this.intervalFlag = null
     return {
-      config: { mode: 0, num: 1, singleTime: 0.5, width: 30, beta: 8 }
+      config: {
+        mode: 0,
+        num: 1,
+        singleTime: 0.5,
+        width: 30,
+        beta: 8
+      }
     }
   },
   name: 'action-card',
   // components: { SystemInformation },
   methods: {
-    ...mapActions(['setLoading']),
+    ...mapActions(['setLoading', 'setCanNum', 'setStopFlag']),
     init() {
-      this.can = new Can()
+      if (!this.can) {
+        this.can = new Can()
+      }
       if (this.can.error) {
         this.$message.error(this.can.humenErrorMsg)
         return
       }
-      this.$message.success('初始化成功' + this.can.humenErrorMsg)
+      // this.$message.success('初始化成功' + this.can.humenErrorMsg)
+      this.setStopFlag(false)
+      this.intervalFlag = setInterval(() => {
+        this.setCanNum(this.can.readNum())
+        if (this.status.stopFlag) {
+          clearInterval(this.intervalFlag)
+        }
+      }, 1e2)
+    },
+    stop() {
+      this.setStopFlag(true)
     },
     loading() {
       this.setLoading(true)
     }
   },
   computed: {
-    // ...mapState({ status: (state) => state.Status })
+    ...mapState({ status: (state) => state.Status })
   },
   filters: {
     fix2(e) {
