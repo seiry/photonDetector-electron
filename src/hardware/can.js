@@ -58,6 +58,7 @@ class Can {
       } else {
         this.setError(re, '初始化未知错误')
       }
+      return
     }
 
     re = api.VCI_ClearBuffer(this.devType, this.devIndex, this.canIndex)
@@ -71,6 +72,7 @@ class Can {
       } else {
         this.setError(re, '缓冲区未知错误')
       }
+      return
     }
 
     re = api.VCI_StartCAN(this.devType, this.devIndex, this.canIndex)
@@ -89,6 +91,7 @@ class Can {
   /**
    * 读取函数要考虑是不是要异步 这样可以超时
    * 而且可以考虑用回报模式？
+   * @returns -1为错误 0为超时（无数据，考虑增大retry） 正数为十进制数据
    */
   ReadNum() {
     const data = {
@@ -119,7 +122,70 @@ class Can {
       } else {
         this.setError(re, '连接编码器出现未知错误')
       }
+
+      return -1
     }
+
+    let retry = 0
+    re = 0
+
+    do {
+      re = api.VCI_Receive(this.devType, this.devIndex, this.canIndex, 5)
+      retry++
+    } while (re === 0 && retry < 10)
+
+    if (re === -1) {
+      this.setError(re, 'usb设备不存在')
+      return -1
+    }
+
+    if (!Array.isArray(re)) {
+      this.setError(re, '读取数据出现位置错误，返回值非数组')
+      return -1
+    }
+
+    if (re.length === 0) {
+      this.setError(0, '未获取到数据')
+      return 0
+    }
+
+    let num = -1
+    for (let d of re) {
+      d = d.Data
+      if (d.length === 0) {
+        this.setError(-2, '得到can数据包，但是返回data为空')
+        continue
+      }
+      // expect d `[0x05][0x02][0x01][0x34][0x12]`
+      //           [ength][from][code][data2][data1]  => 0x[data1][data2]
+      //                           [dataLow][dataHigh]   aka  result = (data1 << 8) + data2
+      const length = d[0]
+      const id = d[1]
+      const command = d[2]
+      const recieve = d.slice(3, length) // expect recieve.length === 2
+      if (id !== 0x2) {
+        // id不匹配
+      }
+      if (command !== 0x1) {
+        this.setError(-3, '命令不匹配')
+        continue
+      }
+      num = (recieve[2] << 8) + recieve[0]
+      if (num === 0) {
+        // 空值继续往后读？
+      }
+      this.setError(false)
+      break
+    }
+
+    if (this.errMsg.error) {
+      if (this.errMsg.originalCode === -2) {
+        return 0
+      }
+      return -1
+    }
+
+    return num
   }
 
   setError(errorCode, msg) {

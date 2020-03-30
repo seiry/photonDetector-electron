@@ -72,7 +72,7 @@ const can = new ffi.Library(dllPath('ControlCAN.dll'), {
     ['ulong', 'ulong', 'ulong', VCI_CAN_OBJArrayType, 'ulong']
   ],
   VCI_Receive: [
-    'ulong',
+    'int',
     ['ulong', 'ulong', 'ulong', VCI_CAN_OBJArrayType, 'ulong', 'int']
   ]
 })
@@ -207,18 +207,31 @@ const VCI_Receive = (DevType, DevIndex, CANIndex, Len = 2500, WaitTime = 0) => {
   const nullObj = new VCI_CAN_OBJ()
   const recieveArr = Array(Len).fill(nullObj)
   let pReceive = new VCI_CAN_OBJArrayType(recieveArr, Len)
-  // debugger
+  debugger
   const re = can.VCI_Receive(
     DevType,
     DevIndex,
     CANIndex,
-    pReceive,
+    pReceive.ref(), // TODO: ref?
     Len,
     WaitTime
   )
-  // TODO: juege
-  return pReceive
+  if (re === 0 || re === -1) {
+    return 0
+  }
+
+  let arr = pReceive.toArray().slice(0, re)
+  arr = arr.map((e) => {
+    e = e.toObject()
+    e.Data = e.Data.toArray().slice(0, e.DataLen)
+    delete e.Reserved
+    return e
+  })
+
+  return arr
 }
+VCI_Receive()
+
 // debugger
 // let i = 1
 // while (i++ < 100) {
