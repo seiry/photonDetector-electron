@@ -207,7 +207,6 @@ const VCI_Receive = (DevType, DevIndex, CANIndex, Len = 2500, WaitTime = 0) => {
   const nullObj = new VCI_CAN_OBJ()
   const recieveArr = Array(Len).fill(nullObj)
   let pReceive = new VCI_CAN_OBJArrayType(recieveArr, Len)
-  debugger
   const re = can.VCI_Receive(
     DevType,
     DevIndex,
@@ -230,7 +229,6 @@ const VCI_Receive = (DevType, DevIndex, CANIndex, Len = 2500, WaitTime = 0) => {
 
   return arr
 }
-VCI_Receive()
 
 // debugger
 // let i = 1

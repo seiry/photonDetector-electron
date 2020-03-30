@@ -2,7 +2,8 @@ const state = {
   direction: true, // true:顺民顺时针
   moveStatus: true,
   speed: 1.0,
-  degree: 1.0
+  degree: 1.0,
+  canNum: 0
 }
 
 const mutations = {
@@ -11,6 +12,9 @@ const mutations = {
   },
   HIDE_LOADING(state) {
     state.loading = false
+  },
+  SET_CAN_NUM(state, num) {
+    state.canNum = num
   }
 }
 
@@ -25,6 +29,9 @@ const actions = {
     } else {
       commit('HIDE_LOADING')
     }
+  },
+  setCanNum({ commit }, data) {
+    commit('SET_CAN_NUM', data)
   }
 }
 

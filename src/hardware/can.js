@@ -157,7 +157,7 @@ class Can {
         continue
       }
       // expect d `[0x05][0x02][0x01][0x34][0x12]`
-      //           [ength][from][code][data2][data1]  => 0x[data1][data2]
+      //           [ength][from][code][data2][data1]  => 0x[data1][data2] 更多位数以此类推
       //                           [dataLow][dataHigh]   aka  result = (data1 << 8) + data2
       const length = d[0]
       const id = d[1]
@@ -170,7 +170,10 @@ class Can {
         this.setError(-3, '命令不匹配')
         continue
       }
-      num = (recieve[2] << 8) + recieve[0]
+      for (let i = 0; i < recieve.length; i++) {
+        num += recieve[i] << (i * 8)
+      }
+      // num = (recieve[1] << 8) + recieve[0]
       if (num === 0) {
         // 空值继续往后读？
       }

@@ -14,6 +14,8 @@
         :percentage="percentage"
         :color="colors"
       ></el-progress>
+      <span>光电编码器读数: {{ canNum }}</span>
+      <el-button type="primary" round @click="setCan">set can</el-button>
 
       <!-- <el-button type="primary" round @click="test">主要按钮</el-button> -->
     </div>
@@ -45,16 +47,22 @@ export default {
   name: 'status-card',
   // components: { SystemInformation },
   methods: {
-    ...mapActions(['setLoading']),
+    ...mapActions(['setLoading', 'setCanNum']),
     test() {
       this.setLoading(true)
+    },
+    setCan() {
+      this.setCanNum(9)
     }
   },
   computed: {
     percentage() {
       return parseFloat((this.process % 100).toFixed(2))
     },
-    ...mapState({ status: (state) => state.Status })
+    ...mapState({
+      status: (state) => state.Status,
+      canNum: (state) => state.Status.canNum
+    })
   },
   filters: {
     direction(e) {
