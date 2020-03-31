@@ -99,7 +99,7 @@ class Can {
    */
   readNum() {
     if (this.mock) {
-      this.mockNum += Math.round(Math.random() * 300 - 10)
+      this.mockNum += Math.round(Math.random() * 100 - 5)
       return this.mockNum
     }
     const data = {

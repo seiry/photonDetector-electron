@@ -8,34 +8,38 @@
       <el-button type="primary" round @click="init">开始</el-button>
       <el-button type="primary" round @click="stop">停止</el-button>
       <el-button type="primary" round @click="loading">强行停止</el-button>
+      <el-button type="primary" round @click="loading">配置</el-button>
     </div>
   </el-card>
 </template>
 
 <script>
 /* eslint-disable no-unused-vars */
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapState, mapGetters } from 'vuex'
 // import SystemInformation from './LandingPage/SystemInformation'
 import Can from '../../hardware/can'
 export default {
   data() {
     this.can = null
-    this.intervalFlag = null
     return {
       config: {
         mode: 0,
         num: 1,
         singleTime: 0.5,
         width: 30,
-        beta: 8
+        beta: 8,
+        intervalFlag: null
       }
     }
   },
   name: 'action-card',
   // components: { SystemInformation },
   methods: {
-    ...mapActions(['setLoading', 'setCanNum', 'setStopFlag']),
+    ...mapActions(['setLoading', 'addCanNum', 'setStopFlag']),
     init() {
+      if (this.intervalFlag) {
+        return
+      }
       if (!this.can) {
         this.can = new Can()
       }
@@ -46,9 +50,10 @@ export default {
       // this.$message.success('初始化成功' + this.can.humenErrorMsg)
       this.setStopFlag(false)
       this.intervalFlag = setInterval(() => {
-        this.setCanNum(this.can.readNum())
+        this.addCanNum(this.can.readNum())
         if (this.status.stopFlag) {
           clearInterval(this.intervalFlag)
+          this.intervalFlag = null
         }
       }, 1e2)
     },

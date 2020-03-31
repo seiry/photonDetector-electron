@@ -4,17 +4,18 @@
       <span>状态</span>
     </div>
     <div class="textStatus">
-      <span> 方向: {{ status.direction | direction }} </span>
-      <span> 状态: {{ status.moveStatus | formatStatus }} </span>
-      <span> 转速: {{ status.speed | fix2 }} °/s </span>
-      <span> 角度: {{ status.degree | fix2 }} °</span>
+      <span> 方向: {{ avgV | formatDirection }} </span>
+      <span> 状态: {{ (avgV > 0) | formatStatus }} </span>
+      <span> 平均转速: {{ (avgV * 1e3) | fix2 }} °/s </span>
+      <span> 瞬时转速: {{ (vNum * 1e3) | fix2 }} °/s </span>
+      <span> 角度: {{ angle | fix2 }} °</span>
 
       <el-progress
         type="dashboard"
         :percentage="percentage"
         :color="colors"
       ></el-progress>
-      <span>光电编码器读数: {{ canNum }}</span>
+      <span>光电编码器读数: {{ lastNum }} {{ deltaNum }}</span>
       <el-button type="primary" round @click="setCan">set can</el-button>
 
       <!-- <el-button type="primary" round @click="test">主要按钮</el-button> -->
@@ -24,13 +25,15 @@
 
 <script>
 /* eslint-disable no-unused-vars */
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapState, mapGetters } from 'vuex'
+import { throttle } from 'lodash'
 // import SystemInformation from './LandingPage/SystemInformation'
 import dmc from '../../ffi/dmc1380.js'
 import myTest from '../../ffi/test.js'
 import can from '../../ffi/can'
 export default {
   data() {
+    this.deltaVs = []
     return {
       ret: '',
       ret2: '',
@@ -62,10 +65,24 @@ export default {
     ...mapState({
       status: (state) => state.Status,
       canNum: (state) => state.Status.canNum
-    })
+    }),
+    ...mapGetters(['lastNum', 'vNum', 'deltaNum', 'avgV', 'angle'])
+  },
+  watch: {
+    vNum(cur, pre) {
+      this.deltaVs.unshift(cur - pre)
+      const judgeThreshold = 5
+      if (this.deltaVs.length > 5) {
+        if (this.deltaVs.filter((e) => e > 0).length > judgeThreshold / 2) {
+        }
+      }
+    }
   },
   filters: {
-    direction(e) {
+    formatDirection(e) {
+      if (e === 0) {
+        return ' - '
+      }
       if (e) {
         return '顺时针'
       } else {
@@ -79,8 +96,12 @@ export default {
         return '停止'
       }
     },
+
     fix2(e) {
       return e.toFixed(2)
+    },
+    fix4(e) {
+      return e.toFixed(4)
     }
   },
   created() {
