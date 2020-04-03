@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 'use strict'
-import { app, BrowserWindow, dialog } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain } from 'electron'
+
 // import myTest from '../ffi/test'
 // import { dllPath } from '../ffi/utils'
 // import { myUser32, showText } from '../ffi/user32.js'

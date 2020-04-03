@@ -1,6 +1,5 @@
 <template>
   <div id="wrapper">
-    <Loading v-show="loading"></Loading>
     <!-- <img id="logo" src="~@/assets/logo.png" alt="electron-vue" /> -->
     <main>
       <StatusCard class="statusCard"></StatusCard>
@@ -17,7 +16,6 @@
 
 import { mapState } from 'vuex'
 import SystemInformation from './LandingPage/SystemInformation'
-import Loading from './Loading'
 import StatusCard from './StatusCard'
 import ConfigCard from './ConfigCard'
 import ActionCard from './ActionCard'
@@ -32,7 +30,7 @@ export default {
     }
   },
   name: 'main-page',
-  components: { StatusCard, Loading, ConfigCard, ActionCard },
+  components: { StatusCard, ConfigCard, ActionCard },
   methods: {
     open(link) {
       this.$electron.shell.openExternal(link)

@@ -14,7 +14,12 @@ Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
 
 Vue.use(ElementUI)
-
+document.querySelector('html').ondragover = (e) => {
+  e.preventDefault()
+}
+document.querySelector('html').ondrop = (e) => {
+  e.preventDefault()
+}
 /* eslint-disable no-new */
 new Vue({
   components: { App },

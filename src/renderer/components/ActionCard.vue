@@ -47,7 +47,7 @@ export default {
     },
     async initDmc() {
       if (!this.dmc) {
-        this.dmc = new Dmc(false)
+        this.dmc = new Dmc(true)
       }
       this.dmc.close()
       if (this.dmc.error) {
