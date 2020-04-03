@@ -6,7 +6,7 @@
         <div slot="header" class="clearfix">
           <span>数据存放路径(拖放文件夹到此即可)</span>
         </div>
-        <div class="drag">
+        <div class="drag" @click="open">
           {{ configs.savePath || Config.savePath }}
         </div>
       </el-card>
@@ -79,6 +79,10 @@ export default {
       this.setLoading(200)
       await this.saveConfig(this.configs)
       this.$message.success('保存成功')
+    },
+    open() {
+      this.Config.savePath &&
+        this.$electron.remote.shell.showItemInFolder(this.Config.savePath)
     }
   }
 }
