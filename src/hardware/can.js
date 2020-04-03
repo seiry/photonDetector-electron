@@ -1,7 +1,8 @@
 /* eslint-disable no-unreachable */
 import api from '../ffi/can'
+import base from './base.class'
 
-class Can {
+class Can extends base {
   errMsg = {
     error: false,
     originalCode: 0,
@@ -12,7 +13,8 @@ class Can {
   canIndex = 0
   mock = false
   mockNum = 0
-  constructor(mock = true) {
+  constructor(mock = false) {
+    super()
     this.mock = mock
     let re = api.VCI_OpenDevice(this.devType, this.devIndex)
 
@@ -197,39 +199,6 @@ class Can {
     }
 
     return num
-  }
-
-  setError(errorCode, msg) {
-    if (errorCode === false) {
-      this.errMsg = {
-        error: false,
-        originalCode: 0,
-        msg: 'none'
-      }
-      return
-    }
-    this.errMsg = {
-      error: true,
-      originalCode: errorCode,
-      msg: msg
-    }
-  }
-
-  get error() {
-    if (this.errMsg.error === true) {
-      return true
-    } else {
-      return false
-    }
-    if (this.mock) {
-      return false
-    }
-  }
-  get humenErrorMsg() {
-    if (this.errMsg.error === false) {
-      return ' 嘻嘻，一切正常'
-    }
-    return ` ${this.errMsg.msg}, code: ${this.errMsg.originalCode}`
   }
 }
 export default Can

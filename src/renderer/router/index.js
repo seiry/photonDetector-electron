@@ -7,8 +7,18 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'landing-page',
+      name: 'main-page',
       component: require('@/components/MainPage').default
+    },
+    {
+      path: '/config',
+      name: 'config-page',
+      component: require('@/components/ConfigPage.vue').default
+    },
+    {
+      path: '/data',
+      name: 'data-page',
+      component: require('@/components/DataPage.vue').default
     },
     {
       path: '*',

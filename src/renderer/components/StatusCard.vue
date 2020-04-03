@@ -15,7 +15,7 @@
         :percentage="percentage"
         :color="colors"
       ></el-progress>
-      <span>光电编码器读数: {{ lastNum }} {{ deltaNum }}</span>
+      <span>光电编码器读数: {{ lastNum }} </span>
       <el-button type="primary" round @click="setCan">set can</el-button>
 
       <!-- <el-button type="primary" round @click="test">主要按钮</el-button> -->

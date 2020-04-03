@@ -18,9 +18,11 @@
 import { mapActions, mapState, mapGetters } from 'vuex'
 // import SystemInformation from './LandingPage/SystemInformation'
 import Can from '../../hardware/can'
+import Dmc from '../../hardware/dmc'
 export default {
   data() {
     this.can = null
+    this.dmc = null
     return {
       config: {
         mode: 0,
@@ -37,11 +39,28 @@ export default {
   methods: {
     ...mapActions(['setLoading', 'addCanNum', 'setStopFlag']),
     init() {
+      this.initDmc()
+        .then((e) => {
+          this.initNumWatcher()
+        })
+        .catch((e) => console.error(e))
+    },
+    async initDmc() {
+      if (!this.dmc) {
+        this.dmc = new Dmc(false)
+      }
+      this.dmc.close()
+      if (this.dmc.error) {
+        this.$message.error(this.dmc.humenErrorMsg)
+        throw new Error('dmc init error')
+      }
+    },
+    initNumWatcher() {
       if (this.intervalFlag) {
         return
       }
       if (!this.can) {
-        this.can = new Can()
+        this.can = new Can(true)
       }
       if (this.can.error) {
         this.$message.error(this.can.humenErrorMsg)
