@@ -81,9 +81,13 @@ const actions = {
   setLoading({ commit }, data) {
     // TODO: add lock may
     if (data) {
+      let _timeout = 1e3
+      if (typeof data === 'number') {
+        _timeout = data
+      }
       setTimeout(() => {
         commit('HIDE_LOADING')
-      }, 1e3)
+      }, _timeout)
       commit('SHOW_LOADING')
     } else {
       commit('HIDE_LOADING')

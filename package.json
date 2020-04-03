@@ -65,6 +65,7 @@
         "axios": "^0.18.0",
         "element-ui": "^2.13.0",
         "ffi-napi": "^2.4.7",
+        "is-directory": "^0.3.1",
         "localforage": "^1.7.3",
         "lodash": "^4.17.15",
         "moment": "^2.24.0",
@@ -76,7 +77,8 @@
         "vue-electron": "^1.0.6",
         "vue-router": "^3.0.1",
         "vuex": "^3.0.1",
-        "vuex-electron": "^1.0.0"
+        "vuex-electron": "^1.0.0",
+        "vuex-persistedstate": "^3.0.1"
     },
     "devDependencies": {
         "ajv": "^6.5.0",
