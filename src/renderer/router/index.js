@@ -21,6 +21,11 @@ export default new Router({
       component: require('@/components/DataPage.vue').default
     },
     {
+      path: '/debug',
+      name: 'debug-page',
+      component: require('@/components/DebugPage.vue').default
+    },
+    {
       path: '*',
       redirect: '/'
     }

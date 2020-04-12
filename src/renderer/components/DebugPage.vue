@@ -106,7 +106,6 @@ main {
   flex-direction: column;
   justify-content: space-between;
   flex: 1;
-  user-select: none;
 }
 .drag {
   background-color: rgba(158, 255, 223, 0.472);
