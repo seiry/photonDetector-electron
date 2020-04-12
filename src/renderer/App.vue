@@ -34,5 +34,6 @@ export default {
 }
 .routerMain {
   flex: 1;
+  overflow: hidden;
 }
 </style>

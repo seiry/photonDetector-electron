@@ -4,16 +4,14 @@
     <main>
       <el-card class="drag-save" shadow="hover" ref="dragSave">
         <div slot="header" class="clearfix">
-          <span>数据存放路径(拖放文件夹到此即可)</span>
+          <span>持久化配置</span>
         </div>
-        <div class="drag" @click="open">
-          {{ configs.savePath || Config.savePath }}
-        </div>
+        <prism language="json" :plugins="[]" :code="vuexConfig"></prism>
       </el-card>
 
       <div class="operateCard"></div>
       <div class="btns">
-        <el-button type="primary" round @click="save">保存</el-button>
+        <el-button type="danger" round @click="save">清空配置</el-button>
       </div>
     </main>
   </div>
@@ -21,11 +19,18 @@
 <script>
 /* eslint-disable no-unused-vars */
 import { mapActions, mapState, mapGetters } from 'vuex'
-import isDirectory from 'is-directory'
+import Prism from 'vue-prismjs'
+import 'prismjs/themes/prism.css'
+const jsonFormater = require('json-format')
 export default {
   name: 'debug-page',
+  components: {
+    Prism
+  },
   data() {
     return {
+      code: 'npm install vue-prismjs --save',
+
       configs: {
         savePath: null,
         fromPath: null
@@ -33,7 +38,10 @@ export default {
     }
   },
   computed: {
-    ...mapState(['Config'])
+    ...mapState(['Config']),
+    vuexConfig() {
+      return jsonFormater(JSON.parse(localStorage['pet-vuex']))
+    }
   },
   mounted() {},
   methods: {
