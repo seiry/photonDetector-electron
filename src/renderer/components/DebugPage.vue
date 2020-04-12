@@ -11,7 +11,7 @@
 
       <div class="operateCard"></div>
       <div class="btns">
-        <el-button type="danger" round @click="save">清空配置</el-button>
+        <el-button type="danger" round @click="clear">清空配置</el-button>
       </div>
     </main>
   </div>
@@ -46,10 +46,22 @@ export default {
   mounted() {},
   methods: {
     ...mapActions(['saveConfig', 'setLoading']),
-    async save() {
-      this.setLoading(200)
-      await this.saveConfig(this.configs)
-      this.$message.success('保存成功')
+    async clear() {
+      this.$confirm('此操作将永久删除现有配置, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          localStorage['pet-vuex'] = '""'
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+        })
+        .catch(() => {})
+      // this.setLoading(200)
+      // await this.saveConfig(this.configs)
     },
     open() {
       this.Config.savePath &&

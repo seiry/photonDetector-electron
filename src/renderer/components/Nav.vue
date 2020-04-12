@@ -1,7 +1,7 @@
 <template>
   <nav>
     <el-row class="nav">
-      <el-menu default-active="2" class=" " :router="true">
+      <el-menu default-active="1" class=" " :router="true">
         <el-menu-item index="1" route="/">
           <i class="el-icon-menu"></i>
           <span slot="title">控制面板</span>
