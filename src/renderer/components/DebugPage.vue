@@ -11,15 +11,6 @@
         </div>
       </el-card>
 
-      <el-card class="drag-from" shadow="hover" ref="dragSave">
-        <div slot="header" class="clearfix">
-          <span>数据来源(拖放文件夹到此即可)</span>
-        </div>
-        <div class="drag">
-          {{ configs.fromPath || Config.fromPath }}
-        </div>
-      </el-card>
-
       <div class="operateCard"></div>
       <div class="btns">
         <el-button type="primary" round @click="save">保存</el-button>
@@ -32,7 +23,7 @@
 import { mapActions, mapState, mapGetters } from 'vuex'
 import isDirectory from 'is-directory'
 export default {
-  name: 'config-page',
+  name: 'debug-page',
   data() {
     return {
       configs: {
@@ -44,35 +35,7 @@ export default {
   computed: {
     ...mapState(['Config'])
   },
-  mounted() {
-    document.querySelector('.drag-save').ondrop = (e) => {
-      if (!e.dataTransfer || e.dataTransfer.files.length === 0) {
-        return
-      }
-      let p = e.dataTransfer.files[0].path || ''
-      if (!isDirectory.sync(p)) {
-        p = p.replace(/\\[^\\]+$/g, '')
-      }
-      this.configs.savePath = p
-      e.preventDefault()
-    }
-
-    document.querySelector('.drag-from').ondrop = (e) => {
-      if (!e.dataTransfer || e.dataTransfer.files.length === 0) {
-        return
-      }
-      let p = e.dataTransfer.files[0].path || ''
-      if (isDirectory.sync(p)) {
-        this.$message.warning('需要一个文件，而不是文件夹')
-        return
-      }
-      this.configs.fromPath = p
-      e.preventDefault()
-    }
-    // document.querySelector('.el-card').ondragover = (e) => {
-    //   e.preventDefault()
-    // }
-  },
+  mounted() {},
   methods: {
     ...mapActions(['saveConfig', 'setLoading']),
     async save() {

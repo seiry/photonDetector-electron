@@ -14,7 +14,7 @@
           <i class="el-icon-setting"></i>
           <span slot="title">配置</span>
         </el-menu-item>
-        <el-menu-item index="4" route="/config">
+        <el-menu-item index="4" route="/debug">
           <i class="el-icon-magic-stick"></i>
           <span slot="title">原始数据</span>
         </el-menu-item>
