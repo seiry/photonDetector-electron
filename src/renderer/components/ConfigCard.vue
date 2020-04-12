@@ -123,7 +123,6 @@ export default {
       return Math.round((Math.PI * this.config.width) / (b * 2))
     },
     deltaTheta() {
-      console.log(this.beta)
       return this.sigma * this.config.beta
     },
     L1() {
