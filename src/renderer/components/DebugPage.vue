@@ -9,11 +9,22 @@
         <prism language="json" :plugins="[]" :code="vuexConfig"></prism>
       </el-card>
 
-      <div class="operateCard"></div>
-      <div class="btns">
-        <el-button type="danger" round @click="clear">清空配置</el-button>
-      </div>
+      <!-- <el-card class="drag-save" shadow="hover" ref="dragSave">
+        <div slot="header" class="clearfix">
+          <span>数据文件</span>
+        </div>
+        <prism language="json" :plugins="[]" :code="vuexConfig"></prism>
+      </el-card> -->
+      <!-- <el-card class="drag-save" shadow="hover" ref="dragSave">
+        <div slot="header" class="clearfix">
+          <span>数据文件</span>
+        </div>
+        <prism language="json" :plugins="[]" :code="vuexConfig"></prism>
+      </el-card> -->
     </main>
+    <div class="btns">
+      <el-button type="danger" round @click="clear">清空配置</el-button>
+    </div>
   </div>
 </template>
 <script>
@@ -89,6 +100,7 @@ main {
   flex-direction: column;
   justify-content: space-between;
   flex: 1;
+  overflow-y: auto;
 }
 .drag {
   background-color: rgba(158, 255, 223, 0.472);
