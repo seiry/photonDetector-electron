@@ -41,6 +41,7 @@
   </div>
 </template>
 <script>
+// TODO: 尺寸 overflow
 import isDirectory from 'is-directory'
 const fs = require('fs')
 const path = require('path')
