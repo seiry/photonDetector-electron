@@ -1,10 +1,13 @@
 <template>
   <div class="wrap">
     <div class="btns">
-      <el-button type="primary" icon="el-icon-refresh" circle></el-button>
-
-      <div>
-        <el-input placeholder="搜索..." v-model="search" class="" clearable>
+      <el-button type="primary" icon="el-icon-refresh" round>刷新</el-button>
+      <el-button type="primary" round @click="save" icon="el-icon-upload2"
+        >打包导出</el-button
+      >
+      <div class="space"></div>
+      <div class="search">
+        <el-input placeholder="搜索..." v-model="search" clearable>
           <el-button slot="append" icon="el-icon-search"></el-button>
         </el-input>
       </div>
@@ -81,7 +84,8 @@ export default {
         })
       }
       this.tableData = re
-    }
+    },
+    save() {}
   },
   computed: {
     filterFiles() {
@@ -107,7 +111,12 @@ export default {
 }
 .btns {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   align-items: center;
+}
+.search {
+}
+.space {
+  flex: 1;
 }
 </style>
