@@ -2,9 +2,20 @@
   <div class="wrap">
     <div class="btns">
       <el-button type="primary" icon="el-icon-refresh" circle></el-button>
+
+      <div>
+        <el-input
+          placeholder="搜索..."
+          v-model="search"
+          class=""
+          :clearable="true"
+        >
+          <el-button slot="append" icon="el-icon-search"></el-button>
+        </el-input>
+      </div>
     </div>
     <el-table
-      :data="tableData"
+      :data="filterFiles"
       stripe
       style="width: 100%"
       :default-sort="{ prop: 'date', order: 'descending' }"
@@ -51,7 +62,8 @@ export default {
   name: 'data-page',
   data() {
     return {
-      tableData: []
+      tableData: [],
+      search: ''
     }
   },
   mounted() {
@@ -75,6 +87,16 @@ export default {
       }
       this.tableData = re
     }
+  },
+  computed: {
+    filterFiles() {
+      if (!this.search) {
+        return this.tableData
+      }
+      return this.tableData.filter((e) =>
+        e.name.toLowerCase().includes(this.search.toLowerCase())
+      )
+    }
   }
 }
 </script>
@@ -87,5 +109,10 @@ export default {
 .table {
   flex: 1;
   overflow-y: scroll;
+}
+.btns {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
 }
 </style>
