@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 'use strict'
-import { app, BrowserWindow, dialog, ipcMain } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain, Menu } from 'electron'
 
 // import myTest from '../ffi/test'
 // import { dllPath } from '../ffi/utils'
@@ -28,6 +28,8 @@ function createWindow() {
     useContentSize: true,
     width: 1000
   })
+
+  Menu.setApplicationMenu(null)
 
   mainWindow.loadURL(winURL)
   // mainWindow.openDevTools() // devtools for build

@@ -13,7 +13,7 @@
 
       <el-card class="drag-from" shadow="hover" ref="dragSave">
         <div slot="header" class="clearfix">
-          <span>数据来源(拖放文件夹到此即可)</span>
+          <span>数据来源(拖放文件到此即可)</span>
         </div>
         <div class="drag">
           {{ configs.fromPath || Config.fromPath }}
