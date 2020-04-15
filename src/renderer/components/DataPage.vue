@@ -89,6 +89,10 @@ export default {
       this.tableData = re
     },
     async save() {
+      if (this.filterFiles.length === 0) {
+        this.$message.warning('没有可以导出的内容')
+        return
+      }
       const savePath = this.$electron.remote.dialog.showSaveDialog({
         title: '请选择保存位置',
         defaultPath: 'export.zip',
@@ -149,8 +153,7 @@ export default {
   justify-content: flex-start;
   align-items: center;
 }
-.search {
-}
+
 .space {
   flex: 1;
 }
