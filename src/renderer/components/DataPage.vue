@@ -4,12 +4,7 @@
       <el-button type="primary" icon="el-icon-refresh" circle></el-button>
 
       <div>
-        <el-input
-          placeholder="搜索..."
-          v-model="search"
-          class=""
-          :clearable="true"
-        >
+        <el-input placeholder="搜索..." v-model="search" class="" clearable>
           <el-button slot="append" icon="el-icon-search"></el-button>
         </el-input>
       </div>
@@ -17,6 +12,7 @@
     <el-table
       :data="filterFiles"
       stripe
+      height="100%"
       style="width: 100%"
       :default-sort="{ prop: 'date', order: 'descending' }"
       class="table"
@@ -53,7 +49,6 @@
   </div>
 </template>
 <script>
-// TODO: 尺寸 overflow
 import isDirectory from 'is-directory'
 const fs = require('fs')
 const path = require('path')
@@ -108,7 +103,7 @@ export default {
 }
 .table {
   flex: 1;
-  overflow-y: scroll;
+  // overflow-y: scroll;
 }
 .btns {
   display: flex;
