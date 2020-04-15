@@ -8,6 +8,7 @@
       stripe
       style="width: 100%"
       :default-sort="{ prop: 'date', order: 'descending' }"
+      class="table"
     >
       <el-table-column label="日期" width="180" sortable prop="date">
         <template slot-scope="scope">
@@ -79,6 +80,12 @@ export default {
 </script>
 <style lang="scss" scoped>
 .wrap {
+  display: flex;
+  flex-direction: column;
   margin: 30px;
+}
+.table {
+  flex: 1;
+  overflow-y: scroll;
 }
 </style>

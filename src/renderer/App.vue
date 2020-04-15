@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <router-view class="routerMain"></router-view>
+    <keep-alive>
+      <router-view class="routerMain"></router-view>
+    </keep-alive>
     <sideNav />
     <Loading v-show="loading"></Loading>
   </div>
@@ -31,6 +33,8 @@ export default {
 <style lang="scss" scoped>
 #app {
   display: flex;
+  height: 100vh;
+  width: 100vw;
 }
 .routerMain {
   flex: 1;
