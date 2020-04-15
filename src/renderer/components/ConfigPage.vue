@@ -20,6 +20,15 @@
         </div>
       </el-card>
 
+      <el-card class="drag-from" shadow="hover" ref="dragSave">
+        <div slot="header" class="clearfix">
+          <span>导出/导入(拖放配置文件到此即可)</span>
+        </div>
+        <div class="">
+          <el-button type="primary" round @click="output">导出</el-button>
+        </div>
+      </el-card>
+
       <div class="operateCard"></div>
       <div class="btns">
         <el-button type="primary" round @click="save">保存</el-button>
@@ -83,6 +92,23 @@ export default {
     open() {
       this.Config.savePath &&
         this.$electron.remote.shell.showItemInFolder(this.Config.savePath)
+    },
+    output() {
+      const path = this.$electron.remote.dialog.showSaveDialog({
+        title: '请选择保存位置',
+        defaultPath: 'pet-config.json',
+        filters: [
+          {
+            name: 'json文件',
+            extensions: ['json']
+          }
+        ]
+      })
+      if (path) {
+        // TODO:写文件
+      } else {
+        this.$message.warning('保存取消')
+      }
     }
   }
 }
