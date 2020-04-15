@@ -31,6 +31,7 @@
     <div class="btns">
       <el-button type="danger" round @click="clear">清空配置</el-button>
     </div>
+    <v-tour name="myTour" :steps="steps"></v-tour>
   </div>
 </template>
 <script>
@@ -50,6 +51,27 @@ export default {
   },
   data() {
     return {
+      steps: [
+        {
+          target: '.card', // We're using document.querySelector() under the hood
+          header: {
+            title: 'Get Started'
+          },
+          content: `Discover <strong>Vue Tour</strong>!`
+        },
+        {
+          target: '.v-step-1',
+          content: 'An awesome plugin made with Vue.js!'
+        },
+        {
+          target: '[data-v-step="2"]',
+          content:
+            "Try it, you'll love it!<br>You can put HTML in the steps and completely customize the DOM to suit your needs.",
+          params: {
+            placement: 'top' // Any valid Popper.js placement. See https://popper.js.org/popper-documentation.html#Popper.placements
+          }
+        }
+      ],
       files: '',
       configs: {
         savePath: null,
@@ -67,6 +89,7 @@ export default {
     }
   },
   mounted() {
+    this.$tours['myTour'].start()
     const files = fs.readdirSync(this.Config.savePath || './') || []
     let re = []
     for (const e of files) {

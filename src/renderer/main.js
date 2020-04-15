@@ -8,11 +8,15 @@ import App from './App'
 import router from './router'
 import store from './store'
 // import path from 'path'
+import VueTour from 'vue-tour'
+
+require('vue-tour/dist/vue-tour.css')
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
 
+Vue.use(VueTour)
 Vue.use(ElementUI)
 Vue.use(require('vue-moment'))
 
