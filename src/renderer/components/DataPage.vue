@@ -1,7 +1,9 @@
 <template>
   <div class="wrap">
     <div class="btns">
-      <el-button type="primary" icon="el-icon-refresh" round>刷新</el-button>
+      <el-button type="primary" icon="el-icon-refresh" round @click="getFiles"
+        >刷新</el-button
+      >
       <el-button type="primary" round @click="save" icon="el-icon-upload2"
         >打包导出</el-button
       >
@@ -53,8 +55,10 @@
 </template>
 <script>
 import isDirectory from 'is-directory'
+import { mapState } from 'vuex'
 const fs = require('fs')
 const path = require('path')
+
 export default {
   name: 'data-page',
   data() {
@@ -68,10 +72,10 @@ export default {
   },
   methods: {
     getFiles() {
-      const files = fs.readdirSync('./')
+      const files = fs.readdirSync(this.Config.savePath || './')
       let re = []
       for (const e of files) {
-        const file = path.join('.', e)
+        const file = path.join(this.Config.savePath, e)
         if (isDirectory.sync(file)) {
           continue
         }
@@ -99,7 +103,7 @@ export default {
         const JSZip = require('jszip')
         const zip = new JSZip()
         for (const e of this.filterFiles) {
-          let file = path.join('.', e.name)
+          let file = path.join(this.Config.savePath, e.name)
           zip.file(e.name, fs.readFileSync(file))
         }
 
@@ -118,6 +122,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(['Config']),
     filterFiles() {
       if (!this.search) {
         return this.tableData
