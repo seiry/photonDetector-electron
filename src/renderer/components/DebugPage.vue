@@ -2,25 +2,31 @@
   <div id="wrapper">
     <!-- <img id="logo" src="~@/assets/logo.png" alt="electron-vue" /> -->
     <main>
-      <el-card class="drag-save" shadow="hover" ref="dragSave">
+      <el-card class="card" shadow="hover" ref="dragSave">
         <div slot="header" class="clearfix">
           <span>持久化配置</span>
         </div>
-        <prism language="json" :plugins="[]" :code="vuexConfig"></prism>
+        <prism
+          language="json"
+          :plugins="[]"
+          :code="vuexConfig"
+          class="code"
+        ></prism>
       </el-card>
 
-      <!-- <el-card class="drag-save" shadow="hover" ref="dragSave">
+      <el-card class="card" shadow="hover" ref="dragSave">
         <div slot="header" class="clearfix">
-          <span>数据文件</span>
+          <span>文件数据</span>
         </div>
-        <prism language="json" :plugins="[]" :code="vuexConfig"></prism>
-      </el-card> -->
-      <!-- <el-card class="drag-save" shadow="hover" ref="dragSave">
+        <prism language="json" :plugins="[]" :code="files" class="code"></prism>
+      </el-card>
+
+      <el-card class="card" shadow="hover" ref="dragSave">
         <div slot="header" class="clearfix">
-          <span>数据文件</span>
+          <span>can编码器状态</span>
         </div>
-        <prism language="json" :plugins="[]" :code="vuexConfig"></prism>
-      </el-card> -->
+        <prism language="json" :plugins="[]" :code="can" class="code"></prism>
+      </el-card>
     </main>
     <div class="btns">
       <el-button type="danger" round @click="clear">清空配置</el-button>
@@ -32,7 +38,11 @@
 import { mapActions, mapState, mapGetters } from 'vuex'
 import Prism from 'vue-prismjs'
 import 'prismjs/themes/prism.css'
+import isDirectory from 'is-directory'
+const fs = require('fs')
+const path = require('path')
 const jsonFormater = require('json-format')
+
 export default {
   name: 'debug-page',
   components: {
@@ -40,8 +50,7 @@ export default {
   },
   data() {
     return {
-      code: 'npm install vue-prismjs --save',
-
+      files: '',
       configs: {
         savePath: null,
         fromPath: null
@@ -52,9 +61,28 @@ export default {
     ...mapState(['Config']),
     vuexConfig() {
       return jsonFormater(JSON.parse(localStorage['pet-vuex']))
+    },
+    can() {
+      return jsonFormater(this.$store.state.Status)
     }
   },
-  mounted() {},
+  mounted() {
+    const files = fs.readdirSync(this.Config.savePath || './') || []
+    let re = []
+    for (const e of files) {
+      const file = path.join(this.Config.savePath, e)
+      if (isDirectory.sync(file)) {
+        continue
+      }
+      const info = fs.statSync(file)
+      re.push({
+        size: info.size,
+        name: e,
+        date: info.ctime
+      })
+    }
+    this.files = jsonFormater(re)
+  },
   methods: {
     ...mapActions(['saveConfig', 'setLoading']),
     async clear() {
@@ -89,8 +117,8 @@ export default {
     rgba(229, 229, 229, 0.9) 100%
   );
   height: 100vh;
-  padding: 30px 40px;
-  width: 100vw;
+  padding: 10px 20px;
+  // width: 100vw;
   display: flex;
   flex-direction: column;
 }
@@ -113,5 +141,12 @@ main {
   display: flex;
   justify-content: flex-end;
   align-items: center;
+}
+.card {
+  min-height: fit-content;
+  margin-bottom: 10px;
+}
+.code {
+  min-height: fit-content;
 }
 </style>

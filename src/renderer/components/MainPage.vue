@@ -53,7 +53,7 @@ export default {
   );
   height: 100vh;
   padding: 30px 40px;
-  width: 100vw;
+  // width: 100vw;
   display: flex;
   flex-direction: column;
 }
