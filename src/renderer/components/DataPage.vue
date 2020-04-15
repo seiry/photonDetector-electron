@@ -26,10 +26,10 @@
         </template>
       </el-table-column>
 
-      <el-table-column prop="name" label="文件名" width="180">
+      <el-table-column prop="name" label="文件名" width="180 " sortable>
       </el-table-column>
 
-      <el-table-column label="大小">
+      <el-table-column label="大小" sortable>
         <template slot-scope="scope">
           {{ scope.row.size | prettyBytes }}
         </template>
@@ -55,7 +55,6 @@
 import isDirectory from 'is-directory'
 const fs = require('fs')
 const path = require('path')
-
 export default {
   name: 'data-page',
   data() {
@@ -85,7 +84,38 @@ export default {
       }
       this.tableData = re
     },
-    save() {}
+    async save() {
+      const savePath = this.$electron.remote.dialog.showSaveDialog({
+        title: '请选择保存位置',
+        defaultPath: 'export.zip',
+        filters: [
+          {
+            name: '打包文件',
+            extensions: ['zip']
+          }
+        ]
+      })
+      if (savePath) {
+        const JSZip = require('jszip')
+        const zip = new JSZip()
+        for (const e of this.filterFiles) {
+          let file = path.join('.', e.name)
+          zip.file(e.name, fs.readFileSync(file))
+        }
+
+        const data = await zip.generateAsync({
+          type: 'nodebuffer',
+          compression: 'DEFLATE',
+          compressionOptions: {
+            level: 6
+          }
+        })
+        fs.writeFileSync(savePath, data)
+        this.$message.success('导出成功')
+      } else {
+        this.$message.warning('导出取消')
+      }
+    }
   },
   computed: {
     filterFiles() {
