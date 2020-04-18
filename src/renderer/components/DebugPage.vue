@@ -2,7 +2,7 @@
   <div id="wrapper">
     <!-- <img id="logo" src="~@/assets/logo.png" alt="electron-vue" /> -->
     <main>
-      <el-card class="card" shadow="hover" ref="dragSave">
+      <el-card class="card config1" shadow="hover">
         <div slot="header" class="clearfix">
           <span>持久化配置</span>
         </div>
@@ -14,14 +14,14 @@
         ></prism>
       </el-card>
 
-      <el-card class="card" shadow="hover" ref="dragSave">
+      <el-card class="card config2" shadow="hover">
         <div slot="header" class="clearfix">
           <span>文件数据</span>
         </div>
         <prism language="json" :plugins="[]" :code="files" class="code"></prism>
       </el-card>
 
-      <el-card class="card" shadow="hover" ref="dragSave">
+      <el-card class="card config3" shadow="hover" ref="dragSave">
         <div slot="header" class="clearfix">
           <span>can编码器状态</span>
         </div>
@@ -29,9 +29,16 @@
       </el-card>
     </main>
     <div class="btns">
-      <el-button type="danger" round @click="clear">清空配置</el-button>
+      <el-button type="danger" round @click="clear" class="btn1"
+        >清空配置</el-button
+      >
     </div>
-    <v-tour name="myTour" :steps="steps"></v-tour>
+    <v-tour
+      name="myTour"
+      :steps="steps"
+      :options="options"
+      :callbacks="myCallbacks"
+    ></v-tour>
   </div>
 </template>
 <script>
@@ -50,26 +57,42 @@ export default {
     Prism
   },
   data() {
+    this.myCallbacks = {
+      onStop: (e) => {
+        localStorage['tour-debug'] = 1
+      }
+    }
     return {
+      options: {
+        labels: {
+          buttonSkip: '跳过引导',
+          buttonPrevious: '上一个',
+          buttonNext: '下一个',
+          buttonStop: 'ok，起飞！'
+        }
+      },
       steps: [
         {
-          target: '.card', // We're using document.querySelector() under the hood
+          target: '.config1',
           header: {
             title: 'Get Started'
           },
-          content: `Discover <strong>Vue Tour</strong>!`
+          content: `这里展示了存储位置的配置`
         },
         {
-          target: '.v-step-1',
-          content: 'An awesome plugin made with Vue.js!'
+          target: '.config2',
+          content: '这是已经存储的文件'
         },
         {
-          target: '[data-v-step="2"]',
-          content:
-            "Try it, you'll love it!<br>You can put HTML in the steps and completely customize the DOM to suit your needs.",
+          target: '.config3',
+          content: '这是光电编码器的状态数据',
           params: {
-            placement: 'top' // Any valid Popper.js placement. See https://popper.js.org/popper-documentation.html#Popper.placements
+            placement: 'top'
           }
+        },
+        {
+          target: '.btn1',
+          content: '这个按钮会清空一切配置，出错的时候就可以试试啦'
         }
       ],
       files: '',
@@ -89,7 +112,9 @@ export default {
     }
   },
   mounted() {
-    this.$tours['myTour'].start()
+    if (!+localStorage['tour-debug']) {
+      this.$tours['myTour'].start()
+    }
     const files = fs.readdirSync(this.Config.savePath || './') || []
     let re = []
     for (const e of files) {
@@ -116,6 +141,7 @@ export default {
       })
         .then(() => {
           localStorage['pet-vuex'] = '""'
+          localStorage['tour-debug'] = 0
           this.$message({
             type: 'success',
             message: '删除成功!'
