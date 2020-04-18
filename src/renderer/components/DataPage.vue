@@ -52,7 +52,7 @@
         <template slot-scope="scope">
           <el-tag
             closable
-            @close="handleRemoveTag(scope.row.id)"
+            @close="handleRemoveTag(scope.row)"
             v-if="scope.row.tag"
           >
             {{ scope.row.tag }}
@@ -73,7 +73,7 @@
               class="button-new-tag"
               size="small"
               @click="showInput(scope.$index, scope.row)"
-              >+ New Tag</el-button
+              >+ 增加标签</el-button
             >
           </div>
         </template>
@@ -98,6 +98,7 @@
 <script>
 import isDirectory from 'is-directory'
 import { mapState } from 'vuex'
+import localforage from 'localforage'
 const fs = require('fs')
 const path = require('path')
 
@@ -123,11 +124,14 @@ export default {
         this.$refs[`saveTagInput${index}`].$refs.input.focus()
       })
     },
-    handleInputTag(i) {
+    async handleInputTag(i) {
       // this.tableData[i].tag = this.inputTag
-      this.tableData.map((e) => {
+      this.tableData.map(async (e) => {
         if (e.id === i) {
           e.tag = this.inputTag
+          let saved = (await localforage.getItem('tags')) || {}
+          saved[e.name] = e.tag
+          localforage.setItem('tags', saved)
         }
       })
       this.$nextTick((_) => {
@@ -135,10 +139,22 @@ export default {
         this.inputVisible = false
       })
     },
-    getFiles() {
+    async handleRemoveTag(row) {
+      this.tableData.map(async (e) => {
+        if (e.id === row.id) {
+          e.tag = null
+        }
+      })
+      let saved = (await localforage.getItem('tags')) || {}
+      delete saved[row.name]
+      localforage.setItem('tags', saved)
+    },
+    async getFiles() {
       const files = fs.readdirSync(this.Config.savePath || './')
       let re = []
       let id = 0
+      let savedTag = (await localforage.getItem('tags')) || {}
+
       for (const e of files) {
         const file = path.join(this.Config.savePath, e)
         if (isDirectory.sync(file)) {
@@ -150,7 +166,7 @@ export default {
           size: info.size,
           name: e,
           date: info.ctime,
-          tag: null
+          tag: savedTag[e] || null
         })
         id++
       }
@@ -248,7 +264,9 @@ export default {
   justify-content: flex-start;
   align-items: center;
 }
-
+.search {
+  margin-left: 10px;
+}
 .space {
   flex: 1;
 }
