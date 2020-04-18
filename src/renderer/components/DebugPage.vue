@@ -21,6 +21,16 @@
         <prism language="json" :plugins="[]" :code="files" class="code"></prism>
       </el-card>
 
+      <el-card class="card config2" shadow="hover">
+        <div slot="header" class="clearfix">
+          <span>文件标签</span>
+        </div>
+        <prism language="json" :plugins="[]" :code="tags" class="code"></prism>
+        <el-button type="danger" round @click="clearTag" class="btn1"
+          >清空标签</el-button
+        >
+      </el-card>
+
       <el-card class="card config3" shadow="hover" ref="dragSave">
         <div slot="header" class="clearfix">
           <span>can编码器状态</span>
@@ -29,6 +39,9 @@
       </el-card>
     </main>
     <div class="btns">
+      <el-button type="primary" round @click="refresh" class="btn1"
+        >刷新</el-button
+      >
       <el-button type="danger" round @click="clear" class="btn1"
         >清空配置</el-button
       >
@@ -47,6 +60,7 @@ import { mapActions, mapState, mapGetters } from 'vuex'
 import Prism from 'vue-prismjs'
 import 'prismjs/themes/prism.css'
 import isDirectory from 'is-directory'
+import localforage from 'localforage'
 const fs = require('fs')
 const path = require('path')
 const jsonFormater = require('json-format')
@@ -96,6 +110,7 @@ export default {
         }
       ],
       files: '',
+      tags: '',
       configs: {
         savePath: null,
         fromPath: null
@@ -112,27 +127,55 @@ export default {
     }
   },
   mounted() {
-    if (!+localStorage['tour-debug']) {
-      this.$tours['myTour'].start()
-    }
-    const files = fs.readdirSync(this.Config.savePath || './') || []
-    let re = []
-    for (const e of files) {
-      const file = path.join(this.Config.savePath, e)
-      if (isDirectory.sync(file)) {
-        continue
-      }
-      const info = fs.statSync(file)
-      re.push({
-        size: info.size,
-        name: e,
-        date: info.ctime
-      })
-    }
-    this.files = jsonFormater(re)
+    this.init()
   },
+
   methods: {
     ...mapActions(['saveConfig', 'setLoading']),
+    init() {
+      if (!+localStorage['tour-debug']) {
+        this.$tours['myTour'].start()
+      }
+      const files = fs.readdirSync(this.Config.savePath || './') || []
+      let re = []
+      for (const e of files) {
+        const file = path.join(this.Config.savePath, e)
+        if (isDirectory.sync(file)) {
+          continue
+        }
+        const info = fs.statSync(file)
+        re.push({
+          size: info.size,
+          name: e,
+          date: info.ctime
+        })
+      }
+      this.files = jsonFormater(re)
+
+      localforage.getItem('tags').then((e = {}) => {
+        this.tags = jsonFormater(e)
+      })
+    },
+    refresh() {
+      this.init()
+    },
+    async clearTag() {
+      this.$confirm('此操作将永久删除所有标签, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          localforage.setItem('tags', {})
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+        })
+        .catch(() => {})
+      // this.setLoading(200)
+      // await this.saveConfig(this.configs)
+    },
     async clear() {
       this.$confirm('此操作将永久删除现有配置, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -140,6 +183,7 @@ export default {
         type: 'warning'
       })
         .then(() => {
+          localforage.setItem('tags', {})
           localStorage['pet-vuex'] = '""'
           localStorage['tour-debug'] = 0
           this.$message({
