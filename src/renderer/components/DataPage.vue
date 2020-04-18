@@ -9,13 +9,13 @@
       >
       <div class="space"></div>
       <div>
-        <el-select v-model="value1" multiple clearable placeholder="请选择">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          >
+        <el-select
+          v-model="tagSelected"
+          multiple
+          clearable
+          placeholder="请选择"
+        >
+          <el-option v-for="tag in tags" :key="tag" :label="tag" :value="tag">
           </el-option>
         </el-select>
       </div>
@@ -48,6 +48,37 @@
         </template>
       </el-table-column>
 
+      <el-table-column label="标签">
+        <template slot-scope="scope">
+          <el-tag
+            closable
+            @close="handleRemoveTag(scope.row.id)"
+            v-if="scope.row.tag"
+          >
+            {{ scope.row.tag }}
+          </el-tag>
+          <div v-else>
+            <el-input
+              class="input-new-tag"
+              v-if="inputVisible === scope.$index"
+              v-model="inputTag"
+              :ref="`saveTagInput${scope.$index}`"
+              size="small"
+              @keyup.enter.native="handleInputTag(scope.row.id)"
+              @blur="handleInputTag(scope.row.id)"
+            >
+            </el-input>
+            <el-button
+              v-else
+              class="button-new-tag"
+              size="small"
+              @click="showInput(scope.$index, scope.row)"
+              >+ New Tag</el-button
+            >
+          </div>
+        </template>
+      </el-table-column>
+
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
@@ -76,39 +107,38 @@ export default {
     return {
       tableData: [],
       search: '',
-      options: [
-        {
-          value: '选项1',
-          label: '黄金糕'
-        },
-        {
-          value: '选项2',
-          label: '双皮奶'
-        },
-        {
-          value: '选项3',
-          label: '蚵仔煎'
-        },
-        {
-          value: '选项4',
-          label: '龙须面'
-        },
-        {
-          value: '选项5',
-          label: '北京烤鸭'
-        }
-      ],
-      value1: [],
-      value2: []
+
+      tagSelected: [],
+      inputTag: '',
+      inputVisible: false
     }
   },
   mounted() {
     this.getFiles()
   },
   methods: {
+    showInput(index, row) {
+      this.inputVisible = index
+      this.$nextTick((_) => {
+        this.$refs[`saveTagInput${index}`].$refs.input.focus()
+      })
+    },
+    handleInputTag(i) {
+      // this.tableData[i].tag = this.inputTag
+      this.tableData.map((e) => {
+        if (e.id === i) {
+          e.tag = this.inputTag
+        }
+      })
+      this.$nextTick((_) => {
+        this.inputTag = ''
+        this.inputVisible = false
+      })
+    },
     getFiles() {
       const files = fs.readdirSync(this.Config.savePath || './')
       let re = []
+      let id = 0
       for (const e of files) {
         const file = path.join(this.Config.savePath, e)
         if (isDirectory.sync(file)) {
@@ -116,10 +146,13 @@ export default {
         }
         const info = fs.statSync(file)
         re.push({
+          id,
           size: info.size,
           name: e,
-          date: info.ctime
+          date: info.ctime,
+          tag: null
         })
+        id++
       }
       this.tableData = re
     },
@@ -163,12 +196,39 @@ export default {
   computed: {
     ...mapState(['Config']),
     filterFiles() {
-      if (!this.search) {
+      if (!this.search && this.tagSelected.length === 0) {
         return this.tableData
       }
-      return this.tableData.filter((e) =>
-        e.name.toLowerCase().includes(this.search.toLowerCase())
-      )
+      return this.tableData.filter((e) => {
+        let flagSearch = true
+        let flagTag = true
+        if (this.search) {
+          flagSearch = false
+          if (e.name.toLowerCase().includes(this.search.toLowerCase())) {
+            // 文件名含有指定文字
+            flagSearch = true
+          }
+          if ((e.tag || '').toLowerCase().includes(this.search.toLowerCase())) {
+            // 标签含有指定文字
+            flagSearch = true
+          }
+        }
+        if (this.tagSelected.length > 0) {
+          flagTag = false
+
+          if (this.tagSelected.includes(e.tag)) {
+            flagTag = true
+          }
+        }
+
+        return flagSearch && flagTag
+      })
+    },
+    tags() {
+      let tags = this.tableData
+        .map((e) => e.tag)
+        .filter((e) => e !== null && e !== '')
+      return [...new Set(tags)]
     }
   }
 }
