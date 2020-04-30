@@ -39,17 +39,20 @@ export default {
   methods: {
     ...mapActions(['setLoading', 'addCanNum', 'setStopFlag']),
     init() {
-      this.initDmc()
+      this.initDmc() // 初始化运动控制卡，之后才是圈数监视器
         .then((e) => {
           this.initNumWatcher()
         })
-        .catch((e) => console.error(e))
+        .catch((e) => {
+          this.$message.error(e)
+          console.error(e)
+        })
     },
     async initDmc() {
       if (!this.dmc) {
         this.dmc = new Dmc(true)
       }
-      this.dmc.close()
+      // const e = this.dmc.close()
       if (this.dmc.error) {
         this.$message.error(this.dmc.humenErrorMsg)
         throw new Error('dmc init error')

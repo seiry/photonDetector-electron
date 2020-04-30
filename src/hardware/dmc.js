@@ -13,11 +13,16 @@ class DMC extends base {
     super()
     this.mock = mock
     let re = api.d1000_board_init()
+
     if (this.mock) {
       return
     }
+    // 0表示没有卡
+
     if (re === 0) {
       // 没有卡....
+      // TODO: 没卡
+
       this.setError(0, '没卡')
       return
     }

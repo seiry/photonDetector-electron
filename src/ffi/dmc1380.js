@@ -5,33 +5,33 @@ const ffi = require('ffi-napi')
 const ArrayType = require('ref-array-napi')
 const ShortArray = ArrayType('short')
 const dmc1380 = new ffi.Library(dllPath('Dmc1380.dll'), {
-  d1000_board_init: ['ulong', []],
-  d1000_board_close: ['ulong', []],
-  d1000_set_pls_outmode: ['ulong', ['short', 'short']],
-  d1000_start_tv_move: ['ulong', ['short', 'long', 'long', 'double']],
-  d1000_get_speed: ['ulong', ['short']],
-  d1000_change_speed: ['ulong', ['short', 'long']],
-  d1000_decel_stop: ['ulong', ['short']],
-  d1000_immediate_stop: ['ulong', ['short']],
-  d1000_start_t_move: ['ulong', ['short', 'long', 'long', 'double']],
-  d1000_start_ta_move: ['ulong', ['short', 'long', 'long', 'double']],
+  d1000_board_init: ['int', []],
+  d1000_board_close: ['int', []],
+  d1000_set_pls_outmode: ['int', ['short', 'short']],
+  d1000_start_tv_move: ['int', ['short', 'long', 'long', 'double']],
+  d1000_get_speed: ['int', ['short']],
+  d1000_change_speed: ['int', ['short', 'long']],
+  d1000_decel_stop: ['int', ['short']],
+  d1000_immediate_stop: ['int', ['short']],
+  d1000_start_t_move: ['int', ['short', 'long', 'long', 'double']],
+  d1000_start_ta_move: ['int', ['short', 'long', 'long', 'double']],
   d1000_start_t_line: [
-    'ulong',
+    'int',
     ['short', ShortArray, ShortArray, 'long', 'long', 'double']
   ],
   d1000_start_ta_line: [
-    'ulong',
+    'int',
     ['short', ShortArray, ShortArray, 'long', 'long', 'double']
   ],
-  d1000_home_move: ['ulong', ['short', 'long', 'long', 'double']],
-  d1000_check_done: ['ulong', ['short']],
-  d1000_get_command_pos: ['ulong', ['short']],
-  d1000_set_command_pos: ['ulong', ['short', 'double']],
-  d1000_out_bit: ['ulong', ['short', 'short']],
-  d1000_in_bit: ['ulong', ['short']],
-  d1000_get_outbit: ['ulong', ['short']],
-  d1000_in_enable: ['void', ['ulong', 'ulong']],
-  d1000_set_sd: ['ulong', ['short', 'short']],
+  d1000_home_move: ['int', ['short', 'long', 'long', 'double']],
+  d1000_check_done: ['int', ['short']],
+  d1000_get_command_pos: ['int', ['short']],
+  d1000_set_command_pos: ['int', ['short', 'double']],
+  d1000_out_bit: ['int', ['short', 'short']],
+  d1000_in_bit: ['ulintong', ['short']],
+  d1000_get_outbit: ['int', ['short']],
+  d1000_in_enable: ['void', ['ulong', 'ulong']], // void?
+  d1000_set_sd: ['int', ['short', 'short']],
   d1000_get_axis_status: ['byte', ['short']]
 })
 
