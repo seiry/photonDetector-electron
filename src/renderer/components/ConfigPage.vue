@@ -2,7 +2,7 @@
   <div id="wrapper">
     <!-- <img id="logo" src="~@/assets/logo.png" alt="electron-vue" /> -->
     <main>
-      <el-card class="drag-save" shadow="hover" ref="dragSave">
+      <el-card class="drag-save card" shadow="hover" ref="dragSave">
         <div slot="header" class="clearfix">
           <span>数据存放路径(拖放文件夹到此即可)</span>
         </div>
@@ -11,7 +11,7 @@
         </div>
       </el-card>
 
-      <el-card class="drag-from" shadow="hover" ref="dragSave">
+      <el-card class="drag-from card" shadow="hover" ref="dragSave">
         <div slot="header" class="clearfix">
           <span>数据来源(拖放文件到此即可)</span>
         </div>
@@ -20,7 +20,19 @@
         </div>
       </el-card>
 
-      <el-card class="drag-from" shadow="hover" ref="dragSave">
+      <el-card class=" card" shadow="hover" ref="dragSave">
+        <div slot="header" class="clearfix">
+          <span>dmc1380</span>
+        </div>
+        <div>
+          <el-checkbox v-model="slowDown" border
+            >减速使能: {{ slowDown ? '使能' : '禁止' }}</el-checkbox
+          >
+          <span></span>
+        </div>
+      </el-card>
+
+      <el-card class="drag-from card" shadow="hover" ref="dragSave">
         <div slot="header" class="clearfix">
           <span>导出/导入(拖放配置文件到此即可)</span>
         </div>
@@ -30,10 +42,10 @@
       </el-card>
 
       <div class="operateCard"></div>
-      <div class="btns">
-        <el-button type="primary" round @click="save">保存</el-button>
-      </div>
     </main>
+    <div class="btns">
+      <el-button type="primary" round @click="save">保存</el-button>
+    </div>
   </div>
 </template>
 <script>
@@ -52,6 +64,14 @@ export default {
   },
   computed: {
     ...mapState(['Config']),
+    slowDown: {
+      get() {
+        return this.Config.dmc.slowDown
+      },
+      set(val) {
+        this.$store.dispatch('updateSlowDown', val)
+      },
+    },
   },
   mounted() {
     document.querySelector('.drag-save').ondrop = (e) => {
@@ -121,7 +141,8 @@ export default {
     rgba(229, 229, 229, 0.9) 100%
   );
   height: 100vh;
-  padding: 30px 40px;
+  padding: 10px 20px;
+
   // width: 100vw;
   display: flex;
   flex-direction: column;
@@ -132,6 +153,7 @@ main {
   flex-direction: column;
   justify-content: space-between;
   flex: 1;
+  overflow-y: auto;
   user-select: none;
 }
 .drag {
@@ -140,6 +162,10 @@ main {
   padding: 5px;
   border-radius: 5px;
   margin: auto;
+}
+.card {
+  min-height: fit-content;
+  margin-bottom: 10px;
 }
 .btns {
   display: flex;

@@ -7,11 +7,11 @@ const ShortArray = ArrayType('short')
 const dmc1380 = new ffi.Library(dllPath('Dmc1380.dll'), {
   d1000_board_init: ['int', []],
   d1000_board_close: ['int', []],
-  d1000_set_pls_outmode: ['int', ['short', 'short']],
+  d1000_set_pls_outmode: ['int', ['int', 'int']],
   d1000_start_tv_move: ['int', ['short', 'long', 'long', 'double']],
   d1000_get_speed: ['int', ['short']],
   d1000_change_speed: ['int', ['short', 'long']],
-  d1000_decel_stop: ['int', ['short']],
+  d1000_decel_stop: ['int', ['int']],
   d1000_immediate_stop: ['int', ['short']],
   d1000_start_t_move: ['int', ['short', 'long', 'long', 'double']],
   d1000_start_ta_move: ['int', ['short', 'long', 'long', 'double']],
@@ -24,14 +24,14 @@ const dmc1380 = new ffi.Library(dllPath('Dmc1380.dll'), {
     ['short', ShortArray, ShortArray, 'long', 'long', 'double'],
   ],
   d1000_home_move: ['int', ['short', 'long', 'long', 'double']],
-  d1000_check_done: ['int', ['short']],
+  d1000_check_done: ['int', ['int']],
   d1000_get_command_pos: ['int', ['int']],
   d1000_set_command_pos: ['int', ['short', 'double']],
   d1000_out_bit: ['int', ['short', 'short']],
-  d1000_in_bit: ['ulintong', ['short']],
+  d1000_in_bit: ['int', ['int']],
   d1000_get_outbit: ['int', ['short']],
   d1000_in_enable: ['void', ['ulong', 'ulong']], // void?
-  d1000_set_sd: ['int', ['short', 'short']],
+  d1000_set_sd: ['int', ['int', 'int']],
   d1000_get_axis_status: ['byte', ['int']],
 })
 
@@ -207,6 +207,7 @@ const d1000_home_move = (axis, StrVel, MaxVel, Tacc) => {
  * 4：遇原点停止。
  * @param {*} axis 轴号，范围 0～(n×3-1)，n 为卡数。
  */
+// 不存在卡的时候返回10
 const d1000_check_done = (axis) => {
   return dmc1380.d1000_check_done(axis)
 }
