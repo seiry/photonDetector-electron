@@ -12,8 +12,8 @@
     <el-form ref="form" class="ops" :model="config">
       <el-form-item label="采集模式">
         <el-select v-model="config.mode" placeholder="请选择" class="formText">
-          <el-option label="默认模式" :value="0"></el-option>
-          <el-option label="模式2" :value="1"></el-option>
+          <el-option label="默认模式" :value="0" class="non-select"></el-option>
+          <el-option label="模式2" :value="1" class="non-select"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="传感器数量n">
@@ -23,7 +23,13 @@
           class=""
           style="width:80px"
         >
-          <el-option :label="n" :value="n" v-for="n in 8" :key="n"></el-option>
+          <el-option
+            :label="n"
+            :value="n"
+            v-for="n in 8"
+            :key="n"
+            class="non-select"
+          ></el-option>
         </el-select>
         对
       </el-form-item>
@@ -53,7 +59,13 @@
           class=""
           style="width:80px"
         >
-          <el-option :label="n" :value="n" v-for="n in 8" :key="n"></el-option>
+          <el-option
+            :label="n"
+            :value="n"
+            v-for="n in 8"
+            :key="n"
+            class="non-select"
+          ></el-option>
         </el-select>
         <el-tooltip
           class="item"
@@ -187,5 +199,8 @@ export default {
 }
 .clearfix:after {
   clear: both;
+}
+.non-select {
+  user-select: none;
 }
 </style>

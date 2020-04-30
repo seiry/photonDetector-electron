@@ -81,9 +81,7 @@
 
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
-            >查看</el-button
-          >
+          <el-button size="mini" @click="open(scope.row)">查看</el-button>
           <el-button
             size="mini"
             type="danger"
@@ -118,6 +116,32 @@ export default {
     this.getFiles()
   },
   methods: {
+    open({ name }) {
+      this.Config.savePath &&
+        this.$electron.remote.shell.showItemInFolder(
+          path.join(this.Config.savePath, name)
+        )
+    },
+    handleDelete() {
+      this.$confirm(
+        '此操作将永久删除该文件且无法恢复，确定要删除么？',
+        '提示',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      )
+        .then(() => {
+          // TODO:删除
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+          this.getFiles()
+        })
+        .catch(() => {})
+    },
     showInput(index, row) {
       this.inputVisible = index
       this.$nextTick((_) => {
