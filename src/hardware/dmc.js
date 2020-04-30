@@ -36,10 +36,25 @@ class DMC extends base {
   }
   // d1000_get_axis_status获取的时轴的状态，可以设计一个定时器，来将状态压入整体队列
   // dmc类里，只关心dmc的状态和负责输出，公共状态推到队列里，进行判断，可以和can公用一个vuex队列
-  timer() {
+  getStatus() {
     api.d1000_get_axis_status(Axis.x)
     api.d1000_get_axis_status(Axis.y)
     api.d1000_get_axis_status(Axis.z)
+  }
+  getPosition() {
+    if (this.mock) {
+      this.mockNum += parseInt(Math.random() * 20 + 20)
+      return [this.mockNum, this.mockNum, this.mockNum, this.mockNum]
+    }
+    let re = []
+    for (const e of Object.values(Axis)) {
+      const read = api.d1000_get_command_pos(e)
+      if (read) {
+        // TODO: 数据有效性判断？
+      }
+      re.push(read)
+    }
+    return re
   }
   stopAll() {
     for (const e of Object.values(Axis)) {

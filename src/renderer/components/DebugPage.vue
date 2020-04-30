@@ -37,6 +37,13 @@
         </div>
         <prism language="json" :plugins="[]" :code="can" class="code"></prism>
       </el-card>
+
+      <el-card class="card config3" shadow="hover" ref="dragSave">
+        <div slot="header" class="clearfix">
+          <span>dmc运动控制卡状态</span>
+        </div>
+        <prism language="json" :plugins="[]" :code="dmc" class="code"></prism>
+      </el-card>
     </main>
     <div class="btns">
       <el-button type="primary" round @click="refresh" class="btn1"
@@ -124,6 +131,9 @@ export default {
     },
     can() {
       return jsonFormater(this.$store.state.Status)
+    },
+    dmc() {
+      return jsonFormater(this.$store.state.Dmc)
     },
   },
   mounted() {

@@ -30,14 +30,17 @@ export default {
         singleTime: 0.5,
         width: 30,
         beta: 8,
-        intervalFlag: null,
+      },
+      intervalFlag: {
+        can: null,
+        dmcPosition: null,
       },
     }
   },
   name: 'action-card',
   // components: { SystemInformation },
   methods: {
-    ...mapActions(['setLoading', 'addCanNum', 'setStopFlag']),
+    ...mapActions(['setLoading', 'addCanNum', 'setStopFlag', 'addDmcNum']),
     init() {
       this.initDmc() // 初始化运动控制卡，之后才是圈数监视器
         .then((e) => {
@@ -49,6 +52,9 @@ export default {
         })
     },
     async initDmc() {
+      if (this.intervalFlag.dmcPosition) {
+        return
+      }
       if (!this.dmc) {
         this.dmc = new Dmc(true)
       }
@@ -57,9 +63,21 @@ export default {
         this.$message.error(this.dmc.humenErrorMsg)
         throw new Error('dmc init error')
       }
+      this.intervalFlag.dmcPosition = setInterval(() => {
+        const [x, y, z] = this.dmc.getPosition() // TODO: 这里返回数组，可以根据情况再解构取值
+        this.addDmcNum({
+          x,
+          y,
+          z,
+        })
+        if (this.status.stopFlag) {
+          clearInterval(this.intervalFlag.dmcPosition)
+          this.intervalFlag.dmcPosition = null
+        }
+      }, 1e2)
     },
     initNumWatcher() {
-      if (this.intervalFlag) {
+      if (this.intervalFlag.can) {
         return
       }
       if (!this.can) {
@@ -71,11 +89,11 @@ export default {
       }
       // this.$message.success('初始化成功' + this.can.humenErrorMsg)
       this.setStopFlag(false)
-      this.intervalFlag = setInterval(() => {
+      this.intervalFlag.can = setInterval(() => {
         this.addCanNum(this.can.readNum())
         if (this.status.stopFlag) {
-          clearInterval(this.intervalFlag)
-          this.intervalFlag = null
+          clearInterval(this.intervalFlag.can)
+          this.intervalFlag.can = null
         }
       }, 1e2)
     },
