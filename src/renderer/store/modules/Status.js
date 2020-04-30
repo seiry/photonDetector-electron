@@ -7,7 +7,7 @@ const state = {
   degree: 1.0,
   canNum: 0,
   numRecord: [], // 是个队列 TODO: 队列长度是不是要维护?
-  stopFlag: false
+  stopFlag: false,
 }
 
 const getters = {
@@ -51,7 +51,7 @@ const getters = {
     const delta =
       state.numRecord[0].num - state.numRecord[state.numRecord.length - 1].num
     return +(delta * _canRate).toFixed(8)
-  }
+  },
 }
 const mutations = {
   SHOW_LOADING(state) {
@@ -74,7 +74,7 @@ const mutations = {
   },
   CLEAR_NUM_RECORD(state) {
     state.numRecord = []
-  }
+  },
 }
 
 const actions = {
@@ -99,7 +99,7 @@ const actions = {
   addCanNum({ commit }, data) {
     commit('ADD_CAN_NUM', {
       num: data || 0,
-      time: +moment().format('x')
+      time: +moment().format('x'),
     })
   },
   setStopFlag({ commit }, data) {
@@ -108,12 +108,12 @@ const actions = {
     } else {
       commit('STOPFLAG_OFF')
     }
-  }
+  },
 }
 
 export default {
   state,
   getters,
   mutations,
-  actions
+  actions,
 }

@@ -22,7 +22,7 @@ const VCI_INIT_CONFIG = StructType({
   Filter: 'uchar',
   Timing0: 'uchar',
   Timing1: 'uchar',
-  Mode: 'uchar'
+  Mode: 'uchar',
 })
 const VCI_BOARD_INFO = StructType({
   hw_Version: 'ushort',
@@ -33,7 +33,7 @@ const VCI_BOARD_INFO = StructType({
   can_Num: 'byte',
   str_Serial_Num: 'string',
   str_hw_Type: 'string',
-  Reserved: 'ushort'
+  Reserved: 'ushort',
 })
 const VCI_CAN_OBJ = StructType({
   id: 'uint',
@@ -44,7 +44,7 @@ const VCI_CAN_OBJ = StructType({
   ExternFlag: 'byte',
   DataLen: 'byte',
   Data: ArrayType('byte', 8),
-  Reserved: ArrayType('byte', 3)
+  Reserved: ArrayType('byte', 3),
 })
 const VCI_CAN_OBJArrayType = ArrayType(VCI_CAN_OBJ)
 
@@ -61,7 +61,7 @@ const can = new ffi.Library(dllPath('ControlCAN.dll'), {
   VCI_CloseDevice: ['ulong', ['ulong', 'ulong']],
   VCI_InitCAN: [
     'ulong',
-    ['ulong', 'ulong', 'ulong', ref.refType(VCI_INIT_CONFIG)]
+    ['ulong', 'ulong', 'ulong', ref.refType(VCI_INIT_CONFIG)],
   ],
   VCI_ReadBoardInfo: ['ulong', ['ulong', 'ulong', ref.refType(VCI_BOARD_INFO)]],
   VCI_GetReceiveNum: ['ulong', ['ulong', 'ulong', 'ulong']],
@@ -69,12 +69,12 @@ const can = new ffi.Library(dllPath('ControlCAN.dll'), {
   VCI_StartCAN: ['ulong', ['ulong', 'ulong', 'ulong']],
   VCI_Transmit: [
     'ulong',
-    ['ulong', 'ulong', 'ulong', VCI_CAN_OBJArrayType, 'ulong']
+    ['ulong', 'ulong', 'ulong', VCI_CAN_OBJArrayType, 'ulong'],
   ],
   VCI_Receive: [
     'int',
-    ['ulong', 'ulong', 'ulong', VCI_CAN_OBJArrayType, 'ulong', 'int']
-  ]
+    ['ulong', 'ulong', 'ulong', VCI_CAN_OBJArrayType, 'ulong', 'int'],
+  ],
 })
 
 /**
@@ -246,5 +246,5 @@ export default {
   VCI_StartCAN,
   VCI_ResetCAN,
   VCI_Transmit,
-  VCI_Receive
+  VCI_Receive,
 }

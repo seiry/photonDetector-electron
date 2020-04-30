@@ -102,8 +102,8 @@ export default {
         num: 6,
         singleTime: 0.5,
         width: 20,
-        beta: 4
-      }
+        beta: 4,
+      },
     }
   },
   name: 'config-card',
@@ -112,7 +112,7 @@ export default {
     ...mapActions(['setLoading']),
     test() {
       this.setLoading(true)
-    }
+    },
   },
   computed: {
     // ...mapState({ status: (state) => state.Status })
@@ -157,14 +157,14 @@ export default {
       const addNum = this.NAll / this.config.num - 1
       const sigleDegree = 180 / this.NAll
       return addNum * sigleDegree
-    }
+    },
   },
   filters: {
     fix2(e) {
       return e.toFixed(2)
-    }
+    },
   },
-  created() {}
+  created() {},
 }
 </script>
 

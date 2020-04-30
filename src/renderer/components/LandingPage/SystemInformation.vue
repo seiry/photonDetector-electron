@@ -44,9 +44,9 @@ export default {
       path: this.$route.path,
       platform: require('os').platform(),
       arch: require('os').arch(),
-      vue: require('vue/package.json').version
+      vue: require('vue/package.json').version,
     }
-  }
+  },
 }
 </script>
 

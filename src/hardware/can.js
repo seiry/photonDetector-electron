@@ -6,7 +6,7 @@ class Can extends base {
   errMsg = {
     error: false,
     originalCode: 0,
-    msg: 'none'
+    msg: 'none',
   }
   devType = 4
   devIndex = 0
@@ -50,7 +50,7 @@ class Can extends base {
       Filter: 2,
       Timing0: 0x00,
       Timing1: 0x1c,
-      Mode: 0
+      Mode: 0,
     }
     // TODO: canindex?
     re = api.VCI_InitCAN(this.devType, this.devIndex, this.canIndex, config)
@@ -112,11 +112,11 @@ class Can extends base {
       RemoteFlag: 0,
       ExternFlag: 0,
       DataLen: 4,
-      Data: [0x4, 0x2, 0x1, 0x0]
+      Data: [0x4, 0x2, 0x1, 0x0],
       // Reserved: [0, 0, 0]
     }
     let re = api.VCI_Transmit(this.devType, this.devIndex, this.canIndex, [
-      data
+      data,
     ])
 
     if (re >= 1 || this.mock) {

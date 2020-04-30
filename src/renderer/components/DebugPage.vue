@@ -68,13 +68,13 @@ const jsonFormater = require('json-format')
 export default {
   name: 'debug-page',
   components: {
-    Prism
+    Prism,
   },
   data() {
     this.myCallbacks = {
       onStop: (e) => {
         localStorage['tour-debug'] = 1
-      }
+      },
     }
     return {
       options: {
@@ -82,39 +82,39 @@ export default {
           buttonSkip: '跳过引导',
           buttonPrevious: '上一个',
           buttonNext: '下一个',
-          buttonStop: 'ok，起飞！'
-        }
+          buttonStop: 'ok，起飞！',
+        },
       },
       steps: [
         {
           target: '.config1',
           header: {
-            title: 'Get Started'
+            title: 'Get Started',
           },
-          content: `这里展示了存储位置的配置`
+          content: `这里展示了存储位置的配置`,
         },
         {
           target: '.config2',
-          content: '这是已经存储的文件'
+          content: '这是已经存储的文件',
         },
         {
           target: '.config3',
           content: '这是光电编码器的状态数据',
           params: {
-            placement: 'top'
-          }
+            placement: 'top',
+          },
         },
         {
           target: '.btn1',
-          content: '这个按钮会清空一切配置，出错的时候就可以试试啦'
-        }
+          content: '这个按钮会清空一切配置，出错的时候就可以试试啦',
+        },
       ],
       files: '',
       tags: '',
       configs: {
         savePath: null,
-        fromPath: null
-      }
+        fromPath: null,
+      },
     }
   },
   computed: {
@@ -124,7 +124,7 @@ export default {
     },
     can() {
       return jsonFormater(this.$store.state.Status)
-    }
+    },
   },
   mounted() {
     this.init()
@@ -147,7 +147,7 @@ export default {
         re.push({
           size: info.size,
           name: e,
-          date: info.ctime
+          date: info.ctime,
         })
       }
       this.files = jsonFormater(re)
@@ -163,13 +163,13 @@ export default {
       this.$confirm('此操作将永久删除所有标签, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       })
         .then(() => {
           localforage.setItem('tags', {})
           this.$message({
             type: 'success',
-            message: '删除成功!'
+            message: '删除成功!',
           })
         })
         .catch(() => {})
@@ -180,7 +180,7 @@ export default {
       this.$confirm('此操作将永久删除现有配置, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       })
         .then(() => {
           localforage.setItem('tags', {})
@@ -188,7 +188,7 @@ export default {
           localStorage['tour-debug'] = 0
           this.$message({
             type: 'success',
-            message: '删除成功!'
+            message: '删除成功!',
           })
         })
         .catch(() => {})
@@ -198,8 +198,8 @@ export default {
     open() {
       this.Config.savePath &&
         this.$electron.remote.shell.showItemInFolder(this.Config.savePath)
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss" scoped>

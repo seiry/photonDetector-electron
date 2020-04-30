@@ -1,6 +1,6 @@
 const state = {
   savePath: '',
-  fromPath: ''
+  fromPath: '',
 }
 
 const getters = {}
@@ -13,18 +13,18 @@ const mutations = {
       }
       state[key] = payload[key]
     }
-  }
+  },
 }
 
 const actions = {
   saveConfig({ commit }, data) {
     commit('UPDATE_CONFIG', data)
-  }
+  },
 }
 
 export default {
   state,
   getters,
   mutations,
-  actions
+  actions,
 }

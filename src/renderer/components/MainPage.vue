@@ -26,7 +26,7 @@ export default {
   data() {
     return {
       ret: '',
-      ret2: ''
+      ret2: '',
     }
   },
   name: 'main-page',
@@ -34,13 +34,13 @@ export default {
   methods: {
     open(link) {
       this.$electron.shell.openExternal(link)
-    }
+    },
   },
   computed: {
     ...mapState({
-      loading: (state) => state.Misc.loading
-    })
-  }
+      loading: (state) => state.Misc.loading,
+    }),
+  },
 }
 </script>
 

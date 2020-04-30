@@ -22,12 +22,12 @@ const Type = ArrayType('int', 8)
 const Type2 = ArrayType(Type)
 
 const TestStruct = StructType({
-  name: 'string'
+  name: 'string',
 })
 const TestStruct2 = StructType({
   byte: 'byte',
   char: 'char',
-  uchar: 'uchar'
+  uchar: 'uchar',
 })
 // console.log(
 //   new TestStruct({
@@ -42,7 +42,7 @@ const TestStruct2 = StructType({
 //   })
 // )
 const Obj1 = new StructType({
-  Data: byteArray
+  Data: byteArray,
 })
 const myTest = new ffi.Library(dllPath('Dll1.dll'), {
   add: ['ulong', ['int', 'int']],
@@ -51,7 +51,7 @@ const myTest = new ffi.Library(dllPath('Dll1.dll'), {
   arrayAddDouble: ['double', [DoubleArray]],
   getObj: [Obj1, []],
   changeObj: ['void', [ref.refType(Obj1)]],
-  changeArr: ['int', [Type, 'int']]
+  changeArr: ['int', [Type, 'int']],
 })
 const add = (a, b) => {
   return myTest.add(a, b)
@@ -94,5 +94,5 @@ export default {
   arrayAdd,
   arrayAddDouble,
   getObj,
-  changeObj
+  changeObj,
 }

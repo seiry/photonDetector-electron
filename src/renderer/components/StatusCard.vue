@@ -43,8 +43,8 @@ export default {
         { color: '#e6a23c', percentage: 40 },
         { color: '#5cb87a', percentage: 60 },
         { color: '#1989fa', percentage: 80 },
-        { color: '#6f7ad3', percentage: 100 }
-      ]
+        { color: '#6f7ad3', percentage: 100 },
+      ],
     }
   },
   name: 'status-card',
@@ -56,7 +56,7 @@ export default {
     },
     setCan() {
       this.setCanNum(9)
-    }
+    },
   },
   computed: {
     percentage() {
@@ -64,9 +64,9 @@ export default {
     },
     ...mapState({
       status: (state) => state.Status,
-      canNum: (state) => state.Status.canNum
+      canNum: (state) => state.Status.canNum,
     }),
-    ...mapGetters(['lastNum', 'vNum', 'deltaNum', 'avgV', 'angle'])
+    ...mapGetters(['lastNum', 'vNum', 'deltaNum', 'avgV', 'angle']),
   },
   watch: {
     vNum(cur, pre) {
@@ -76,7 +76,7 @@ export default {
         if (this.deltaVs.filter((e) => e > 0).length > judgeThreshold / 2) {
         }
       }
-    }
+    },
   },
   filters: {
     formatDirection(e) {
@@ -102,13 +102,13 @@ export default {
     },
     fix4(e) {
       return e.toFixed(4)
-    }
+    },
   },
   created() {
     // setInterval(() => {
     //   this.process += Math.random() * 5
     // }, 1e3)
-  }
+  },
 }
 </script>
 

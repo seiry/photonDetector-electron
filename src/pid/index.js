@@ -90,8 +90,8 @@ const ps = [
   data,
   {
     x: data.x,
-    y: [...data.y].fill(1)
-  }
+    y: [...data.y].fill(1),
+  },
 ]
 plot(ps)
 // console.log(turnable)

@@ -17,22 +17,22 @@ const dmc1380 = new ffi.Library(dllPath('Dmc1380.dll'), {
   d1000_start_ta_move: ['int', ['short', 'long', 'long', 'double']],
   d1000_start_t_line: [
     'int',
-    ['short', ShortArray, ShortArray, 'long', 'long', 'double']
+    ['short', ShortArray, ShortArray, 'long', 'long', 'double'],
   ],
   d1000_start_ta_line: [
     'int',
-    ['short', ShortArray, ShortArray, 'long', 'long', 'double']
+    ['short', ShortArray, ShortArray, 'long', 'long', 'double'],
   ],
   d1000_home_move: ['int', ['short', 'long', 'long', 'double']],
   d1000_check_done: ['int', ['short']],
-  d1000_get_command_pos: ['int', ['short']],
+  d1000_get_command_pos: ['int', ['int']],
   d1000_set_command_pos: ['int', ['short', 'double']],
   d1000_out_bit: ['int', ['short', 'short']],
   d1000_in_bit: ['ulintong', ['short']],
   d1000_get_outbit: ['int', ['short']],
   d1000_in_enable: ['void', ['ulong', 'ulong']], // void?
   d1000_set_sd: ['int', ['short', 'short']],
-  d1000_get_axis_status: ['byte', ['short']]
+  d1000_get_axis_status: ['byte', ['int']],
 })
 
 /**
@@ -214,6 +214,7 @@ const d1000_check_done = (axis) => {
 /**
  * 读取指令位置计数器计数值。
  * @param {*} axis 轴号，范围 0～(n×3-1)，n 为卡数。
+ * @return 单位为Pulse
  */
 const d1000_get_command_pos = (axis) => {
   return dmc1380.d1000_get_command_pos(axis)
@@ -273,7 +274,8 @@ const d1000_set_sd = (axis, SdMode) => {
 }
 /**
  * 读取指定轴的专用接口信号状态，包括 EL+、EL-、STP、STA、SD+、SD-等信号状态。
- * @param {*} axis 轴号，范围 0～(n×3-1)， n 为卡数。 返回值：指定轴专用信号
+ * @param {*} axis 轴号，范围 0～(n×3-1)， n 为卡数。一张卡时，范围为0-2，代表x,y,z三个轴
+ * @return 指定轴专用信号。
  */
 const d1000_get_axis_status = (axis) => {
   return dmc1380.d1000_get_axis_status(axis)
@@ -300,5 +302,5 @@ export default {
   d1000_get_outbit,
   d1000_in_enable,
   d1000_set_sd,
-  d1000_get_axis_status
+  d1000_get_axis_status,
 }

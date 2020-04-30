@@ -8,26 +8,26 @@ export default new Router({
     {
       path: '/',
       name: 'main-page',
-      component: require('@/components/MainPage').default
+      component: require('@/components/MainPage').default,
     },
     {
       path: '/config',
       name: 'config-page',
-      component: require('@/components/ConfigPage.vue').default
+      component: require('@/components/ConfigPage.vue').default,
     },
     {
       path: '/data',
       name: 'data-page',
-      component: require('@/components/DataPage.vue').default
+      component: require('@/components/DataPage.vue').default,
     },
     {
       path: '/debug',
       name: 'debug-page',
-      component: require('@/components/DebugPage.vue').default
+      component: require('@/components/DebugPage.vue').default,
     },
     {
       path: '*',
-      redirect: '/'
-    }
-  ]
+      redirect: '/',
+    },
+  ],
 })

@@ -20,9 +20,9 @@ export default {
   methods: {},
   computed: {
     ...mapState({
-      loading: (state) => state.Misc.loading
-    })
-  }
+      loading: (state) => state.Misc.loading,
+    }),
+  },
 }
 </script>
 

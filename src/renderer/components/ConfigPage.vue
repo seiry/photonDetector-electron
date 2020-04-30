@@ -46,12 +46,12 @@ export default {
     return {
       configs: {
         savePath: null,
-        fromPath: null
-      }
+        fromPath: null,
+      },
     }
   },
   computed: {
-    ...mapState(['Config'])
+    ...mapState(['Config']),
   },
   mounted() {
     document.querySelector('.drag-save').ondrop = (e) => {
@@ -100,17 +100,17 @@ export default {
         filters: [
           {
             name: 'json文件',
-            extensions: ['json']
-          }
-        ]
+            extensions: ['json'],
+          },
+        ],
       })
       if (path) {
         // TODO:写文件
       } else {
         this.$message.warning('保存取消')
       }
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss" scoped>

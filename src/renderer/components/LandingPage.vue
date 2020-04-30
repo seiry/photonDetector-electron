@@ -59,7 +59,7 @@ export default {
   data() {
     return {
       ret: '',
-      ret2: ''
+      ret2: '',
     }
   },
   name: 'landing-page',
@@ -74,7 +74,7 @@ export default {
         myTest.add(1, 17),
         myTest.arrayAdd([-1, 9]),
         myTest.arrayAddDouble([1.2, 1.3]),
-        myTest.doubleAdd(0.1, 0.2)
+        myTest.doubleAdd(0.1, 0.2),
       ]
     },
     dmc() {
@@ -82,8 +82,8 @@ export default {
       // this.ret2 = dmc.d1000_get_speed()
       // console.log(myTest.getObj())
       console.log(can.VCI_Transmit(0, 0, 0, { Data: [1] }, 1))
-    }
-  }
+    },
+  },
 }
 </script>
 

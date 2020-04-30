@@ -13,9 +13,9 @@ export default new Vuex.Store({
   plugins: [
     createPersistedState({
       key: 'pet-vuex',
-      paths: ['Config']
-    })
+      paths: ['Config'],
+    }),
     // createSharedMutations()
   ],
-  strict: process.env.NODE_ENV !== 'production'
+  strict: process.env.NODE_ENV !== 'production',
 })

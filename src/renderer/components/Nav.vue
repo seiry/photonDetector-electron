@@ -26,7 +26,7 @@
 <script>
 export default {
   name: 'side-nav',
-  methods: {}
+  methods: {},
 }
 </script>
 

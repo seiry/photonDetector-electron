@@ -109,7 +109,7 @@ export default {
 
       tagSelected: [],
       inputTag: '',
-      inputVisible: false
+      inputVisible: false,
     }
   },
   mounted() {
@@ -129,14 +129,14 @@ export default {
         {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'warning'
+          type: 'warning',
         }
       )
         .then(() => {
           // TODO:删除
           this.$message({
             type: 'success',
-            message: '删除成功!'
+            message: '删除成功!',
           })
           this.getFiles()
         })
@@ -190,7 +190,7 @@ export default {
           size: info.size,
           name: e,
           date: info.ctime,
-          tag: savedTag[e] || null
+          tag: savedTag[e] || null,
         })
         id++
       }
@@ -207,9 +207,9 @@ export default {
         filters: [
           {
             name: '打包文件',
-            extensions: ['zip']
-          }
-        ]
+            extensions: ['zip'],
+          },
+        ],
       })
       if (savePath) {
         const JSZip = require('jszip')
@@ -223,15 +223,15 @@ export default {
           type: 'nodebuffer',
           compression: 'DEFLATE',
           compressionOptions: {
-            level: 6
-          }
+            level: 6,
+          },
         })
         fs.writeFileSync(savePath, data)
         this.$message.success('导出成功')
       } else {
         this.$message.warning('导出取消')
       }
-    }
+    },
   },
   computed: {
     ...mapState(['Config']),
@@ -269,8 +269,8 @@ export default {
         .map((e) => e.tag)
         .filter((e) => e !== null && e !== '')
       return [...new Set(tags)]
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss" scoped>

@@ -1,5 +1,5 @@
 const state = {
-  loading: false
+  loading: false,
 }
 
 const mutations = {
@@ -8,7 +8,7 @@ const mutations = {
   },
   HIDE_LOADING(state) {
     state.loading = false
-  }
+  },
 }
 
 const actions = {
@@ -22,11 +22,11 @@ const actions = {
     } else {
       commit('HIDE_LOADING')
     }
-  }
+  },
 }
 
 export default {
   state,
   mutations,
-  actions
+  actions,
 }

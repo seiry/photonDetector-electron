@@ -5,14 +5,14 @@ class HardwareBase {
       this.errMsg = {
         error: false,
         originalCode: 0,
-        msg: 'none'
+        msg: 'none',
       }
       return
     }
     this.errMsg = {
       error: true,
       originalCode: errorCode,
-      msg: msg
+      msg: msg,
     }
   }
 

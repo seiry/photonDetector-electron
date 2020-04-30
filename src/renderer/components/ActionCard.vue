@@ -30,8 +30,8 @@ export default {
         singleTime: 0.5,
         width: 30,
         beta: 8,
-        intervalFlag: null
-      }
+        intervalFlag: null,
+      },
     }
   },
   name: 'action-card',
@@ -84,17 +84,17 @@ export default {
     },
     loading() {
       this.setLoading(true)
-    }
+    },
   },
   computed: {
-    ...mapState({ status: (state) => state.Status })
+    ...mapState({ status: (state) => state.Status }),
   },
   filters: {
     fix2(e) {
       return e.toFixed(2)
-    }
+    },
   },
-  created() {}
+  created() {},
 }
 </script>
 

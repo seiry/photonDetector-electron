@@ -4,7 +4,7 @@ class DMC extends base {
   errMsg = {
     error: false,
     originalCode: 0,
-    msg: 'none'
+    msg: 'none',
   }
 
   mock = false
@@ -27,6 +27,16 @@ class DMC extends base {
       return
     }
     return re
+  }
+  // d1000_get_axis_status获取的时轴的状态，可以设计一个定时器，来将状态压入整体队列
+  timer() {
+    const axis = {
+      x: 0,
+      y: 1,
+      z: 2,
+      u: 3, // 暂时还不知道 这个u是干啥
+    }
+    api.d1000_get_axis_status(axis.y)
   }
   close() {
     const re = api.d1000_board_close()
