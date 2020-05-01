@@ -7,8 +7,8 @@
       <el-button type="primary" round @click="loading">清零</el-button>
       <el-button type="primary" round @click="init">开始</el-button>
       <el-button type="primary" round @click="stop">停止</el-button>
-      <el-button type="primary" round @click="loading">强行停止</el-button>
-      <el-button type="primary" round @click="loading">配置</el-button>
+      <el-button type="danger" round @click="forceStop">强行停止</el-button>
+      <!-- <el-button type="primary" round @click="loading">配置</el-button> -->
     </div>
   </el-card>
 </template>
@@ -99,6 +99,11 @@ export default {
     },
     stop() {
       this.setStopFlag(true)
+    },
+    forceStop() {
+      this.setStopFlag(true)
+
+      this.loading()
     },
     loading() {
       this.setLoading(true)
