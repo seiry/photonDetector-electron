@@ -1,5 +1,6 @@
 import moment from 'moment'
 const _canRate = 0.01 // °/圈
+const _maxQueueLength = 20
 const state = {
   direction: true, // true:顺民顺时针
   moveStatus: true,
@@ -65,6 +66,9 @@ const mutations = {
   },
   ADD_CAN_NUM(state, data) {
     state.numRecord.unshift(data)
+    if (state.numRecord.length > _maxQueueLength) {
+      state.numRecord.splice(_maxQueueLength, 2)
+    }
   },
   STOPFLAG_ON(state) {
     state.stopFlag = true

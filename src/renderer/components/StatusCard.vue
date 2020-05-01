@@ -16,7 +16,11 @@
         :color="colors"
       ></el-progress>
       <span>光电编码器读数: {{ lastNum }} </span>
-      <el-button type="primary" round @click="setCan">set can</el-button>
+      <el-divider></el-divider>
+      <span> 控制卡位置: </span>
+      <span>[{{ lastPositionArray }}]</span>
+
+      <!-- <el-button type="primary" round @click="setCan">set can</el-button> -->
 
       <!-- <el-button type="primary" round @click="test">主要按钮</el-button> -->
     </div>
@@ -66,7 +70,18 @@ export default {
       status: (state) => state.Status,
       canNum: (state) => state.Status.canNum,
     }),
-    ...mapGetters(['lastNum', 'vNum', 'deltaNum', 'avgV', 'angle']),
+    ...mapGetters([
+      'lastNum',
+      'vNum',
+      'deltaNum',
+      'avgV',
+      'angle',
+      'lastPosition',
+    ]),
+    lastPositionArray() {
+      const { x, y, z, time } = this.lastPosition
+      return [x, y, z].join(', ')
+    },
   },
   watch: {
     vNum(cur, pre) {
