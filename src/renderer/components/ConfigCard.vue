@@ -11,9 +11,15 @@
     <!-- <div style="background-color:red;"></div> -->
     <el-form ref="form" class="ops" :model="config">
       <el-form-item label="采集模式">
-        <el-select v-model="config.mode" placeholder="请选择" class="formText">
-          <el-option label="默认模式" :value="0" class="non-select"></el-option>
-          <el-option label="模式2" :value="1" class="non-select"></el-option>
+        <el-select v-model="mode" placeholder="请选择" class="formText">
+          <!-- 模式可以分速度和精度 -->
+          <el-option label="标准模式" :value="0" class="non-select"></el-option>
+          <el-option label="高速模式" :value="1" class="non-select"></el-option>
+          <el-option
+            label="高精度模式"
+            :value="2"
+            class="non-select"
+          ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="传感器数量n">
@@ -109,13 +115,22 @@ export default {
   name: 'config-card',
   // components: { SystemInformation },
   methods: {
-    ...mapActions(['setLoading']),
+    ...mapActions(['setLoading', 'setMode']),
     test() {
       this.setLoading(true)
     },
   },
   computed: {
     // ...mapState({ status: (state) => state.Status })
+    ...mapState(['Config']),
+    mode: {
+      get() {
+        return this.Config.mode
+      },
+      set(val) {
+        this.setMode(val)
+      },
+    },
     sigma() {
       /**
        * σ =

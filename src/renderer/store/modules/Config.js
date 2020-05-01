@@ -1,6 +1,7 @@
 const state = {
   savePath: '',
   fromPath: '',
+  mode: 0,
   dmc: {
     slowDown: true, // SD,减速使能
   },
@@ -20,9 +21,15 @@ const mutations = {
   UPDATE_SLOW_DOWN(state, payload) {
     state.dmc.slowDown = payload
   },
+  SET_MODE(state, payload) {
+    state.mode = payload
+  },
 }
 
 const actions = {
+  setMode({ commit }, data) {
+    commit('SET_MODE', data)
+  },
   saveConfig({ commit }, data) {
     commit('UPDATE_CONFIG', data)
   },
