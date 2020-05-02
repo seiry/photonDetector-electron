@@ -51,7 +51,7 @@
 
       <el-form-item label="探测孔径">
         <el-input-number
-          v-model="config.width"
+          v-model="width"
           :step="1"
           style="width:130px"
         ></el-input-number>
@@ -84,10 +84,10 @@
       </el-form-item>
       <div>
         NAll: {{ NAll }}<br />
-        σ: {{ sigma }}<br />
-        Δθ: {{ deltaTheta }}<br />
+        σ: {{ sigma | fix4 }}<br />
+        Δθ: {{ deltaTheta | fix4 }}<br />
         L1: {{ L1 }} <br />
-        φhigh: {{ phiHigh }}
+        φhigh: {{ phiHigh | fix4 }}
       </div>
     </el-form>
   </el-card>
@@ -115,7 +115,13 @@ export default {
   name: 'config-card',
   // components: { SystemInformation },
   methods: {
-    ...mapActions(['setLoading', 'setMode', 'setNum', 'setSingleTime']),
+    ...mapActions([
+      'setLoading',
+      'setMode',
+      'setNum',
+      'setSingleTime',
+      'setWidth',
+    ]),
     test() {
       this.setLoading(true)
     },
@@ -147,6 +153,14 @@ export default {
         this.setSingleTime(val)
       },
     },
+    width: {
+      get() {
+        return this.Config.width
+      },
+      set(val) {
+        this.setWidth(val)
+      },
+    },
     sigma() {
       /**
        * σ =
@@ -163,7 +177,7 @@ export default {
        * b = 2.6
        */
       const b = 2.6
-      return Math.round((Math.PI * this.config.width) / (b * 2))
+      return Math.round((Math.PI * this.Config.width) / (b * 2))
     },
     deltaTheta() {
       return this.sigma * this.config.beta
@@ -193,6 +207,9 @@ export default {
   filters: {
     fix2(e) {
       return e.toFixed(2)
+    },
+    fix4(e) {
+      return e.toFixed(4)
     },
   },
   created() {},

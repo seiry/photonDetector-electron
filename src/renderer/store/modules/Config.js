@@ -4,6 +4,7 @@ const state = {
   mode: 0,
   num: 6,
   singleTime: 0.5,
+  width: 20,
   dmc: {
     slowDown: true, // SD,减速使能
   },
@@ -32,6 +33,9 @@ const mutations = {
   SET_SINGLETIME(state, payload) {
     state.singleTime = payload
   },
+  SET_WIDTH(state, payload) {
+    state.width = payload
+  },
 }
 
 const actions = {
@@ -43,6 +47,9 @@ const actions = {
   },
   setSingleTime({ commit }, data) {
     commit('SET_SINGLETIME', data)
+  },
+  setWidth({ commit }, data) {
+    commit('SET_WIDTH', data)
   },
   saveConfig({ commit }, data) {
     commit('UPDATE_CONFIG', data)
