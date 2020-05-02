@@ -9,7 +9,7 @@
     </div>
 
     <!-- <div style="background-color:red;"></div> -->
-    <el-form ref="form" class="ops" :model="config">
+    <el-form ref="form" class="ops">
       <el-form-item label="采集模式">
         <el-select v-model="mode" placeholder="请选择" class="formText">
           <!-- 模式可以分速度和精度 -->
@@ -102,15 +102,7 @@ import myTest from '../../ffi/test.js'
 import can from '../../ffi/can'
 export default {
   data() {
-    return {
-      config: {
-        mode: 0,
-        num: 6,
-        singleTime: 0.5,
-        width: 20,
-        beta: 4,
-      },
-    }
+    return {}
   },
   name: 'config-card',
   // components: { SystemInformation },
