@@ -9,6 +9,7 @@ const state = {
   canNum: 0,
   numRecord: [], // 是个队列 TODO: 队列长度是不是要维护?
   stopFlag: false,
+  runningFlag: false,
 }
 
 const getters = {
@@ -79,6 +80,12 @@ const mutations = {
   CLEAR_NUM_RECORD(state) {
     state.numRecord = []
   },
+  START_RUNNING(state) {
+    state.runningFlag = true
+  },
+  STOP_RUNNING(state) {
+    state.runningFlag = false
+  },
 }
 
 const actions = {
@@ -112,6 +119,12 @@ const actions = {
     } else {
       commit('STOPFLAG_OFF')
     }
+  },
+  startRunningFlag({ commit }) {
+    commit('START_RUNNING')
+  },
+  stopRunningFlag({ commit }) {
+    commit('STOP_RUNNING')
   },
 }
 

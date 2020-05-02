@@ -40,16 +40,32 @@ export default {
   name: 'action-card',
   // components: { SystemInformation },
   methods: {
-    ...mapActions(['setLoading', 'addCanNum', 'setStopFlag', 'addDmcNum']),
-    init() {
-      this.initDmc() // 初始化运动控制卡，之后才是圈数监视器
-        .then((e) => {
-          this.initNumWatcher()
-        })
-        .catch((e) => {
-          this.$message.error(e)
-          console.error(e)
-        })
+    ...mapActions([
+      'startRunningFlag',
+      'stopRunningFlag',
+      'setLoading',
+      'addCanNum',
+      'setStopFlag',
+      'addDmcNum',
+    ]),
+    async init() {
+      // 初始化运动控制卡，之后才是圈数监视器
+      try {
+        await this.initDmc()
+        await this.initNumWatcher()
+      } catch (e) {
+        this.$message.error(e)
+        console.error(e)
+      }
+      this.startRunningFlag()
+      // this.initDmc()
+      //   .then((e) => {
+      //     this.initNumWatcher()
+      //   })
+      //   .catch((e) => {
+      //     this.$message.error(e)
+      //     console.error(e)
+      //   })
     },
     async initDmc() {
       if (this.intervalFlag.dmcPosition) {
@@ -99,6 +115,7 @@ export default {
     },
     stop() {
       this.setStopFlag(true)
+      this.stopRunningFlag()
     },
     forceStop() {
       this.setStopFlag(true)

@@ -9,7 +9,7 @@
     </div>
 
     <!-- <div style="background-color:red;"></div> -->
-    <el-form ref="form" class="ops">
+    <el-form ref="form" class="ops" :disabled="Status.runningFlag">
       <el-form-item label="采集模式">
         <el-select v-model="mode" placeholder="请选择" class="formText">
           <!-- 模式可以分速度和精度 -->
@@ -121,7 +121,7 @@ export default {
   },
   computed: {
     // ...mapState({ status: (state) => state.Status })
-    ...mapState(['Config']),
+    ...mapState(['Config', 'Status']),
     mode: {
       get() {
         return this.Config.mode
