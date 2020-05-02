@@ -4,9 +4,27 @@
       <span>操作</span>
     </div>
     <div style="" class="btns">
-      <el-button type="primary" round @click="loading">清零</el-button>
-      <el-button type="primary" round @click="init">开始</el-button>
-      <el-button type="primary" round @click="stop">停止</el-button>
+      <el-button
+        type="primary"
+        round
+        @click="loading"
+        :disabled="status.runningFlag"
+        >清零</el-button
+      >
+      <el-button
+        type="primary"
+        round
+        @click="init"
+        :disabled="status.runningFlag"
+        >开始</el-button
+      >
+      <el-button
+        type="primary"
+        round
+        @click="stop"
+        :disabled="!status.runningFlag"
+        >停止</el-button
+      >
       <el-button type="danger" round @click="forceStop">强行停止</el-button>
       <!-- <el-button type="primary" round @click="loading">配置</el-button> -->
     </div>
