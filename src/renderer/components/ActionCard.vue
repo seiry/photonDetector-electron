@@ -137,7 +137,7 @@ export default {
     },
     forceStop() {
       this.setStopFlag(true)
-
+      this.stopRunningFlag()
       this.loading()
     },
     loading() {

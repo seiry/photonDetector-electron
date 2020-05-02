@@ -181,6 +181,8 @@ const VCI_ResetCAN = (DevType, DevIndex, CANIndex) => {
  * 返回实际发送的帧数，=-1表示USB-CAN设备不存在或USB掉线。
  */
 // TODO: 帧是数组，这里需要验证，需不需要引用传值；也需要验证长度可变是否影响传入
+// 通过看c#的代码 应该是要引用传的，不过数组貌似就是自动引用？
+// c#代码还可以 不用数组....
 const VCI_Transmit = (DeviceType, DeviceInd, CANInd, pSend = []) => {
   // pSend = new PVCI_CAN_OBJ(pSend)
   pSend = pSend.map((e) => new VCI_CAN_OBJ(e))
