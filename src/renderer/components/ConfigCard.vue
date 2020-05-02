@@ -42,7 +42,7 @@
 
       <el-form-item label="单点时间">
         <el-input-number
-          v-model="config.singleTime"
+          v-model="singleTime"
           :step="0.1"
           style="width:130px"
         ></el-input-number>
@@ -115,7 +115,7 @@ export default {
   name: 'config-card',
   // components: { SystemInformation },
   methods: {
-    ...mapActions(['setLoading', 'setMode', 'setNum']),
+    ...mapActions(['setLoading', 'setMode', 'setNum', 'setSingleTime']),
     test() {
       this.setLoading(true)
     },
@@ -137,6 +137,14 @@ export default {
       },
       set(val) {
         this.setNum(val)
+      },
+    },
+    singleTime: {
+      get() {
+        return this.Config.singleTime
+      },
+      set(val) {
+        this.setSingleTime(val)
       },
     },
     sigma() {

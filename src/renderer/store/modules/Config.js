@@ -3,6 +3,7 @@ const state = {
   fromPath: '',
   mode: 0,
   num: 6,
+  singleTime: 0.5,
   dmc: {
     slowDown: true, // SD,减速使能
   },
@@ -28,6 +29,9 @@ const mutations = {
   SET_NUM(state, payload) {
     state.num = payload
   },
+  SET_SINGLETIME(state, payload) {
+    state.singleTime = payload
+  },
 }
 
 const actions = {
@@ -36,6 +40,9 @@ const actions = {
   },
   setNum({ commit }, data) {
     commit('SET_NUM', data)
+  },
+  setSingleTime({ commit }, data) {
+    commit('SET_SINGLETIME', data)
   },
   saveConfig({ commit }, data) {
     commit('UPDATE_CONFIG', data)
