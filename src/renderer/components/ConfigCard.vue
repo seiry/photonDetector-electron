@@ -60,7 +60,7 @@
 
       <el-form-item label="采集步进β">
         <el-select
-          v-model="config.beta"
+          v-model="beta"
           placeholder="请选择"
           class=""
           style="width:80px"
@@ -121,6 +121,7 @@ export default {
       'setNum',
       'setSingleTime',
       'setWidth',
+      'setBeta',
     ]),
     test() {
       this.setLoading(true)
@@ -161,6 +162,14 @@ export default {
         this.setWidth(val)
       },
     },
+    beta: {
+      get() {
+        return this.Config.beta
+      },
+      set(val) {
+        this.setBeta(val)
+      },
+    },
     sigma() {
       /**
        * σ =
@@ -180,7 +189,7 @@ export default {
       return Math.round((Math.PI * this.Config.width) / (b * 2))
     },
     deltaTheta() {
-      return this.sigma * this.config.beta
+      return this.sigma * this.Config.beta
     },
     L1() {
       /**

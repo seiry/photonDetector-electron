@@ -5,6 +5,7 @@ const state = {
   num: 6,
   singleTime: 0.5,
   width: 20,
+  beta: 4,
   dmc: {
     slowDown: true, // SD,减速使能
   },
@@ -36,6 +37,9 @@ const mutations = {
   SET_WIDTH(state, payload) {
     state.width = payload
   },
+  SET_BETA(state, payload) {
+    state.beta = payload
+  },
 }
 
 const actions = {
@@ -50,6 +54,9 @@ const actions = {
   },
   setWidth({ commit }, data) {
     commit('SET_WIDTH', data)
+  },
+  setBeta({ commit }, data) {
+    commit('SET_BETA', data)
   },
   saveConfig({ commit }, data) {
     commit('UPDATE_CONFIG', data)
