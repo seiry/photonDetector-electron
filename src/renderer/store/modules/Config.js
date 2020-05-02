@@ -2,6 +2,7 @@ const state = {
   savePath: '',
   fromPath: '',
   mode: 0,
+  num: 6,
   dmc: {
     slowDown: true, // SD,减速使能
   },
@@ -24,11 +25,17 @@ const mutations = {
   SET_MODE(state, payload) {
     state.mode = payload
   },
+  SET_NUM(state, payload) {
+    state.num = payload
+  },
 }
 
 const actions = {
   setMode({ commit }, data) {
     commit('SET_MODE', data)
+  },
+  setNum({ commit }, data) {
+    commit('SET_NUM', data)
   },
   saveConfig({ commit }, data) {
     commit('UPDATE_CONFIG', data)

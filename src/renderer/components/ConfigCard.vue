@@ -24,7 +24,7 @@
       </el-form-item>
       <el-form-item label="传感器数量n">
         <el-select
-          v-model="config.num"
+          v-model="num"
           placeholder="请选择"
           class=""
           style="width:80px"
@@ -115,7 +115,7 @@ export default {
   name: 'config-card',
   // components: { SystemInformation },
   methods: {
-    ...mapActions(['setLoading', 'setMode']),
+    ...mapActions(['setLoading', 'setMode', 'setNum']),
     test() {
       this.setLoading(true)
     },
@@ -129,6 +129,14 @@ export default {
       },
       set(val) {
         this.setMode(val)
+      },
+    },
+    num: {
+      get() {
+        return this.Config.num
+      },
+      set(val) {
+        this.setNum(val)
       },
     },
     sigma() {
@@ -161,7 +169,7 @@ export default {
        * ((NAll / num - 1) * (180 / NAll)) / deltaTheta 需要补足的次数
        * + 1 本身初始位置的一次
        */
-      const addNum = this.NAll / this.config.num - 1
+      const addNum = this.NAll / this.Config.num - 1
       const sigleDegree = 180 / this.NAll
       return Math.round((addNum * sigleDegree) / this.deltaTheta + 1)
     },
@@ -169,7 +177,7 @@ export default {
       /**
        * φhigh 最大旋转角
        */
-      const addNum = this.NAll / this.config.num - 1
+      const addNum = this.NAll / this.Config.num - 1
       const sigleDegree = 180 / this.NAll
       return addNum * sigleDegree
     },
