@@ -42,13 +42,8 @@ export default {
     this.can = null
     this.dmc = null
     return {
-      config: {
-        mode: 0,
-        num: 1,
-        singleTime: 0.5,
-        width: 30,
-        beta: 8,
-      },
+      taskQueue: [],
+      // [先,....,后]
       intervalFlag: {
         can: null,
         dmcPosition: null,
@@ -109,6 +104,14 @@ export default {
           this.intervalFlag.dmcPosition = null
         }
       }, 1e2)
+      /**
+       * 任务队列应该被设计成一个队列
+       * Δθ决定单次运动的角度
+       * 单点时间决定运动停止时间是多少
+       * 队列执行方法被设计成一个消费者函数 通过子函数进行执行 消费者函数应该是一个同步函数
+       */
+      this.taskQueue = this.makeTask()
+      this.mover()
     },
     initNumWatcher() {
       if (this.intervalFlag.can) {
@@ -130,6 +133,53 @@ export default {
           this.intervalFlag.can = null
         }
       }, 1e2)
+    },
+    makeTask() {
+      const move = {
+        type: 'move',
+        value: 3, // 这里应该是绝对还是相对好？ 貌似绝对的好一些
+      }
+      const stop = {
+        type: 'stop',
+        value: 3, // s
+      }
+      return [move, stop]
+    },
+    async mover() {
+      const move = async (e) => {
+        // 区分速度
+        const epsilon1 = 1
+        // const epsilon1 = 1
+        while (Math.abs(this.$store.getters.angle - e) > epsilon1) {
+          if (this.status.stopFlag) {
+            return
+          }
+          const isRunning = this.dmc.isRunning()
+          if (isRunning) {
+            await sleep(100)
+          } else {
+            this.dmc.move()
+          }
+        }
+        this.dmc.stopX()
+        console.log('i moved to', e)
+      }
+      const stop = async (e) => {
+        await sleep(e * 1e3)
+        console.log('stoped', e)
+      }
+      const sleep = (ms) => {
+        return new Promise((resolve) => setTimeout(resolve, ms))
+      }
+      console.log(this.taskQueue)
+      while (this.taskQueue.length > 0) {
+        const task = this.taskQueue.shift()
+        if (task.type === 'move') {
+          await move(task.value)
+        } else if (task.type === 'stop') {
+          await stop(task.value)
+        }
+      }
     },
     stop() {
       this.setStopFlag(true)

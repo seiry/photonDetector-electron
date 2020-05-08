@@ -84,11 +84,45 @@
         </el-tooltip>
       </el-form-item>
       <div>
-        NAll: {{ NAll }}<br />
-        σ: {{ sigma | fix4 }}<br />
-        Δθ: {{ deltaTheta | fix4 }}<br />
-        L1: {{ L1 }} <br />
-        φhigh: {{ phiHigh | fix4 }}
+        <el-tooltip
+          class="item"
+          effect="dark"
+          content="给定直径，组成满环 需要多少个传感器"
+          placement="top"
+        >
+          <span>NAll: {{ NAll }}</span>
+        </el-tooltip>
+        <br />
+        <el-tooltip
+          class="item"
+          effect="dark"
+          content="每个传感器的度数"
+          placement="top"
+        >
+          <span>σ: {{ sigma | fix4 }}</span>
+        </el-tooltip>
+        <br />
+        <el-tooltip class="item" effect="dark" content="" placement="top">
+          <span>Δθ: {{ deltaTheta | fix4 }}</span>
+        </el-tooltip>
+        <br />
+        <el-tooltip
+          class="item"
+          effect="dark"
+          content="采集的位置数量"
+          placement="top"
+        >
+          <span>L1: {{ L1 }}</span>
+        </el-tooltip>
+        <br />
+        <el-tooltip
+          class="item"
+          effect="dark"
+          content="最大旋转角"
+          placement="top"
+        >
+          <span>φhigh: {{ phiHigh | fix4 }}</span>
+        </el-tooltip>
       </div>
     </el-form>
   </el-card>

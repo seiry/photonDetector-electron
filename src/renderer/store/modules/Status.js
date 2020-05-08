@@ -97,7 +97,6 @@ const mutations = {
     const lastNum = getters.lastNum
     const last2ndNum = getters.last2ndNum
     const last3ndNum = getters.last3ndNum
-    // eslint-disable-next-line no-unused-vars
     const lastDirection = last2ndNum - last3ndNum > 0 // 再向前一组的方向
     const direction = lastNum - last2ndNum > 0 // 当前的方向
     const addDirection = toAdd - lastNum > 0 // 新添加的数据的方向

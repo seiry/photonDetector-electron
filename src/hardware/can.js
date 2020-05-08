@@ -104,7 +104,7 @@ class Can extends base {
    */
   readNum() {
     if (this.mock) {
-      this.mockNum += Math.round(Math.random() * 1000)
+      this.mockNum += Math.round(Math.random() * 10)
       if (this.mockNum > _maxCanNum) {
         this.mockNum -= _maxCanNum
       }

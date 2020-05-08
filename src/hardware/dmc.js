@@ -68,6 +68,34 @@ class DMC extends base {
       api.d1000_decel_stop(axis)
     }
   }
+  stopX(immediate = false) {
+    if (immediate) {
+      api.d1000_immediate_stop(Axis.x)
+    } else {
+      api.d1000_decel_stop(Axis.x)
+    }
+  }
+  move(direction = 1) {
+    const startV = 500
+    const maxV = -1000 * direction
+    const accTime = 0.1
+    api.d1000_start_tv_move(Axis.x, startV, maxV, accTime)
+  }
+  isRunning() {
+    if (this.mock) {
+      if (Math.random() > 0.5) {
+        return true
+      } else {
+        return false
+      }
+    }
+    const re = api.d1000_check_done(Axis.x)
+    if (re === 0) {
+      return true
+    } else {
+      return false
+    }
+  }
   close() {
     const re = api.d1000_board_close()
     return re
