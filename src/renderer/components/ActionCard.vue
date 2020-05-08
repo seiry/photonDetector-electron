@@ -43,6 +43,7 @@ export default {
     this.dmc = null
     return {
       taskQueue: [],
+      taskQueueLength: 0,
       // [先,....,后]
       intervalFlag: {
         can: null,
@@ -143,10 +144,26 @@ export default {
         type: 'stop',
         value: 3, // s
       }
-      return [move, stop]
+      let temp = []
+      const singleTime = this.$store.state.Config.singleTime
+      const deltaTheta = this.$store.getters.deltaTheta
+      const loops = this.$store.getters.L1
+      for (let i = 0; i < loops; i++) {
+        temp.push({
+          type: 'stop',
+          value: singleTime,
+        })
+        temp.push({
+          type: 'move',
+          value: deltaTheta * (i + 1),
+        })
+      }
+      // TODO: 完成音乐？
+      return temp
     },
     async mover() {
       const move = async (e) => {
+        console.log('start moving')
         // 区分速度
         const epsilon1 = 1
         // const epsilon1 = 1
@@ -165,6 +182,7 @@ export default {
         console.log('i moved to', e)
       }
       const stop = async (e) => {
+        console.log('start stop')
         await sleep(e * 1e3)
         console.log('stoped', e)
       }
@@ -173,6 +191,7 @@ export default {
       }
       console.log(this.taskQueue)
       while (this.taskQueue.length > 0) {
+        // 通过队列长度显示进度
         const task = this.taskQueue.shift()
         if (task.type === 'move') {
           await move(task.value)
