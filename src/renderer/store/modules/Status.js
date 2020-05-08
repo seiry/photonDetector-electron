@@ -1,15 +1,18 @@
 import moment from 'moment'
+
 // const _canRate = 0.01 // °/圈
-const _maxCanNum = 16383
-const _canRate = 360.0 / _maxCanNum // 一圈为16383刻度
+const _maxCanNum = 16383 // 一圈为16383刻度
+const _canRate = 360.0 / _maxCanNum // °/圈
+
 const _maxQueueLength = 20
+
 const state = {
   direction: true, // true:顺民顺时针
   moveStatus: true,
   speed: 1.0,
   degree: 1.0,
   canNum: 0,
-  numRecord: [], // 是个队列 TODO: 队列长度是不是要维护?
+  numRecord: [], // 是个队列
   turns: 0, // 圈数多少
   stopFlag: false,
   runningFlag: false,
@@ -57,6 +60,8 @@ const getters = {
     return +speed.toFixed(8)
   },
   avgV(state) {
+    // 这里会有超圈错误，因为圈数没有历史状态记录
+    // TODO: 重构可以使用一个真实的圈数队列
     if (state.numRecord.length < 10) {
       return 0
     }
@@ -113,8 +118,6 @@ const mutations = {
         }
       }
     }
-
-    // debugger
 
     state.numRecord.unshift(data)
     if (state.numRecord.length > _maxQueueLength) {
