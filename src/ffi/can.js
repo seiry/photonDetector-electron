@@ -186,6 +186,7 @@ const VCI_ResetCAN = (DevType, DevIndex, CANIndex) => {
 const VCI_Transmit = (DeviceType, DeviceInd, CANInd, pSend = []) => {
   // pSend = new PVCI_CAN_OBJ(pSend)
   pSend = pSend.map((e) => new VCI_CAN_OBJ(e))
+  // TODO: 这里老代码中传入的是对象指针而不是数组 可能需要调试
   const SendArray = new VCI_CAN_OBJArrayType(pSend)
   return can.VCI_Transmit(
     DeviceType,
@@ -213,7 +214,7 @@ const VCI_Receive = (DevType, DevIndex, CANIndex, Len = 2500, WaitTime = 0) => {
     DevType,
     DevIndex,
     CANIndex,
-    pReceive.ref(), // TODO: ref?
+    pReceive.ref(),
     Len,
     WaitTime
   )

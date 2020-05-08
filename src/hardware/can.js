@@ -1,6 +1,7 @@
 /* eslint-disable no-unreachable */
 import api from '../ffi/can'
 import base from './base.class'
+const _maxCanNum = 16383
 
 class Can extends base {
   errMsg = {
@@ -103,17 +104,22 @@ class Can extends base {
    */
   readNum() {
     if (this.mock) {
-      this.mockNum += Math.round(Math.random() * 100 - 5)
+      this.mockNum += Math.round(Math.random() * 1000)
+      if (this.mockNum > _maxCanNum) {
+        this.mockNum -= _maxCanNum
+      }
       return this.mockNum
     }
     const data = {
-      ID: 0,
+      // ID: 0,
+      ID: 0x00000002, // 这个是老代码里的
       TimeStamp: 0, // 这个东西 是不是发出是没有的
       TimeFlag: 0x1,
       SendType: 1,
       RemoteFlag: 0,
       ExternFlag: 0,
       DataLen: 4,
+      // DataLen: 5,//老代码里是5？？
       Data: [0x4, 0x2, 0x1, 0x0],
       // Reserved: [0, 0, 0]
     }
@@ -146,6 +152,8 @@ class Can extends base {
       retry++
     } while (re === 0 && retry < 10)
 
+    // api.VCI_ClearBuffer(this.devType, this.devIndex, this.canIndex) //TODO: 读完销毁？
+
     if (re === -1) {
       this.setError(re, 'usb设备不存在')
       return -1
@@ -161,7 +169,7 @@ class Can extends base {
       return 0
     }
 
-    let num = -1
+    let num = 0
     for (let d of re) {
       d = d.Data
       if (d.length === 0) {
@@ -175,6 +183,7 @@ class Can extends base {
       const id = d[1]
       const command = d[2]
       const recieve = d.slice(3, length) // expect recieve.length === 2
+      // TODO: data内的类型是byte，可能需要转换？
       if (id !== 0x2) {
         // id不匹配
       }

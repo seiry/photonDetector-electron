@@ -17,6 +17,7 @@
       ></el-progress>
       <el-divider></el-divider>
       <span>光电编码器读数: {{ lastNum }} </span>
+      <span>光电编码器圈数: {{ status.turns }} </span>
       <span> 控制卡位置: </span>
       <span>[{{ lastPositionArray }}]</span>
       <el-divider></el-divider>

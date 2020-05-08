@@ -1,5 +1,7 @@
 import moment from 'moment'
-const _canRate = 0.01 // °/圈
+// const _canRate = 0.01 // °/圈
+const _maxCanNum = 16383
+const _canRate = 360.0 / _maxCanNum // 一圈为16383刻度
 const _maxQueueLength = 20
 const state = {
   direction: true, // true:顺民顺时针
@@ -8,6 +10,7 @@ const state = {
   degree: 1.0,
   canNum: 0,
   numRecord: [], // 是个队列 TODO: 队列长度是不是要维护?
+  turns: 0, // 圈数多少
   stopFlag: false,
   runningFlag: false,
 }
@@ -18,6 +21,23 @@ const getters = {
       return 0
     }
     return state.numRecord[0].num
+  },
+  last2ndNum(state) {
+    if (state.numRecord.length < 2) {
+      return 0
+    }
+    return state.numRecord[1].num
+  },
+  last3ndNum(state) {
+    if (state.numRecord.length < 3) {
+      return 0
+    }
+    return state.numRecord[2].num
+  },
+  trueNum(state, getters) {
+    // debugger
+
+    return getters.lastNum + state.turns * _maxCanNum // 当前读数+圈数
   },
   deltaNum(state) {
     if (state.numRecord.length < 2) {
@@ -46,13 +66,14 @@ const getters = {
     const speed = rate * _canRate
     return +speed.toFixed(8)
   },
-  angle(state) {
-    if (state.numRecord.length < 2) {
-      return 0
-    }
-    const delta =
-      state.numRecord[0].num - state.numRecord[state.numRecord.length - 1].num
-    return +(delta * _canRate).toFixed(8)
+  angle(state, getters) {
+    // if (state.numRecord.length < 2) {
+    //   return 0
+    // }
+    // const delta =
+    //   state.numRecord[0].num - state.numRecord[state.numRecord.length - 1].num
+    // debugger
+    return +(getters.trueNum * _canRate).toFixed(8)
   },
 }
 const mutations = {
@@ -65,7 +86,36 @@ const mutations = {
   SET_CAN_NUM(state, num) {
     state.canNum = num
   },
-  ADD_CAN_NUM(state, data) {
+  ADD_CAN_NUM(state, { data, getters }) {
+    // 突然变大或变小意味着超圈
+    const toAdd = data.num
+    const lastNum = getters.lastNum
+    const last2ndNum = getters.last2ndNum
+    const last3ndNum = getters.last3ndNum
+    // eslint-disable-next-line no-unused-vars
+    const lastDirection = last2ndNum - last3ndNum > 0 // 再向前一组的方向
+    const direction = lastNum - last2ndNum > 0 // 当前的方向
+    const addDirection = toAdd - lastNum > 0 // 新添加的数据的方向
+    if (
+      last2ndNum === lastNum || // 0值/不变值不跳转
+      lastNum === toAdd || // 0值/不变值不跳转
+      lastDirection === addDirection // 祖状态相同不跳转
+    ) {
+    } else {
+      if (addDirection !== direction) {
+        // 发生变化 比如 90 100 1  =>  10 vs -99
+        if (addDirection === false) {
+          // 小于0 就是正超圈
+          state.turns += 1
+        } else {
+          // 负超圈
+          state.turns -= 1
+        }
+      }
+    }
+
+    // debugger
+
     state.numRecord.unshift(data)
     if (state.numRecord.length > _maxQueueLength) {
       state.numRecord.splice(_maxQueueLength, 2)
@@ -107,10 +157,13 @@ const actions = {
   setCanNum({ commit }, data) {
     commit('SET_CAN_NUM', data)
   },
-  addCanNum({ commit }, data) {
+  addCanNum({ commit, getters }, data) {
     commit('ADD_CAN_NUM', {
-      num: data || 0,
-      time: +moment().format('x'),
+      data: {
+        num: data || 0,
+        time: +moment().format('x'),
+      },
+      getters,
     })
   },
   setStopFlag({ commit }, data) {
