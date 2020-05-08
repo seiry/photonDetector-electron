@@ -7,7 +7,7 @@
       <el-button
         type="primary"
         round
-        @click="loading"
+        @click="clear"
         :disabled="status.runningFlag"
         >清零</el-button
       >
@@ -61,6 +61,8 @@ export default {
       'addCanNum',
       'setStopFlag',
       'addDmcNum',
+      'clearCanNum',
+      'setCurrentTask',
     ]),
     async init() {
       // 初始化运动控制卡，之后才是圈数监视器
@@ -163,11 +165,15 @@ export default {
     },
     async mover() {
       const move = async (e) => {
-        console.log('start moving')
+        console.log('start moving to', e, 'from', this.$store.getters.angle)
         // 区分速度
         const epsilon1 = 1
+        const direction = 1
         // const epsilon1 = 1
-        while (Math.abs(this.$store.getters.angle - e) > epsilon1) {
+        while (
+          Math.abs(this.$store.getters.angle - e) > epsilon1 ||
+          (this.$store.getters.angle - e) * direction < 0 // 没有达到目标
+        ) {
           if (this.status.stopFlag) {
             return
           }
@@ -179,7 +185,7 @@ export default {
           }
         }
         this.dmc.stopX()
-        console.log('i moved to', e)
+        console.log('i have moved to', e)
       }
       const stop = async (e) => {
         console.log('start stop')
@@ -193,6 +199,7 @@ export default {
       while (this.taskQueue.length > 0) {
         // 通过队列长度显示进度
         const task = this.taskQueue.shift()
+        this.setCurrentTask(task)
         if (task.type === 'move') {
           await move(task.value)
         } else if (task.type === 'stop') {
@@ -208,6 +215,9 @@ export default {
       this.setStopFlag(true)
       this.stopRunningFlag()
       this.loading()
+    },
+    clear() {
+      this.clearCanNum()
     },
     loading() {
       this.setLoading(true)

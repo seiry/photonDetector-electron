@@ -22,7 +22,7 @@
       <!-- //仅使用x轴 -->
       <!-- <span>[{{  }}]</span> -->
       <el-divider></el-divider>
-      <span>下一条命令</span>
+      <span>当前指令 {{ status.order.type }}: {{ status.order.value }}</span>
       <!-- <el-button type="primary" round @click="setCan">set can</el-button> -->
 
       <!-- <el-button type="primary" round @click="test">主要按钮</el-button> -->

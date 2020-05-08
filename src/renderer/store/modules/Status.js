@@ -12,10 +12,12 @@ const state = {
   speed: 1.0,
   degree: 1.0,
   canNum: 0,
+  startNum: 0,
   numRecord: [], // 是个队列
   turns: 0, // 圈数多少
   stopFlag: false,
   runningFlag: false,
+  order: { type: '', value: 0 },
 }
 
 const getters = {
@@ -78,7 +80,7 @@ const getters = {
     // const delta =
     //   state.numRecord[0].num - state.numRecord[state.numRecord.length - 1].num
     // debugger
-    return +(getters.trueNum * _canRate).toFixed(8)
+    return +((getters.trueNum - state.startNum) * _canRate).toFixed(8)
   },
 }
 const mutations = {
@@ -92,8 +94,12 @@ const mutations = {
     state.canNum = num
   },
   ADD_CAN_NUM(state, { data, getters }) {
-    // 突然变大或变小意味着超圈
     const toAdd = data.num
+
+    if (state.canNum.length === 0) {
+      state.startNum = toAdd
+    }
+    // 突然变大或变小意味着超圈
     const lastNum = getters.lastNum
     const last2ndNum = getters.last2ndNum
     const last3ndNum = getters.last3ndNum
@@ -138,6 +144,13 @@ const mutations = {
   STOP_RUNNING(state) {
     state.runningFlag = false
   },
+  CLEAR_CAN_NUM(state) {
+    state.numRecord = []
+    state.turns = 0
+  },
+  SET_TASK_ORDER(state, data) {
+    state.order = data
+  },
 }
 
 const actions = {
@@ -155,6 +168,9 @@ const actions = {
     } else {
       commit('HIDE_LOADING')
     }
+  },
+  clearCanNum({ commit }) {
+    commit('CLEAR_CAN_NUM')
   },
   setCanNum({ commit }, data) {
     commit('SET_CAN_NUM', data)
@@ -180,6 +196,9 @@ const actions = {
   },
   stopRunningFlag({ commit }) {
     commit('STOP_RUNNING')
+  },
+  setCurrentTask({ commit }, data) {
+    commit('SET_TASK_ORDER', data)
   },
 }
 
