@@ -96,7 +96,7 @@
 
 <script>
 /* eslint-disable no-unused-vars */
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapState, mapGetters } from 'vuex'
 // import SystemInformation from './LandingPage/SystemInformation'
 import dmc from '../../ffi/dmc1380.js'
 import myTest from '../../ffi/test.js'
@@ -123,6 +123,7 @@ export default {
   computed: {
     // ...mapState({ status: (state) => state.Status })
     ...mapState(['Config', 'Status']),
+    ...mapGetters(['sigma', 'NAll', 'deltaTheta', 'L1', 'phiHigh']),
     mode: {
       get() {
         return this.Config.mode
@@ -162,48 +163,6 @@ export default {
       set(val) {
         this.setBeta(val)
       },
-    },
-    sigma() {
-      /**
-       * σ =
-       */
-      // 180 / NAll 每个传感器的度数
-      // a = 12 单个传感器的晶体纤维数量
-      const a = 12
-      return 180 / this.NAll / a
-    },
-    NAll() {
-      /**
-       * 给定直径，组成满环 需要多少个传感器
-       * NAll = pi * D / 2b
-       * b = 2.6
-       */
-      const b = 2.6
-      return Math.round((Math.PI * this.Config.width) / (b * 2))
-    },
-    deltaTheta() {
-      return this.sigma * this.Config.beta
-    },
-    L1() {
-      /**
-       * 采集的位置数量
-       * NAll / num  需要旋转弥补的比例
-       * NAll / num - 1 需要旋转的次数 (完全不重叠的情况(不考虑β))
-       * (NAll / num - 1) * (180 / NAll) 需要补足的角度
-       * ((NAll / num - 1) * (180 / NAll)) / deltaTheta 需要补足的次数
-       * + 1 本身初始位置的一次
-       */
-      const addNum = this.NAll / this.Config.num - 1
-      const sigleDegree = 180 / this.NAll
-      return Math.round((addNum * sigleDegree) / this.deltaTheta + 1)
-    },
-    phiHigh() {
-      /**
-       * φhigh 最大旋转角
-       */
-      const addNum = this.NAll / this.Config.num - 1
-      const sigleDegree = 180 / this.NAll
-      return addNum * sigleDegree
     },
   },
   filters: {

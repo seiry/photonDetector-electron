@@ -11,7 +11,50 @@ const state = {
   },
 }
 
-const getters = {}
+const getters = {
+  sigma(state, getters) {
+    /**
+     * σ =
+     */
+    // 180 / NAll 每个传感器的度数
+    // a = 12 单个传感器的晶体纤维数量
+    const a = 12
+    return 180 / getters.NAll / a
+  },
+  NAll(state) {
+    /**
+     * 给定直径，组成满环 需要多少个传感器
+     * NAll = pi * D / 2b
+     * b = 2.6
+     */
+    const b = 2.6
+    return Math.round((Math.PI * state.width) / (b * 2))
+  },
+  deltaTheta(state, getters) {
+    return getters.sigma * state.beta
+  },
+  L1(state, getters) {
+    /**
+     * 采集的位置数量
+     * NAll / num  需要旋转弥补的比例
+     * NAll / num - 1 需要旋转的次数 (完全不重叠的情况(不考虑β))
+     * (NAll / num - 1) * (180 / NAll) 需要补足的角度
+     * ((NAll / num - 1) * (180 / NAll)) / deltaTheta 需要补足的次数
+     * + 1 本身初始位置的一次
+     */
+    const addNum = getters.NAll / state.num - 1
+    const sigleDegree = 180 / getters.NAll
+    return Math.round((addNum * sigleDegree) / getters.deltaTheta + 1)
+  },
+  phiHigh(state, getters) {
+    /**
+     * φhigh 最大旋转角
+     */
+    const addNum = getters.NAll / state.num - 1
+    const sigleDegree = 180 / getters.NAll
+    return addNum * sigleDegree
+  },
+}
 const mutations = {
   UPDATE_CONFIG(state, payload) {
     const stateKeys = Object.keys(state) || []

@@ -18,8 +18,9 @@
       <el-divider></el-divider>
       <span>光电编码器读数: {{ lastNum }} </span>
       <span>光电编码器圈数: {{ status.turns }} </span>
-      <span> 控制卡位置: </span>
-      <span>[{{ lastPositionArray }}]</span>
+      <span> 控制卡位置: {{ lastPositionArray }}</span>
+      <!-- //仅使用x轴 -->
+      <!-- <span>[{{  }}]</span> -->
       <el-divider></el-divider>
       <span>下一条命令</span>
       <!-- <el-button type="primary" round @click="setCan">set can</el-button> -->
@@ -82,7 +83,7 @@ export default {
     ]),
     lastPositionArray() {
       const { x, y, z, time } = this.lastPosition
-      return [x, y, z].join(', ')
+      return x
     },
   },
   watch: {
