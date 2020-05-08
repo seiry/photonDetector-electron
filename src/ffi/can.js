@@ -36,7 +36,7 @@ const VCI_BOARD_INFO = StructType({
   Reserved: 'ushort',
 })
 const VCI_CAN_OBJ = StructType({
-  id: 'uint',
+  ID: 'uint',
   TimeStamp: 'uint',
   TimeFlag: 'byte',
   SendType: 'byte',

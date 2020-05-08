@@ -8,9 +8,11 @@ class Can extends base {
     originalCode: 0,
     msg: 'none',
   }
-  devType = 4
+
+  devType = 4 // usbcan2
   devIndex = 0
   canIndex = 0
+
   mock = false
   mockNum = 0
   constructor(mock = false) {
@@ -43,16 +45,16 @@ class Can extends base {
      * Timing 实际上是通过时钟倍率来调整波特率
      */
     const config = {
-      // TODO: 这个掩码设置方式 应该是我全都要吧
+      // 这个掩码设置方式 应该是我全都要吧
       AccCode: 0x00000000,
       AccMask: 0xffffffff,
       Reserved: 0,
-      Filter: 2,
+      Filter: 2, // 标准帧
+      // Filter: 1, // 所有帧 老代码上是这也的
       Timing0: 0x00,
       Timing1: 0x1c,
       Mode: 0,
     }
-    // TODO: canindex?
     re = api.VCI_InitCAN(this.devType, this.devIndex, this.canIndex, config)
 
     if (re === 1 || this.mock) {
@@ -105,7 +107,7 @@ class Can extends base {
       return this.mockNum
     }
     const data = {
-      id: 0,
+      ID: 0,
       TimeStamp: 0, // 这个东西 是不是发出是没有的
       TimeFlag: 0x1,
       SendType: 1,
