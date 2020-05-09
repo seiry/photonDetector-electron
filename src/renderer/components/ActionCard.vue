@@ -233,10 +233,13 @@ export default {
     loading() {
       this.setLoading(true)
     },
-    debugCan() {
-      let re = ffi.VCI_StartCAN(4, 0, 0)
+    async debugCan() {
+      const sleep = (ms) => {
+        return new Promise((resolve) => setTimeout(resolve, ms))
+      }
+      let re = ffi.VCI_OpenDevice(4, 0, 0)
       // 返回值=1，表示操作成功；=0表示操作失败；=-1表示USB-CAN设备不存在或USB掉线。
-      console.log('start', re)
+      console.log('open', re)
       const config = {
         // 这个掩码设置方式 应该是我全都要吧
         AccCode: 0x00000000,
@@ -253,6 +256,29 @@ export default {
        * 返回值=1，表示操作成功；=0表示操作失败；=-1表示USB-CAN设备不存在或USB掉线。
        */
       console.log('init', re)
+      re = ffi.VCI_ClearBuffer(4, 0, 0)
+      console.log('clear buff', re)
+
+      re = ffi.VCI_StartCAN(4, 0, 0)
+      console.log('can start', re)
+
+      const data = {
+        // ID: 0,
+        ID: 0x00000002, // 这个是老代码里的
+        TimeStamp: 0, // 这个东西 是不是发出是没有的
+        TimeFlag: 0x1,
+        SendType: 1,
+        RemoteFlag: 0,
+        ExternFlag: 0,
+        DataLen: 4,
+        // DataLen: 5,//老代码里是5？？
+        Data: [0x4, 0x2, 0x1, 0x0],
+        // Reserved: [0, 0, 0]
+      }
+      re = ffi.VCI_Transmit(4, 0, 0, data)
+      console.log('transmit', re)
+      await sleep(100)
+      re = ffi.VCI_Receive(4, 0, 0, 2)
     },
     closeCan() {
       // 返回值=1，表示操作成功；=0表示操作失败；=-1表示USB-CAN设备不存在或USB掉线。

@@ -57,20 +57,18 @@ const VCI_CAN_OBJArrayType = ArrayType(VCI_CAN_OBJ)
 // console.log(new PVCI_INIT_CONFIG({ Mode: '123' }))
 const can = new ffi.Library(dllPath('ControlCAN.dll'), {
   // 文档里的dword是有问题的，明显返回值是有符号的...
-  VCI_OpenDevice: ['int', ['ulong', 'ulong', 'ulong']],
+  VCI_OpenDevice: ['int', ['int', 'int', 'int']],
   VCI_CloseDevice: ['int', ['int', 'int']],
   VCI_InitCAN: ['int', ['int', 'int', 'int', ref.refType(VCI_INIT_CONFIG)]],
   VCI_ReadBoardInfo: ['ulong', ['ulong', 'ulong', ref.refType(VCI_BOARD_INFO)]],
   VCI_GetReceiveNum: ['ulong', ['ulong', 'ulong', 'ulong']],
   VCI_ClearBuffer: ['ulong', ['ulong', 'ulong', 'ulong']],
   VCI_StartCAN: ['int', ['ulong', 'ulong', 'ulong']],
-  VCI_Transmit: [
-    'ulong',
-    ['ulong', 'ulong', 'ulong', VCI_CAN_OBJArrayType, 'ulong'],
-  ],
+  // VCI_Transmit: ['int', ['int', 'int', 'int', VCI_CAN_OBJArrayType, 'int']],
+  VCI_Transmit: ['int', ['int', 'int', 'int', ref.refType(VCI_CAN_OBJ), 'int']],
   VCI_Receive: [
     'int',
-    ['ulong', 'ulong', 'ulong', VCI_CAN_OBJArrayType, 'ulong', 'int'],
+    ['int', 'int', 'int', ref.refType(VCI_CAN_OBJ), 'int', 'int'],
   ],
 })
 
@@ -180,11 +178,13 @@ const VCI_ResetCAN = (DevType, DevIndex, CANIndex) => {
 // TODO: 帧是数组，这里需要验证，需不需要引用传值；也需要验证长度可变是否影响传入
 // 通过看c#的代码 应该是要引用传的，不过数组貌似就是自动引用？
 // c#代码还可以 不用数组....
-const VCI_Transmit = (DeviceType, DeviceInd, CANInd, pSend = []) => {
+const VCI_TransmitOrigen = (DeviceType, DeviceInd, CANInd, pSend = []) => {
   // pSend = new PVCI_CAN_OBJ(pSend)
   pSend = pSend.map((e) => new VCI_CAN_OBJ(e))
+  console.log('psend', pSend)
   // TODO: 这里老代码中传入的是对象指针而不是数组 可能需要调试
   const SendArray = new VCI_CAN_OBJArrayType(pSend)
+  console.log('SendArray', SendArray)
   return can.VCI_Transmit(
     DeviceType,
     DeviceInd,
@@ -193,7 +193,13 @@ const VCI_Transmit = (DeviceType, DeviceInd, CANInd, pSend = []) => {
     pSend.Length
   )
 }
-
+const VCI_Transmit = (DeviceType, DeviceInd, CANInd, pSend) => {
+  // pSend = new PVCI_CAN_OBJ(pSend)
+  pSend = new VCI_CAN_OBJ(pSend)
+  console.log('psend', pSend)
+  // TODO: 这里老代码中传入的是对象指针而不是数组 可能需要调试
+  return can.VCI_Transmit(DeviceType, DeviceInd, CANInd, pSend.ref(), 1)
+}
 /**
  * 接收函数。此函数从指定的设备CAN通道的接收缓冲区中读取数据。
  * @param {*} DevType
@@ -211,7 +217,7 @@ const VCI_Receive = (DevType, DevIndex, CANIndex, Len = 2500, WaitTime = 0) => {
     DevType,
     DevIndex,
     CANIndex,
-    pReceive.ref(),
+    pReceive[0].ref(),
     Len,
     WaitTime
   )

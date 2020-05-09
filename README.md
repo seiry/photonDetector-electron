@@ -7,7 +7,9 @@
 
 因为使用了`node-ffi-napi`，所以在Windows上，需要vs toolchain全家桶。
 
-以vs2019为例，需要`c++ toolsets`, `windows sdk`，要不`gyp`跑不起来
+以vs2019为例，需要`c++ toolsets`, `windows sdk`，否则`gyp`会跑不起来
+
+`windows sdk`最低需要`Windows 8.1`版本。即使是`Windows 7`，同样可以安装该依赖
 
 安装完成后需要`rebuild`
 

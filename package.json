@@ -1,7 +1,7 @@
 {
     "name": "pet-controler",
     "version": "0.0.1",
-    "intVersion": 15,
+    "intVersion": 20,
     "author": "Seiry Yu",
     "description": "γ光子探测器控制系统",
     "license": "UNLICENSED",
