@@ -177,6 +177,8 @@ export default {
           if (this.status.stopFlag) {
             return
           }
+          // TODO: 分段控制
+          // TODO: 根据模式调速
           const isRunning = this.dmc.isRunning()
           if (isRunning) {
             await sleep(100)
@@ -189,6 +191,8 @@ export default {
       }
       const stop = async (e) => {
         console.log('start stop')
+        // TODO: scaning action
+        // TODO: 扫描动画
         await sleep(e * 1e3)
         console.log('stoped', e)
       }
