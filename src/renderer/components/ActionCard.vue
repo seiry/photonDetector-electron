@@ -25,8 +25,8 @@
         :disabled="!status.runningFlag"
         >停止</el-button
       >
-      <el-button type="primary" round @click="debugCan">debug can</el-button>
-      <el-button type="primary" round @click="closeCan">close can</el-button>
+      <!-- <el-button type="primary" round @click="debugCan">debug can</el-button>
+      <el-button type="primary" round @click="closeCan">close can</el-button> -->
 
       <el-button type="danger" round @click="forceStop">强行停止</el-button>
       <!-- <el-button type="primary" round @click="loading">配置</el-button> -->
@@ -78,22 +78,13 @@ export default {
         console.error(e)
       }
       this.startRunningFlag()
-      // this.initDmc()
-      //   .then((e) => {
-      //     this.initNumWatcher()
-      //   })
-      //   .catch((e) => {
-      //     this.$message.error(e)
-      //     console.error(e)
-      //   })
     },
     async initDmc() {
       if (this.intervalFlag.dmcPosition) {
         return
       }
       if (!this.dmc) {
-        this.dmc = new Dmc()
-        // this.dmc = new Dmc(true)
+        this.dmc = new Dmc(this.config.mockMode)
       }
       // const e = this.dmc.close()
       if (this.dmc.error) {
@@ -126,8 +117,7 @@ export default {
         return
       }
       if (!this.can) {
-        // this.can = new Can(true)
-        this.can = new Can()
+        this.can = new Can(this.config.mockMode)
       }
       if (this.can.error) {
         this.$message.error(this.can.humenErrorMsg)
@@ -287,7 +277,10 @@ export default {
     },
   },
   computed: {
-    ...mapState({ status: (state) => state.Status }),
+    ...mapState({
+      status: (state) => state.Status,
+      config: (state) => state.Config,
+    }),
   },
   filters: {
     fix2(e) {

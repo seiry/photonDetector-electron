@@ -28,7 +28,9 @@
           <el-checkbox v-model="slowDown" border
             >减速使能: {{ slowDown ? '使能' : '禁止' }}</el-checkbox
           >
-          <span></span>
+          <el-checkbox v-model="mock" border
+            >mock模式: {{ mock ? '开' : '关' }}</el-checkbox
+          >
         </div>
       </el-card>
 
@@ -70,6 +72,14 @@ export default {
       },
       set(val) {
         this.$store.dispatch('updateSlowDown', val)
+      },
+    },
+    mock: {
+      get() {
+        return this.Config.mockMode
+      },
+      set(val) {
+        this.$store.dispatch('setMock', val)
       },
     },
   },

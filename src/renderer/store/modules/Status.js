@@ -5,6 +5,7 @@ const _maxCanNum = 16383 // 一圈为16383刻度
 const _canRate = 360.0 / _maxCanNum // °/圈
 
 const _maxQueueLength = 20
+const _debounce = 2
 
 const state = {
   direction: true, // true:顺民顺时针
@@ -14,6 +15,7 @@ const state = {
   canNum: 0,
   startNum: 0,
   numRecord: [], // 是个队列
+  realNums: [], // 真实读数队列 可据此派生真实读数和速度
   turns: 0, // 圈数多少
   stopFlag: false,
   runningFlag: false,
@@ -40,11 +42,13 @@ const getters = {
     return state.numRecord[2].num
   },
   trueNum(state, getters) {
-    // debugger
-
-    return getters.lastNum + state.turns * _maxCanNum // 当前读数+圈数
+    if (state.realNums.length === 0) {
+      return 0
+    }
+    return state.realNums[0].num
   },
   deltaNum(state) {
+    // real
     if (state.numRecord.length < 2) {
       return 0
     }
@@ -85,7 +89,7 @@ const getters = {
   },
   angleOfCan(state, getters) {
     // 小轮
-    return +((getters.trueNum - state.startNum) * _canRate).toFixed(8)
+    return +(getters.trueNum * _canRate).toFixed(8)
   },
 }
 const mutations = {
@@ -99,7 +103,6 @@ const mutations = {
     state.canNum = num
   },
   ADD_CAN_NUM(state, { data, getters }) {
-    const _debounce = 2
     // TODO:可以全局配置化
     const toAdd = data.num
 
@@ -133,8 +136,16 @@ const mutations = {
     }
 
     state.numRecord.unshift(data)
+    const realNum = data.num + state.turns * _maxCanNum // 当前读数+圈数
+    state.realNums.unshift({
+      ...data,
+      num: realNum,
+    })
     if (state.numRecord.length > _maxQueueLength) {
       state.numRecord.splice(_maxQueueLength, 2)
+    }
+    if (state.realNums.length > _maxQueueLength) {
+      state.realNums.splice(_maxQueueLength, 2)
     }
   },
   STOPFLAG_ON(state) {

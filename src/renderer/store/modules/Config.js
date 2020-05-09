@@ -6,6 +6,7 @@ const state = {
   singleTime: 0.5,
   width: 20,
   beta: 4,
+  mockMode: true,
   dmc: {
     slowDown: true, // SD,减速使能
   },
@@ -71,6 +72,9 @@ const mutations = {
   SET_MODE(state, payload) {
     state.mode = payload
   },
+  SET_MOCK(state, payload) {
+    state.mockMode = payload
+  },
   SET_NUM(state, payload) {
     state.num = payload
   },
@@ -88,6 +92,9 @@ const mutations = {
 const actions = {
   setMode({ commit }, data) {
     commit('SET_MODE', data)
+  },
+  setMock({ commit }, data) {
+    commit('SET_MOCK', data)
   },
   setNum({ commit }, data) {
     commit('SET_NUM', data)

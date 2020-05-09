@@ -6,8 +6,8 @@
     <div class="textStatus">
       <span> 方向: {{ avgV | formatDirection }} </span>
       <span> 状态: {{ (avgV > 0) | formatStatus }} </span>
-      <span> 平均转速: {{ (avgV * 1e3) | fix2 }} °/s </span>
-      <span> 瞬时转速: {{ (vNum * 1e3) | fix2 }} °/s </span>
+      <span> 平均转速: {{ avgV | fix2 }} °/s </span>
+      <span> 瞬时转速: {{ vNum | fix2 }} °/s </span>
       <span> 角度: {{ angle | fix2 }} °</span>
 
       <el-progress
