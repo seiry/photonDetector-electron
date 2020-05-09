@@ -6,16 +6,16 @@
     <div class="textStatus">
       <span> 方向: {{ avgV | formatDirection }} </span>
       <span> 状态: {{ (avgV > 0) | formatStatus }} </span>
-      <span> 平均转速: {{ avgV | fix2 }} °/s </span>
-      <span> 瞬时转速: {{ vNum | fix2 }} °/s </span>
-      <span> 角度: {{ angle | fix2 }} °</span>
-
+      <span> 平均转速: {{ (avgV * 1e3) | fix2 }} °/s </span>
+      <span> 瞬时转速: {{ (vNum * 1e3) | fix2 }} °/s </span>
+      <span> 旋转体角度: {{ angle | fix2 }} °</span>
       <el-progress
         type="dashboard"
         :percentage="percentage"
         :color="colors"
       ></el-progress>
       <el-divider></el-divider>
+      <span> 编码器角度: {{ angleOfCan | fix2 }} °</span>
       <span>光电编码器读数: {{ lastNum }} </span>
       <span>光电编码器圈数: {{ status.turns }} </span>
       <span> 控制卡位置: {{ lastPositionArray }}</span>
@@ -79,6 +79,7 @@ export default {
       'deltaNum',
       'avgV',
       'angle',
+      'angleOfCan',
       'lastPosition',
     ]),
     lastPositionArray() {

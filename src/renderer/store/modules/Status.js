@@ -48,34 +48,54 @@ const getters = {
     return state.realNums[0].num
   },
   deltaNum(state) {
-    // real
-    if (state.numRecord.length < 2) {
+    // refact to real
+    if (state.realNums.length < 2) {
       return 0
     }
-    return state.numRecord[0].num - state.numRecord[1].num
+    return state.realNums[0].num - state.realNums[1].num
   },
   deltaT(state) {
-    if (state.numRecord.length < 2) {
+    if (state.realNums.length < 2) {
       return 0
     }
-    return state.numRecord[0].time - state.numRecord[1].time
+    return state.realNums[0].time - state.realNums[1].time
   },
   vNum(state, getters) {
+    if (state.realNums.length < 2) {
+      return 0
+    }
+    const deltaN = state.realNums[0].num - state.realNums[1].num
+    const deltaT = state.realNums[0].time - state.realNums[1].time || 1e3
+    const deltaAngle = +((7560.0 * deltaN) / (_maxCanNum * 92))
+    const speed = deltaAngle / deltaT
+    return +speed.toFixed(8) // °/ms
+  },
+  vNumCan(state, getters) {
     const rate = getters.deltaNum / getters.deltaT || 0
     const speed = rate * _canRate
     return +speed.toFixed(8)
   },
   avgV(state) {
     // 这里会有超圈错误，因为圈数没有历史状态记录
-    // TODO: 重构可以使用一个真实的圈数队列
-    if (state.numRecord.length < 10) {
+    if (state.realNums.length < 10) {
+      return 0
+    }
+    const deltaN = state.realNums[0].num - state.realNums[9].num
+    const deltaT = state.realNums[0].time - state.realNums[9].time || 1e3
+    const deltaAngle = +((7560.0 * deltaN) / (_maxCanNum * 92))
+    const speed = deltaAngle / deltaT
+    return +speed.toFixed(8) // °/ms
+  },
+  avgCanV(state) {
+    // 这里会有超圈错误，因为圈数没有历史状态记录
+    if (state.realNums.length < 10) {
       return 0
     }
     const rate =
-      (state.numRecord[0].num - state.numRecord[9].num) /
-        (state.numRecord[0].time - state.numRecord[9].time) || 0
-    const speed = rate * _canRate
-    return +speed.toFixed(8)
+      (state.realNums[0].num - state.realNums[9].num) /
+        (state.realNums[0].time - state.realNums[9].time) || 0
+    const speed = rate * _canRate // 小轮的转速
+    return +speed.toFixed(8) // °/ms
   },
   angle(state, getters) {
     // if (state.numRecord.length < 2) {
