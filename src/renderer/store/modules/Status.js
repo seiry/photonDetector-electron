@@ -80,9 +80,11 @@ const getters = {
     // const delta =
     //   state.numRecord[0].num - state.numRecord[state.numRecord.length - 1].num
     // debugger
-    return (7560.0 * getters.trueNum) / (_maxCanNum * 92)
+    return +((7560.0 * getters.trueNum) / (_maxCanNum * 92)).toFixed(8)
+    // TODO: 这俩幻数啥意思得问下师兄
   },
   angleOfCan(state, getters) {
+    // 小轮
     return +((getters.trueNum - state.startNum) * _canRate).toFixed(8)
   },
 }
@@ -97,7 +99,8 @@ const mutations = {
     state.canNum = num
   },
   ADD_CAN_NUM(state, { data, getters }) {
-    const _debouce = 2
+    const _debounce = 2
+    // TODO:可以全局配置化
     const toAdd = data.num
 
     if (state.canNum.length === 0) {
@@ -111,13 +114,14 @@ const mutations = {
     const direction = lastNum - last2ndNum > 0 // 当前的方向
     const addDirection = toAdd - lastNum > 0 // 新添加的数据的方向
     if (
-      Math.abs(last2ndNum - lastNum) < _debouce || // 0值/不变值不跳转
-      Math.abs(lastNum - toAdd) < _debouce || // 0值/不变值不跳转
+      Math.abs(last2ndNum - lastNum) < _debounce || // 0值/不变值不跳转
+      Math.abs(lastNum - toAdd) < _debounce || // 0值/不变值不跳转
       lastDirection === addDirection // 祖状态相同不跳转
     ) {
     } else {
       if (addDirection !== direction) {
         // 发生变化 比如 90 100 1  =>  10 vs -99
+        // TODO: 超圈的数字需要进行持久化配置
         if (addDirection === false) {
           // 小于0 就是正超圈
           state.turns += 1
