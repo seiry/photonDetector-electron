@@ -119,7 +119,7 @@ export default {
        * 队列执行方法被设计成一个消费者函数 通过子函数进行执行 消费者函数应该是一个同步函数
        */
       this.taskQueue = this.makeTask()
-      this.mover()
+      // this.mover()
     },
     initNumWatcher() {
       if (this.intervalFlag.can) {

@@ -123,9 +123,7 @@ class Can extends base {
       Data: [0x4, 0x2, 0x1, 0x0],
       // Reserved: [0, 0, 0]
     }
-    let re = api.VCI_Transmit(this.devType, this.devIndex, this.canIndex, [
-      data,
-    ])
+    let re = api.VCI_Transmit(this.devType, this.devIndex, this.canIndex, data)
     console.log(re, 'VCI_Transmit')
     if (re >= 1 || this.mock) {
       if (re === 1) {
@@ -151,14 +149,12 @@ class Can extends base {
       re = api.VCI_Receive(this.devType, this.devIndex, this.canIndex, 5)
       retry++
     } while (re === 0 && retry < 10)
-
-    // api.VCI_ClearBuffer(this.devType, this.devIndex, this.canIndex) //TODO: 读完销毁？
+    api.VCI_ClearBuffer(this.devType, this.devIndex, this.canIndex) // TODO: 读完销毁？
 
     if (re === -1) {
       this.setError(re, 'usb设备不存在')
       return -1
     }
-    console.log(re, 'VCI_Receive')
     if (!Array.isArray(re)) {
       this.setError(re, '读取数据出现位置错误，返回值非数组')
       return -1

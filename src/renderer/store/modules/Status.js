@@ -80,6 +80,9 @@ const getters = {
     // const delta =
     //   state.numRecord[0].num - state.numRecord[state.numRecord.length - 1].num
     // debugger
+    return (7560.0 * getters.trueNum) / (_maxCanNum * 92)
+  },
+  angleOfCan(state, getters) {
     return +((getters.trueNum - state.startNum) * _canRate).toFixed(8)
   },
 }
@@ -94,6 +97,7 @@ const mutations = {
     state.canNum = num
   },
   ADD_CAN_NUM(state, { data, getters }) {
+    const _debouce = 2
     const toAdd = data.num
 
     if (state.canNum.length === 0) {
@@ -107,8 +111,8 @@ const mutations = {
     const direction = lastNum - last2ndNum > 0 // 当前的方向
     const addDirection = toAdd - lastNum > 0 // 新添加的数据的方向
     if (
-      last2ndNum === lastNum || // 0值/不变值不跳转
-      lastNum === toAdd || // 0值/不变值不跳转
+      Math.abs(last2ndNum - lastNum) < _debouce || // 0值/不变值不跳转
+      Math.abs(lastNum - toAdd) < _debouce || // 0值/不变值不跳转
       lastDirection === addDirection // 祖状态相同不跳转
     ) {
     } else {

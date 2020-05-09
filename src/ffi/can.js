@@ -221,6 +221,7 @@ const VCI_Receive = (DevType, DevIndex, CANIndex, Len = 2500, WaitTime = 0) => {
     Len,
     WaitTime
   )
+  debugger
   if (re === 0 || re === -1) {
     return 0
   }
