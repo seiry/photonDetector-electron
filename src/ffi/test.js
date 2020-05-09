@@ -72,7 +72,7 @@ const getObj = () => {
 const changeObj = () => {
   const obj = new Obj1({ Data: [7, 7, 7] })
   console.log(obj)
-  debugger
+  // debugger
   myTest.changeObj(obj.ref())
   console.log(obj)
 }
@@ -80,12 +80,12 @@ const changeArr = () => {
   const arr = new Type([1, 2, 3, 8], 4)
   let arr2 = Array(2500).fill(arr)
   arr2 = new Type2(arr2) // 工厂方法会转换成真实传值
-  debugger
+  // debugger
 
   // const arr = IntArray([1, 2, 3, 4]) // 这里说明，声明类型不能改？
   const re = myTest.changeArr(arr, 4)
   console.log(re)
-  debugger
+  // debugger
 }
 // changeArr()
 export default {

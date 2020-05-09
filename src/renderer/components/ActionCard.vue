@@ -25,6 +25,9 @@
         :disabled="!status.runningFlag"
         >停止</el-button
       >
+      <el-button type="primary" round @click="debugCan">debug can</el-button>
+      <el-button type="primary" round @click="closeCan">close can</el-button>
+
       <el-button type="danger" round @click="forceStop">强行停止</el-button>
       <!-- <el-button type="primary" round @click="loading">配置</el-button> -->
     </div>
@@ -37,6 +40,7 @@ import { mapActions, mapState, mapGetters } from 'vuex'
 // import SystemInformation from './LandingPage/SystemInformation'
 import Can from '../../hardware/can'
 import Dmc from '../../hardware/dmc'
+import ffi from '../../ffi/can'
 export default {
   data() {
     this.can = null
@@ -88,7 +92,8 @@ export default {
         return
       }
       if (!this.dmc) {
-        this.dmc = new Dmc(true)
+        this.dmc = new Dmc()
+        // this.dmc = new Dmc(true)
       }
       // const e = this.dmc.close()
       if (this.dmc.error) {
@@ -121,7 +126,8 @@ export default {
         return
       }
       if (!this.can) {
-        this.can = new Can(true)
+        // this.can = new Can(true)
+        this.can = new Can()
       }
       if (this.can.error) {
         this.$message.error(this.can.humenErrorMsg)
@@ -175,6 +181,7 @@ export default {
           (this.$store.getters.angle - e) * direction < 0 // 没有达到目标
         ) {
           if (this.status.stopFlag) {
+            this.dmc.stopX()
             return
           }
           // TODO: 分段控制
@@ -225,6 +232,32 @@ export default {
     },
     loading() {
       this.setLoading(true)
+    },
+    debugCan() {
+      let re = ffi.VCI_StartCAN(4, 0, 0)
+      // 返回值=1，表示操作成功；=0表示操作失败；=-1表示USB-CAN设备不存在或USB掉线。
+      console.log('start', re)
+      const config = {
+        // 这个掩码设置方式 应该是我全都要吧
+        AccCode: 0x00000000,
+        AccMask: 0xffffffff,
+        Reserved: 0,
+        Filter: 2, // 标准帧
+        // Filter: 1, // 所有帧 老代码上是这也的
+        Timing0: 0x00,
+        Timing1: 0x1c,
+        Mode: 0,
+      }
+      re = ffi.VCI_InitCAN(4, 0, 0, config)
+      /**
+       * 返回值=1，表示操作成功；=0表示操作失败；=-1表示USB-CAN设备不存在或USB掉线。
+       */
+      console.log('init', re)
+    },
+    closeCan() {
+      // 返回值=1，表示操作成功；=0表示操作失败；=-1表示USB-CAN设备不存在或USB掉线。
+      let re = ffi.VCI_CloseDevice(4, 0)
+      console.log('close can', re)
     },
   },
   computed: {

@@ -32,7 +32,7 @@ function createWindow() {
   Menu.setApplicationMenu(null)
 
   mainWindow.loadURL(winURL)
-  // mainWindow.openDevTools() // devtools for build
+  mainWindow.openDevTools() // devtools for build
   // const t = myTest()
   // dialog.showMessageBox({
   //   message : `${t.add(1,2)}`,

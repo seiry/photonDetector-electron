@@ -85,7 +85,7 @@ class Can extends base {
     }
 
     re = api.VCI_StartCAN(this.devType, this.devIndex, this.canIndex)
-
+    console.log(re, 'VCI_StartCAN')
     if (re === 1 || this.mock) {
     } else {
       if (re === -1) {
@@ -126,7 +126,7 @@ class Can extends base {
     let re = api.VCI_Transmit(this.devType, this.devIndex, this.canIndex, [
       data,
     ])
-
+    console.log(re, 'VCI_Transmit')
     if (re >= 1 || this.mock) {
       if (re === 1) {
       } else {
@@ -158,7 +158,7 @@ class Can extends base {
       this.setError(re, 'usb设备不存在')
       return -1
     }
-
+    console.log(re, 'VCI_Receive')
     if (!Array.isArray(re)) {
       this.setError(re, '读取数据出现位置错误，返回值非数组')
       return -1

@@ -58,15 +58,12 @@ const VCI_CAN_OBJArrayType = ArrayType(VCI_CAN_OBJ)
 const can = new ffi.Library(dllPath('ControlCAN.dll'), {
   // 文档里的dword是有问题的，明显返回值是有符号的...
   VCI_OpenDevice: ['int', ['ulong', 'ulong', 'ulong']],
-  VCI_CloseDevice: ['ulong', ['ulong', 'ulong']],
-  VCI_InitCAN: [
-    'ulong',
-    ['ulong', 'ulong', 'ulong', ref.refType(VCI_INIT_CONFIG)],
-  ],
+  VCI_CloseDevice: ['int', ['int', 'int']],
+  VCI_InitCAN: ['int', ['int', 'int', 'int', ref.refType(VCI_INIT_CONFIG)]],
   VCI_ReadBoardInfo: ['ulong', ['ulong', 'ulong', ref.refType(VCI_BOARD_INFO)]],
   VCI_GetReceiveNum: ['ulong', ['ulong', 'ulong', 'ulong']],
   VCI_ClearBuffer: ['ulong', ['ulong', 'ulong', 'ulong']],
-  VCI_StartCAN: ['ulong', ['ulong', 'ulong', 'ulong']],
+  VCI_StartCAN: ['int', ['ulong', 'ulong', 'ulong']],
   VCI_Transmit: [
     'ulong',
     ['ulong', 'ulong', 'ulong', VCI_CAN_OBJArrayType, 'ulong'],
