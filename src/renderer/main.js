@@ -10,6 +10,8 @@ import store from './store'
 // import path from 'path'
 import VueTour from 'vue-tour'
 
+import pkg from '../../package.json'
+document.title = `${pkg.titleName} v${pkg.version} build ${pkg.intVersion}`
 require('vue-tour/dist/vue-tour.css')
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))

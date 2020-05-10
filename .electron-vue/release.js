@@ -61,11 +61,12 @@ function release () {
   return builder.build({
     targets: targets,
     config: {
-      "productName": "γ光子探测器控制系统",
+      // "productName": "γ光子探测器控制系统",pkg
+      "productName": pkg.titleName,
       "appId": "eu.seiry.2020.nuaa.pet",
       artifactName: '${productName}-${version}.${ext}',
       compression: 'maximum',
-      "copyright": "Copyright © 2020 Seiry Yu",      
+      "copyright": "Copyright © 2020 Seiry Yu",
       files,
       extraFiles: extraFiles,
       directories: {
