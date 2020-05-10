@@ -46,13 +46,14 @@ export default {
 
 <style scoped lang="scss">
 #wrapper {
-  background: radial-gradient(
-    ellipse at top left,
-    rgba(255, 255, 255, 1) 40%,
-    rgba(229, 229, 229, 0.9) 100%
-  );
+  // background: radial-gradient(
+  //   ellipse at top left,
+  //   rgba(255, 255, 255, 1) 40%,
+  //   rgba(229, 229, 229, 0.9) 100%
+  // );
+  background-color: rgba(229, 229, 229, 0.267);
   height: 100vh;
-  padding: 30px 40px;
+  padding: 20px 20px;
   // width: 100vw;
   display: flex;
   flex-direction: column;
@@ -128,13 +129,13 @@ main {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  margin-left: 30px;
+  margin-left: 18px;
 
   .config {
     flex-grow: 1;
   }
   .action {
-    margin-top: 20px;
+    margin-top: 14px;
     height: 180px;
   }
 }
