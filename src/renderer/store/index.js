@@ -13,7 +13,7 @@ export default new Vuex.Store({
   plugins: [
     createPersistedState({
       key: 'pet-vuex',
-      paths: ['Config'],
+      paths: ['Config', 'Status.turns'], // 可以部分持久化
     }),
     // createSharedMutations()
   ],
