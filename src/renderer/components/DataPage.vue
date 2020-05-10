@@ -35,18 +35,18 @@
     >
       <el-table-column label="日期" width="180" sortable prop="date">
         <template slot-scope="scope">
-          {{ scope.row.date | moment('YYYY-MM-DD hh:mm:ss') }}
+          {{ scope.row.date | moment('YYYY-MM-DD HH:mm:ss') }}
         </template>
       </el-table-column>
 
       <el-table-column prop="name" label="文件名" width="180 " sortable>
       </el-table-column>
-
+      <!-- 
       <el-table-column label="大小" sortable>
         <template slot-scope="scope">
           {{ scope.row.size | prettyBytes }}
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
       <el-table-column label="标签">
         <template slot-scope="scope">

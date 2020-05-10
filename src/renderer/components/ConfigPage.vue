@@ -22,7 +22,7 @@
 
       <el-card class=" card" shadow="hover" ref="dragSave">
         <div slot="header" class="clearfix">
-          <span>dmc1380</span>
+          <span>misc</span>
         </div>
         <div>
           <el-checkbox v-model="slowDown" border
@@ -30,6 +30,9 @@
           >
           <el-checkbox v-model="mock" border
             >mock模式: {{ mock ? '开' : '关' }}</el-checkbox
+          >
+          <el-button type="primary" round @click="clearTurn"
+            >清除圈数</el-button
           >
         </div>
       </el-card>
@@ -113,7 +116,7 @@ export default {
     // }
   },
   methods: {
-    ...mapActions(['saveConfig', 'setLoading']),
+    ...mapActions(['saveConfig', 'setLoading', 'clearTurn']),
     async save() {
       this.setLoading(200)
       await this.saveConfig(this.configs)
@@ -123,6 +126,7 @@ export default {
       this.Config.savePath &&
         this.$electron.remote.shell.showItemInFolder(this.Config.savePath)
     },
+
     output() {
       const path = this.$electron.remote.dialog.showSaveDialog({
         title: '请选择保存位置',

@@ -1,14 +1,23 @@
 <template>
-  <el-card class="box-card" shadow="hover">
+  <el-card
+    class="fullBodyCard"
+    shadow="hover"
+    body-style="flex:1;display:flex;"
+  >
     <div slot="header" class="clearfix">
       <span>状态</span>
     </div>
     <div class="textStatus">
-      <span> 方向: {{ avgV | formatDirection }} </span>
-      <span> 状态: {{ (avgV > 0) | formatStatus }} </span>
+      <span>
+        方向:
+        <span v-if="status.runningFlag">{{ avgV | formatDirection }} </span>
+        <span v-else> - </span>
+      </span>
+      <span> 状态: {{ status.runningFlag | formatStatus }} </span>
       <span> 平均转速: {{ (avgV * 1e3) | fix2 }} °/s </span>
       <span> 瞬时转速: {{ (vNum * 1e3) | fix2 }} °/s </span>
       <span> 旋转体角度: {{ angle | fix2 }} °</span>
+      <span> 目标角度: {{ status.targetAngle | fix2 }} °</span>
       <el-progress
         type="dashboard"
         :percentage="percentage"
@@ -66,9 +75,6 @@ export default {
     },
   },
   computed: {
-    percentage() {
-      return parseFloat((this.process % 100).toFixed(2))
-    },
     ...mapState({
       status: (state) => state.Status,
       canNum: (state) => state.Status.canNum,
@@ -82,6 +88,20 @@ export default {
       'angleOfCan',
       'lastPosition',
     ]),
+    percentage() {
+      // 进度有两种算法，1.task队列的长度占比，2.角度占比
+      // 2会更平滑一些
+      // debugger
+      const percent = parseFloat(
+        ((this.angle / this.status.targetAngle) * 100).toFixed(1)
+      )
+      if (percent > 100) {
+        return 100
+      } else {
+        return percent
+      }
+    },
+
     lastPositionArray() {
       const { x, y, z, time } = this.lastPosition
       return x
@@ -106,6 +126,13 @@ export default {
         return '顺时针'
       } else {
         return '逆时针'
+      }
+    },
+    formatRunning(e) {
+      if (e) {
+        return e
+      } else {
+        return 0
       }
     },
     formatStatus(e) {
@@ -206,11 +233,13 @@ main {
   background-color: transparent;
 }
 .textStatus {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-evenly;
   & > span {
-    flex-basis: 30px;
+    // flex-basis: 30px;
   }
 }
 </style>

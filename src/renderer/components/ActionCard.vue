@@ -7,13 +7,6 @@
       <el-button
         type="primary"
         round
-        @click="clear"
-        :disabled="status.runningFlag"
-        >清零</el-button
-      >
-      <el-button
-        type="primary"
-        round
         @click="init"
         :disabled="status.runningFlag"
         >开始</el-button
@@ -27,7 +20,13 @@
       >
       <!-- <el-button type="primary" round @click="debugCan">debug can</el-button>
       <el-button type="primary" round @click="closeCan">close can</el-button> -->
-
+      <el-button
+        type="primary"
+        round
+        @click="clear"
+        :disabled="status.runningFlag"
+        >清零/复位</el-button
+      >
       <el-button type="danger" round @click="forceStop">强行停止</el-button>
       <!-- <el-button type="primary" round @click="loading">配置</el-button> -->
     </div>
@@ -37,10 +36,13 @@
 <script>
 /* eslint-disable no-unused-vars */
 import { mapActions, mapState, mapGetters } from 'vuex'
-// import SystemInformation from './LandingPage/SystemInformation'
+import moment from 'moment'
 import Can from '../../hardware/can'
 import Dmc from '../../hardware/dmc'
 import ffi from '../../ffi/can'
+
+import fs from 'fs'
+import path from 'path'
 export default {
   data() {
     this.can = null
@@ -67,6 +69,9 @@ export default {
       'addDmcNum',
       'clearCanNum',
       'setCurrentTask',
+      'setTargetAngle',
+      'addMoveLog',
+      'clearMoveLog',
     ]),
     async init() {
       // 初始化运动控制卡，之后才是圈数监视器
@@ -109,8 +114,15 @@ export default {
        * 单点时间决定运动停止时间是多少
        * 队列执行方法被设计成一个消费者函数 通过子函数进行执行 消费者函数应该是一个同步函数
        */
-      this.taskQueue = this.makeTask()
-      // this.mover()
+      this.setTaskQueue(this.makeTask())
+      this.clearMoveLog()
+      this.mover(true)
+    },
+    setTaskQueue(tasks = []) {
+      this.taskQueue = tasks
+      const finalTargetAngle =
+        this.taskQueue[this.taskQueue.length - 1].value || 0
+      this.setTargetAngle(finalTargetAngle)
     },
     initNumWatcher() {
       if (this.intervalFlag.can) {
@@ -159,44 +171,105 @@ export default {
       // TODO: 完成音乐？
       return temp
     },
-    async mover() {
-      const move = async (e) => {
-        console.log('start moving to', e, 'from', this.$store.getters.angle)
+    async mover(log = false) {
+      const move = async (target) => {
+        console.log(
+          'start moving to',
+          target,
+          'from',
+          this.$store.getters.angle
+        )
         // 区分速度
-        const epsilon1 = 1
-        const direction = 1
-        // const epsilon1 = 1
+        let epsilon1 = 0.5
+        let direction = 1
+
+        let moveDirection = 1 // 1为逆时针，扫描方向,角度增大；-1为顺时针，归位方向，角度减小
+        let directionChangeNum = 0
+        const _maxDirectionChangeNum = 5
         while (
-          Math.abs(this.$store.getters.angle - e) > epsilon1 ||
-          (this.$store.getters.angle - e) * direction < 0 // 没有达到目标
+          Math.abs(this.$store.getters.angle - target) > epsilon1 // 没有满足条件的情况下
+          // ||(this.$store.getters.angle - target) * direction < 0 // 没有达到目标
         ) {
           if (this.status.stopFlag) {
             this.dmc.stopX()
             return
           }
+
+          if (this.$store.getters.angle > target) {
+            // 当前角度大于目标角度，需要减小
+            if (moveDirection !== -1) {
+              directionChangeNum += 1
+            }
+            moveDirection = -1 // 运动方向其实可以实现一个类来getter
+          } else {
+            if (moveDirection !== 1) {
+              directionChangeNum += 1
+            }
+            moveDirection = 1
+          }
+
+          if (directionChangeNum > _maxDirectionChangeNum) {
+            this.dmc.stopX()
+            return
+          }
+
           // TODO: 分段控制
           // TODO: 根据模式调速
+
           const isRunning = this.dmc.isRunning()
+
           if (isRunning) {
             await sleep(100)
           } else {
-            this.dmc.move()
+            this.dmc.move(moveDirection)
           }
         }
         this.dmc.stopX()
-        console.log('i have moved to', e)
+        console.log('i have moved to', target)
       }
       const stop = async (e) => {
         console.log('start stop')
-        // TODO: scaning action
+        if (log) {
+          this.addMoveLog(`扫描任务::${e}秒::scanTask::${e}`)
+          this.addMoveLog(
+            `开始扫描::${moment().format(
+              'YYYY-MM-DD HH:mm:ss.SSSS'
+            )}::scanStart::${moment().format('x')}`
+          )
+        }
+        // 扫描活动上实际上就是写个文件，记录时间就好了
         // TODO: 扫描动画
         await sleep(e * 1e3)
+        if (log) {
+          this.addMoveLog(
+            `结束扫描::${moment().format(
+              'YYYY-MM-DD HH:mm:ss.SSSS'
+            )}::scanEnd::${moment().format('x')}`
+          )
+        }
         console.log('stoped', e)
       }
       const sleep = (ms) => {
         return new Promise((resolve) => setTimeout(resolve, ms))
       }
-      console.log(this.taskQueue)
+      console.log(this.taskQueue, 'taskQueue')
+      if (log) {
+        this.addMoveLog(
+          `任务配置::null::taskConfig::${JSON.stringify(
+            this.$store.state.Config
+          )}`
+        )
+        // debugger
+        this.addMoveLog(
+          `任务队列::null::taskConfig::${JSON.stringify(this.taskQueue)}`
+        )
+
+        this.addMoveLog(
+          `开始扫描::${moment().format(
+            'YYYY-MM-DD HH:mm:ss.SSSS'
+          )}::taskStart::${moment().format('x')}`
+        )
+      }
       while (this.taskQueue.length > 0) {
         // 通过队列长度显示进度
         const task = this.taskQueue.shift()
@@ -207,6 +280,19 @@ export default {
           await stop(task.value)
         }
       }
+      if (log) {
+        this.writeLog()
+      }
+      return true
+    },
+    writeLog() {
+      const fileName = path.join(
+        this.$store.state.Config.savePath,
+        `${moment().format('YYYYMMDD.HH-mm-ss')}.log`
+      )
+      fs.writeFileSync(fileName, this.$store.state.Status.moveLog.join('\n'), {
+        flag: 'w',
+      })
     },
     stop() {
       this.setStopFlag(true)
@@ -218,7 +304,21 @@ export default {
       this.loading()
     },
     clear() {
-      this.clearCanNum()
+      // this.clearCanNum()
+      if (this.status.runningFlag) {
+        return
+      }
+      const _debounce = 1
+      if (Math.abs(this.$store.getters.angle) > _debounce) {
+        // 归0
+        this.setTaskQueue([
+          {
+            type: 'move',
+            value: 0,
+          },
+        ])
+        this.mover()
+      }
     },
     loading() {
       this.setLoading(true)

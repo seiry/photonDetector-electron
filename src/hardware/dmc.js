@@ -75,11 +75,16 @@ class DMC extends base {
       api.d1000_decel_stop(Axis.x)
     }
   }
+  /**
+   *
+   * @param {*} direction 1为逆时针，即扫描时的操作，-1为顺时针
+   */
   move(direction = 1) {
     const startV = 500
     const maxV = -1000 * direction
     const accTime = 0.1
     api.d1000_start_tv_move(Axis.x, startV, maxV, accTime)
+    // Dmc1380.d1000_start_tv_move(nAxis, 200, 1000, 0.05); 这个是顺时针
   }
   isRunning() {
     if (this.mock) {

@@ -123,12 +123,17 @@ main {
   background-color: transparent;
 }
 .statusCard {
-  flex-basis: 30%;
+  flex-basis: 25%;
 }
-.operateCard {
+
+.fullBodyCard {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+}
+
+.operateCard {
+  @extend .fullBodyCard;
   margin-left: 18px;
 
   .config {

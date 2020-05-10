@@ -20,6 +20,8 @@ const state = {
   stopFlag: false,
   runningFlag: false,
   order: { type: '', value: 0 },
+  targetAngle: 1,
+  moveLog: [],
 }
 
 const getters = {
@@ -185,10 +187,22 @@ const mutations = {
   },
   CLEAR_CAN_NUM(state) {
     state.numRecord = []
-    state.turns = 0
+    // state.turns = 0
   },
   SET_TASK_ORDER(state, data) {
     state.order = data
+  },
+  SET_TARGET_ANGLE(state, data) {
+    state.targetAngle = data
+  },
+  CLEAR_TURN(state) {
+    state.turns = 0
+  },
+  ADD_MOVE_LOG(state, data) {
+    state.moveLog.push(data)
+  },
+  CLEAR_MOVE_LOG(state) {
+    state.moveLog = []
   },
 }
 
@@ -238,6 +252,18 @@ const actions = {
   },
   setCurrentTask({ commit }, data) {
     commit('SET_TASK_ORDER', data)
+  },
+  setTargetAngle({ commit }, data) {
+    commit('SET_TARGET_ANGLE', data)
+  },
+  clearTurn({ commit }) {
+    commit('CLEAR_TURN')
+  },
+  addMoveLog({ commit }, data) {
+    commit('ADD_MOVE_LOG', data)
+  },
+  clearMoveLog({ commit }) {
+    commit('CLEAR_MOVE_LOG')
   },
 }
 
