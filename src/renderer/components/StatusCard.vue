@@ -238,8 +238,8 @@ main {
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
-  & > span {
-    // flex-basis: 30px;
-  }
+  // & > span {
+  // flex-basis: 30px;
+  // }
 }
 </style>
