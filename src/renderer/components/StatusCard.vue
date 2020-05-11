@@ -14,8 +14,8 @@
         <span v-else> - </span>
       </span>
       <span> 状态: {{ status.runningFlag | formatStatus }} </span>
-      <span> 平均转速: {{ (avgV * 1e3) | fix2 }} °/s </span>
-      <span> 瞬时转速: {{ (vNum * 1e3) | fix2 }} °/s </span>
+      <span> 平均转速: {{ (avgV * 1e3) | fix1 }} °/s </span>
+      <span> 瞬时转速: {{ (vNum * 1e3) | fix1 }} °/s </span>
       <span> 旋转体角度: {{ angle | fix2 }} °</span>
       <span> 目标角度: {{ status.targetAngle | fix2 }} °</span>
       <el-progress
@@ -144,6 +144,9 @@ export default {
       } else {
         return '停止'
       }
+    },
+    fix1(e) {
+      return e.toFixed(1)
     },
 
     fix2(e) {

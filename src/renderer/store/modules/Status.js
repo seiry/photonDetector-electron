@@ -5,7 +5,7 @@ const _maxCanNum = 16383 // 一圈为16383刻度
 const _canRate = 360.0 / _maxCanNum // °/圈
 
 const _maxQueueLength = 20
-const _debounce = 3
+const _debounce = 2
 
 const state = {
   direction: true, // true:顺民顺时针
@@ -139,10 +139,18 @@ const mutations = {
     const direction = lastNum - last2ndNum > 0 // 当前的方向
     const addDirection = toAdd - lastNum > 0 // 新添加的数据的方向
     if (
+      state.numRecord.length === _maxQueueLength &&
+      (Math.abs(last2ndNum - lastNum) < _debounce || // 0值/不变值不跳转
+        Math.abs(lastNum - toAdd) < _debounce) // 0值/不变值不跳转
+    ) {
+      return
+    }
+    if (
       Math.abs(last2ndNum - lastNum) < _debounce || // 0值/不变值不跳转
       Math.abs(lastNum - toAdd) < _debounce || // 0值/不变值不跳转
-      lastDirection === addDirection // 祖状态相同不跳转
+      lastDirection === addDirection
     ) {
+      // 祖状态相同不跳转
     } else {
       if (addDirection !== direction) {
         // 发生变化 比如 90 100 1  =>  10 vs -99

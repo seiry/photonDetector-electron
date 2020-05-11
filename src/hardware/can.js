@@ -85,7 +85,7 @@ class Can extends base {
     }
 
     re = api.VCI_StartCAN(this.devType, this.devIndex, this.canIndex)
-    console.log(re, 'VCI_StartCAN')
+    // console.log(re, 'VCI_StartCAN')
     if (re === 1 || this.mock) {
     } else {
       if (re === -1) {
@@ -124,7 +124,7 @@ class Can extends base {
       // Reserved: [0, 0, 0]
     }
     let re = api.VCI_Transmit(this.devType, this.devIndex, this.canIndex, data)
-    console.log(re, 'VCI_Transmit')
+    // console.log(re, 'VCI_Transmit')
     if (re >= 1 || this.mock) {
       if (re === 1) {
       } else {
