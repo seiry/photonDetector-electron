@@ -125,7 +125,7 @@ export default {
       if (e === 0) {
         return ' - '
       }
-      if (e) {
+      if (+e < 0) {
         return '顺时针'
       } else {
         return '逆时针'

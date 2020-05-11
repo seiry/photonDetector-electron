@@ -184,16 +184,21 @@ export default {
         let moveDirection = 1 // 1为逆时针，扫描方向,角度增大；-1为顺时针，归位方向，角度减小
         let directionChangeNum = 0
         const _maxDirectionChangeNum = 5
+        // debugger
         while (
           Math.abs(this.$store.getters.angle - target) > epsilon1 // 没有满足条件的情况下
           // ||(this.$store.getters.angle - target) * direction < 0 // 没有达到目标
         ) {
+          // debugger
           if (this.status.stopFlag) {
+            this.setStopFlag(false)
+            this.stopRunningFlag()
             this.dmc.stopX()
             return
           }
 
           if (this.$store.getters.angle > target) {
+            console.log('方向改变', { directionChangeNum })
             // 当前角度大于目标角度，需要减小
             if (moveDirection !== -1) {
               directionChangeNum += 1
@@ -207,6 +212,7 @@ export default {
           }
 
           if (directionChangeNum > _maxDirectionChangeNum) {
+            console.log('超过限制，停止', { directionChangeNum })
             this.dmc.stopX()
             return
           }
@@ -311,6 +317,7 @@ export default {
       const _debounce = 1
       if (Math.abs(this.$store.getters.angle) > _debounce) {
         // 归0
+        this.startRunningFlag()
         this.setTaskQueue([
           {
             type: 'move',

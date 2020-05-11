@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import moment from 'moment'
 
 // const _canRate = 0.01 // °/圈
@@ -5,7 +6,7 @@ const _maxCanNum = 16383 // 一圈为16383刻度
 const _canRate = 360.0 / _maxCanNum // °/圈
 
 const _maxQueueLength = 20
-const _debounce = 2
+const _debounce = 6
 
 const state = {
   direction: true, // true:顺民顺时针
@@ -138,32 +139,43 @@ const mutations = {
     const lastDirection = last2ndNum - last3ndNum > 0 // 再向前一组的方向
     const direction = lastNum - last2ndNum > 0 // 当前的方向
     const addDirection = toAdd - lastNum > 0 // 新添加的数据的方向
+    // 超圈的情况: 16383 => 1   1=>16383
     if (
       state.numRecord.length === _maxQueueLength &&
-      (Math.abs(last2ndNum - lastNum) < _debounce || // 0值/不变值不跳转
-        Math.abs(lastNum - toAdd) < _debounce) // 0值/不变值不跳转
+      Math.abs(lastNum - toAdd) < _debounce // 最后两个值进行防抖
     ) {
       return
     }
-    if (
-      Math.abs(last2ndNum - lastNum) < _debounce || // 0值/不变值不跳转
-      Math.abs(lastNum - toAdd) < _debounce || // 0值/不变值不跳转
-      lastDirection === addDirection
-    ) {
-      // 祖状态相同不跳转
-    } else {
-      if (addDirection !== direction) {
-        // 发生变化 比如 90 100 1  =>  10 vs -99
-        // TODO: 超圈的数字需要进行持久化配置
-        if (addDirection === false) {
-          // 小于0 就是正超圈
-          state.turns += 1
-        } else {
-          // 负超圈
-          state.turns -= 1
-        }
+
+    if (Math.abs(toAdd - lastNum) > 10000) {
+      debugger
+      // 突变认为是跳圈
+      if (toAdd < lastNum) {
+        state.turns += 1
+      } else {
+        state.turns -= 1
       }
     }
+    // if (
+    //   Math.abs(last2ndNum - lastNum) < _debounce || // 0值/不变值不跳转
+    //   Math.abs(lastNum - toAdd) < _debounce || // 0值/不变值不跳转
+    //   lastDirection === addDirection
+    // ) {
+    //   // 祖状态相同不跳转
+    // } else {
+    //   if (addDirection !== direction) {
+    //     // 发生变化 比如 90 100 1  =>  10 vs -99
+    //     // TODO: 超圈的数字需要进行持久化配置
+    //     debugger
+    //     if (addDirection === false) {
+    //       // 小于0 就是正超圈
+    //       state.turns += 1
+    //     } else {
+    //       // 负超圈
+    //       state.turns -= 1
+    //     }
+    //   }
+    // }
 
     state.numRecord.unshift(data)
     const realNum = data.num + state.turns * _maxCanNum // 当前读数+圈数
