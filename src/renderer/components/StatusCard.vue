@@ -92,6 +92,9 @@ export default {
       // 进度有两种算法，1.task队列的长度占比，2.角度占比
       // 2会更平滑一些
       // debugger
+      if (!this.status.runningFlag) {
+        return 0
+      }
       const percent = parseFloat(
         ((this.angle / this.status.targetAngle) * 100).toFixed(1)
       )

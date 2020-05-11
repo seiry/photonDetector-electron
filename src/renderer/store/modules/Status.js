@@ -5,7 +5,7 @@ const _maxCanNum = 16383 // 一圈为16383刻度
 const _canRate = 360.0 / _maxCanNum // °/圈
 
 const _maxQueueLength = 20
-const _debounce = 2
+const _debounce = 3
 
 const state = {
   direction: true, // true:顺民顺时针

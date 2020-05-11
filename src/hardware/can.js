@@ -155,6 +155,9 @@ class Can extends base {
       this.setError(re, 'usb设备不存在')
       return -1
     }
+    if (re === 0) {
+      // 没读到
+    }
     if (!Array.isArray(re)) {
       this.setError(re, '读取数据出现位置错误，返回值非数组')
       return -1

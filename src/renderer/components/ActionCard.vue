@@ -7,7 +7,7 @@
       <el-button
         type="primary"
         round
-        @click="init"
+        @click="start"
         :disabled="status.runningFlag"
         >开始</el-button
       >
@@ -73,16 +73,23 @@ export default {
       'addMoveLog',
       'clearMoveLog',
     ]),
-    async init() {
+    async start() {
       // 初始化运动控制卡，之后才是圈数监视器
       try {
-        await this.initDmc()
-        await this.initNumWatcher()
+        /**
+         * 任务队列应该被设计成一个队列
+         * Δθ决定单次运动的角度
+         * 单点时间决定运动停止时间是多少
+         * 队列执行方法被设计成一个消费者函数 通过子函数进行执行 消费者函数应该是一个同步函数
+         */
+        this.startRunningFlag()
+        this.setTaskQueue(this.makeTask())
+        this.clearMoveLog()
+        this.mover(true)
       } catch (e) {
         this.$message.error(e)
         console.error(e)
       }
-      this.startRunningFlag()
     },
     async initDmc() {
       if (this.intervalFlag.dmcPosition) {
@@ -103,20 +110,11 @@ export default {
           y,
           z,
         })
-        if (this.status.stopFlag) {
-          clearInterval(this.intervalFlag.dmcPosition)
-          this.intervalFlag.dmcPosition = null
-        }
+        // if (this.status.stopFlag) {
+        //   clearInterval(this.intervalFlag.dmcPosition)
+        //   this.intervalFlag.dmcPosition = null
+        // }
       }, 1e2)
-      /**
-       * 任务队列应该被设计成一个队列
-       * Δθ决定单次运动的角度
-       * 单点时间决定运动停止时间是多少
-       * 队列执行方法被设计成一个消费者函数 通过子函数进行执行 消费者函数应该是一个同步函数
-       */
-      this.setTaskQueue(this.makeTask())
-      this.clearMoveLog()
-      this.mover(true)
     },
     setTaskQueue(tasks = []) {
       this.taskQueue = tasks
@@ -139,10 +137,10 @@ export default {
       this.setStopFlag(false)
       this.intervalFlag.can = setInterval(() => {
         this.addCanNum(this.can.readNum())
-        if (this.status.stopFlag) {
-          clearInterval(this.intervalFlag.can)
-          this.intervalFlag.can = null
-        }
+        // if (this.status.stopFlag) {
+        //   clearInterval(this.intervalFlag.can)
+        //   this.intervalFlag.can = null
+        // }
       }, 1e2)
     },
     makeTask() {
@@ -283,6 +281,7 @@ export default {
       if (log) {
         this.writeLog()
       }
+      this.stopRunningFlag()
       return true
     },
     writeLog() {
@@ -305,6 +304,7 @@ export default {
     },
     clear() {
       // this.clearCanNum()
+      // debugger
       if (this.status.runningFlag) {
         return
       }
@@ -387,7 +387,10 @@ export default {
       return e.toFixed(2)
     },
   },
-  created() {},
+  created() {
+    this.initDmc()
+    this.initNumWatcher()
+  },
 }
 </script>
 
