@@ -5,6 +5,7 @@ import moment from 'moment'
 const _maxCanNum = 16383 // 一圈为16383刻度
 const _canRate = 360.0 / _maxCanNum // °/圈
 
+const _addTurnThreshold = 10000
 const _maxQueueLength = 20
 const _debounce = 6
 
@@ -142,13 +143,15 @@ const mutations = {
     // 超圈的情况: 16383 => 1   1=>16383
     if (
       state.numRecord.length === _maxQueueLength &&
-      Math.abs(lastNum - toAdd) < _debounce // 最后两个值进行防抖
+      Math.abs(lastNum - toAdd) < _debounce && // 最后两个值进行防抖
+      toAdd > 30 && // 过大或过小的值不会防抖，解决跳圈的问题
+      toAdd < _maxCanNum - 30
     ) {
       return
     }
 
-    if (Math.abs(toAdd - lastNum) > 10000) {
-      debugger
+    if (Math.abs(toAdd - lastNum) > _addTurnThreshold) {
+      // debugger
       // 突变认为是跳圈
       if (toAdd < lastNum) {
         state.turns += 1
@@ -215,8 +218,8 @@ const mutations = {
   SET_TARGET_ANGLE(state, data) {
     state.targetAngle = data
   },
-  CLEAR_TURN(state) {
-    state.turns = 0
+  SET_TURN(state, data) {
+    state.turns = data
   },
   ADD_MOVE_LOG(state, data) {
     state.moveLog.push(data)
@@ -276,8 +279,8 @@ const actions = {
   setTargetAngle({ commit }, data) {
     commit('SET_TARGET_ANGLE', data)
   },
-  clearTurn({ commit }) {
-    commit('CLEAR_TURN')
+  setTurn({ commit }, data) {
+    commit('SET_TURN', data)
   },
   addMoveLog({ commit }, data) {
     commit('ADD_MOVE_LOG', data)

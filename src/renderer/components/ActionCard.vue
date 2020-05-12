@@ -82,6 +82,12 @@ export default {
          * 单点时间决定运动停止时间是多少
          * 队列执行方法被设计成一个消费者函数 通过子函数进行执行 消费者函数应该是一个同步函数
          */
+        if (Math.abs(this.angle) > 1) {
+          this.$alert('当前位置距离原点较远，请先复位')
+          return
+        }
+        this.setStopFlag(false)
+
         this.startRunningFlag()
         this.setTaskQueue(this.makeTask())
         this.clearMoveLog()
@@ -114,7 +120,7 @@ export default {
         //   clearInterval(this.intervalFlag.dmcPosition)
         //   this.intervalFlag.dmcPosition = null
         // }
-      }, 1e2)
+      }, 1e3)
     },
     setTaskQueue(tasks = []) {
       this.taskQueue = tasks
@@ -134,7 +140,7 @@ export default {
         return
       }
       // this.$message.success('初始化成功' + this.can.humenErrorMsg)
-      this.setStopFlag(false)
+      // this.setStopFlag(false)
       this.intervalFlag.can = setInterval(() => {
         this.addCanNum(this.can.readNum())
         // if (this.status.stopFlag) {
@@ -178,7 +184,7 @@ export default {
           this.$store.getters.angle
         )
         // 区分速度
-        let epsilon1 = 0.5
+        let epsilon1 = 0.3 * this.config.mode
         let direction = 1
 
         let moveDirection = 1 // 1为逆时针，扫描方向,角度增大；-1为顺时针，归位方向，角度减小
@@ -191,7 +197,7 @@ export default {
         ) {
           // debugger
           if (this.status.stopFlag) {
-            this.setStopFlag(false)
+            // this.setStopFlag(false)
             this.stopRunningFlag()
             this.dmc.stopX()
             return
@@ -274,7 +280,14 @@ export default {
           )}::taskStart::${moment().format('x')}`
         )
       }
+      this.dmc.setSpeedX(this.config.mode)
       while (this.taskQueue.length > 0) {
+        if (this.status.stopFlag) {
+          // this.setStopFlag(false)
+          this.stopRunningFlag()
+          this.dmc.stopX()
+          return
+        }
         // 通过队列长度显示进度
         const task = this.taskQueue.shift()
         this.setCurrentTask(task)
@@ -314,7 +327,8 @@ export default {
       if (this.status.runningFlag) {
         return
       }
-      const _debounce = 1
+      this.setStopFlag(false)
+      const _debounce = 0.5 * this.config.mode
       if (Math.abs(this.$store.getters.angle) > _debounce) {
         // 归0
         this.startRunningFlag()
@@ -388,6 +402,7 @@ export default {
       status: (state) => state.Status,
       config: (state) => state.Config,
     }),
+    ...mapGetters(['angle']),
   },
   filters: {
     fix2(e) {

@@ -98,8 +98,13 @@ export default {
       const percent = parseFloat(
         ((this.angle / this.status.targetAngle) * 100).toFixed(1)
       )
+      if (isNaN(percent)) {
+        return 0
+      }
       if (percent > 100) {
         return 100
+      } else if (percent < 0) {
+        return 0
       } else {
         return percent
       }

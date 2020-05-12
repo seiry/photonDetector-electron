@@ -14,11 +14,11 @@
         <el-select v-model="mode" placeholder="请选择" class="formText">
           <!-- 模式可以分速度和精度 -->
           <!-- 区分的其实就是两段的容忍值 -->
-          <el-option label="标准模式" :value="0" class="non-select"></el-option>
-          <el-option label="高速模式" :value="1" class="non-select"></el-option>
+          <el-option label="标准模式" :value="1" class="non-select"></el-option>
+          <el-option label="高速模式" :value="2" class="non-select"></el-option>
           <el-option
             label="高精度模式"
-            :value="2"
+            :value="0.5"
             class="non-select"
           ></el-option>
         </el-select>

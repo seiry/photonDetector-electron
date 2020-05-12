@@ -31,9 +31,18 @@
           <el-checkbox v-model="mock" border
             >mock模式: {{ mock ? '开' : '关' }}</el-checkbox
           >
-          <el-button type="primary" round @click="clearTurn"
+          <!-- <el-button type="primary" round @click="clearTurn"
             >清除圈数</el-button
-          >
+          > -->
+          <div>
+            <el-input placeholder="圈数" v-model="toTurn" clearable>
+              <el-button
+                slot="append"
+                icon="el-icon-search"
+                @click="changeTurn"
+              ></el-button>
+            </el-input>
+          </div>
         </div>
       </el-card>
 
@@ -57,10 +66,12 @@
 /* eslint-disable no-unused-vars */
 import { mapActions, mapState, mapGetters } from 'vuex'
 import isDirectory from 'is-directory'
+import ffi from '../../ffi/dmc1380'
 export default {
   name: 'config-page',
   data() {
     return {
+      toTurn: 0,
       configs: {
         savePath: null,
         fromPath: null,
@@ -116,7 +127,10 @@ export default {
     // }
   },
   methods: {
-    ...mapActions(['saveConfig', 'setLoading', 'clearTurn']),
+    ...mapActions(['saveConfig', 'setLoading', 'setTurn']),
+    changeTurn() {
+      this.setTurn(this.toTurn)
+    },
     async save() {
       this.setLoading(200)
       await this.saveConfig(this.configs)

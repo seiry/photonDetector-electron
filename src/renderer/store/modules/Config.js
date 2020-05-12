@@ -1,7 +1,7 @@
 const state = {
   savePath: '',
   fromPath: '',
-  mode: 0,
+  mode: 1,
   num: 6,
   singleTime: 0.5,
   width: 20,

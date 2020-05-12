@@ -1,5 +1,6 @@
 import api from '../ffi/dmc1380'
 import base from './base.class'
+
 const Axis = {
   x: 0,
   y: 1,
@@ -12,7 +13,7 @@ class DMC extends base {
     originalCode: 0,
     msg: 'none',
   }
-
+  speedX = 2
   mock = false
   mockNum = 0
   constructor(mock = false) {
@@ -76,12 +77,19 @@ class DMC extends base {
     }
   }
   /**
+   * 设定速度倍数，1为标准
+   * @param {*} x
+   */
+  setSpeedX(x) {
+    this.speedX = +x
+  }
+  /**
    *
    * @param {*} direction 1为逆时针，即扫描时的操作，-1为顺时针
    */
   move(direction = 1) {
     const startV = 500
-    const maxV = -1000 * direction
+    const maxV = -1000 * direction * this.speedX
     const accTime = 0.1
     api.d1000_start_tv_move(Axis.x, startV, maxV, accTime)
     // Dmc1380.d1000_start_tv_move(nAxis, 200, 1000, 0.05); 这个是顺时针
