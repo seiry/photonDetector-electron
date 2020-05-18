@@ -7,9 +7,12 @@
 
 因为使用了`node-ffi-napi`，所以在Windows上，需要vs toolchain全家桶。
 
+最低的兼容版本为vs2015，已在vs2015和vs2019社区版中进行了编译测试。
+
 以vs2019为例，需要`c++ toolsets`, `windows sdk`，否则`gyp`会跑不起来
 
 `windows sdk`最低需要`Windows 8.1`版本。即使是`Windows 7`，同样可以安装该依赖
+
 
 安装完成后需要`rebuild`
 
@@ -19,9 +22,13 @@ npm run rebuild
 
 #### Build Setup
 
+`nodejs` 需求版本为 `V10.x` 或 `V12.x`，
+
 ``` bash
 # install dependencies
 npm install
+
+npm run rebuild
 
 # serve with hot reload at localhost:9080
 npm run dev
